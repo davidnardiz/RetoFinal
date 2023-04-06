@@ -17,6 +17,9 @@ import javax.swing.border.EmptyBorder;
 import clases.Publicacion;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
+import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
+import java.awt.Font;
 
 public class ParaTi extends JDialog implements ActionListener {
 
@@ -30,17 +33,16 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JButton btnTienda;
 	private JButton btnCuenta;
 	private JLabel lblNewLabel;
-	private JLabel imagen;
+	private JLabel lblNewLabel_1;
+	private JButton btnDm;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_6;
+	private JLabel lblNewLabel_7;
 
-	public static void main(String[] args) {
-		try {
-			ParaTi dialog = new ParaTi(null, true, null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	/**
 	 * Create the dialog.
@@ -69,11 +71,30 @@ public class ParaTi extends JDialog implements ActionListener {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
+		btnDm = new JButton("");
+		btnDm.setForeground(new Color(43, 45, 47));
+		btnDm.setBackground(new Color(43, 45, 47));
+		btnDm.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logoDm.png")));
+		btnDm.setBounds(522, 21, 78, 68);
+		btnDm.setBorder(null);
+		contentPanel.add(btnDm);
+		
+		lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/6666-removebg-preview.png")));
+		lblNewLabel_1.setBounds(87, 30, 282, 70);
+		contentPanel.add(lblNewLabel_1);
+		
+		JLabel icono = new JLabel("New label");
+		icono.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logo2.png")));
+		icono.setBounds(28, 26, 58, 58);
+		contentPanel.add(icono);
 
 		btnCuenta = new JButton("");
 		btnCuenta.setBackground(new Color(43, 45, 47));
 		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/cuenta.png")));
 		btnCuenta.setBounds(515, 711, 70, 70);
+		btnCuenta.setBorder(null);
 		contentPanel.add(btnCuenta);
 		btnCuenta.addActionListener(this);
 
@@ -81,6 +102,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		btnTienda.setBackground(new Color(43, 45, 47));
 		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/tienda.png")));
 		btnTienda.setBounds(398, 711, 70, 70);
+		btnTienda.setBorder(null);
 		contentPanel.add(btnTienda);
 		btnTienda.addActionListener(this);
 
@@ -88,6 +110,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		btnSubir.setBackground(new Color(43, 45, 47));
 		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/subir.png")));
 		btnSubir.setBounds(281, 711, 70, 70);
+		btnSubir.setBorder(null);
 		contentPanel.add(btnSubir);
 		btnSubir.addActionListener(this);
 
@@ -95,6 +118,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		btnBuscar.setBackground(new Color(43, 45, 47));
 		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/buscar.png")));
 		btnBuscar.setBounds(164, 711, 70, 70);
+		btnBuscar.setBorder(null);
 		contentPanel.add(btnBuscar);
 		btnBuscar.addActionListener(this);
 
@@ -102,6 +126,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		btnParaTi.setBackground(new Color(43, 45, 47));
 		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/para ti.png")));
 		btnParaTi.setBounds(47, 711, 70, 70);
+		btnParaTi.setBorder(null);
 		contentPanel.add(btnParaTi);
 		btnParaTi.addActionListener(this);
 		setLocationRelativeTo(null);
@@ -116,17 +141,44 @@ public class ParaTi extends JDialog implements ActionListener {
 		textPane_1.setBounds(-162, 665, 794, 160);
 		contentPanel.add(textPane_1);
 
-		JLabel perfil = new JLabel("");
-		perfil.setBounds(177, 140, 40, 40);
-		contentPanel.add(perfil);
-
 		lblNewLabel = new JLabel("Me gustas");
 		lblNewLabel.setBounds(195, 711, 78, 14);
 		contentPanel.add(lblNewLabel);
-
-		imagen = new JLabel("");
-		imagen.setBounds(86, 174, 450, 500);
-		contentPanel.add(imagen);
+		
+		lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setBackground(new Color(128, 64, 0));
+		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\Daviz\\Desktop\\retFinal\\RetoFinal\\src\\utilidades\\Sin t\u00EDtulo.jpg"));
+		lblNewLabel_2.setBounds(107, 190, 311, 367);
+		contentPanel.add(lblNewLabel_2);
+		
+		lblNewLabel_3 = new JLabel("New label");
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel_3.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logopersona3.png")));
+		lblNewLabel_3.setBounds(107, 122, 58, 58);
+		contentPanel.add(lblNewLabel_3);
+		
+		lblNewLabel_4 = new JLabel("New label");
+		lblNewLabel_4.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/corazonBlanco3.png")));
+		lblNewLabel_4.setBounds(107, 563, 46, 40);
+		contentPanel.add(lblNewLabel_4);
+		
+		lblNewLabel_5 = new JLabel("Aqu\u00ED va la descripci\u00F3n...");
+		lblNewLabel_5.setForeground(new Color(255, 255, 255));
+		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_5.setBounds(107, 613, 332, 27);
+		contentPanel.add(lblNewLabel_5);
+		
+		lblNewLabel_6 = new JLabel("Usuario");
+		lblNewLabel_6.setForeground(Color.WHITE);
+		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_6.setBounds(169, 144, 332, 27);
+		contentPanel.add(lblNewLabel_6);
+		
+		lblNewLabel_7 = new JLabel("384");
+		lblNewLabel_7.setForeground(new Color(255, 255, 255));
+		lblNewLabel_7.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_7.setBounds(160, 567, 209, 40);
+		contentPanel.add(lblNewLabel_7);
 
 	}
 

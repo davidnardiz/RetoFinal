@@ -12,6 +12,10 @@ import modelo.DAO;
 
 public class Registrarse extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private DAO dao;
 	/**

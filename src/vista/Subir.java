@@ -74,7 +74,7 @@ public class Subir extends JDialog implements ActionListener{
 		JLabel lblNewLabel = new JLabel("Que vas a subir?");
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Serif", Font.PLAIN, 31));
-		lblNewLabel.setBounds(215, 11, 202, 41);
+		lblNewLabel.setBounds(215, 11, 271, 41);
 		contentPanel.add(lblNewLabel);
 
 		cancion = new JComboBox<String>();

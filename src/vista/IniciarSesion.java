@@ -31,7 +31,7 @@ public class IniciarSesion extends JDialog implements ActionListener  {
 		super(principal);
 		this.setModal(b);
 		this.dao = dao;
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 648, 520);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
