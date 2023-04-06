@@ -22,10 +22,12 @@ public class Principal extends JFrame implements ActionListener {
 	private JButton btnIniciar;
 	private JButton btnRegistrarse;
 	private DAO dao;
+	
 	/**
 	 * Create the frame.
 	 * @param dao 
 	 */
+	
 	public Principal(DAO dao) {
 		this.dao = dao;
 		
