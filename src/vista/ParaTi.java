@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
@@ -16,12 +17,6 @@ import javax.swing.border.EmptyBorder;
 import clases.Publicacion;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.SystemColor;
 
 public class ParaTi extends JDialog implements ActionListener {
 
@@ -36,7 +31,6 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JButton btnCuenta;
 	private JLabel lblNewLabel;
 	private JLabel imagen;
-	private JButton btnNext;
 
 	public static void main(String[] args) {
 		try {
@@ -65,7 +59,8 @@ public class ParaTi extends JDialog implements ActionListener {
 		// this.dao = dao;
 		this.dao = new DAOImplementacionBD();
 		
-		int alto = Toolkit.getDefaultToolkit().getScreenSize().height;
+		//int alto = Toolkit.getDefaultToolkit().getScreenSize().height;
+		int alto = 864;
 		int ancho = (alto / 4) * 3;
 
 		setBounds(100, 100, ancho, alto);
@@ -78,71 +73,59 @@ public class ParaTi extends JDialog implements ActionListener {
 		btnCuenta = new JButton("");
 		btnCuenta.setBackground(new Color(43, 45, 47));
 		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/cuenta.png")));
-		btnCuenta.setBounds(645, 896, 100, 100);
+		btnCuenta.setBounds(515, 711, 70, 70);
 		contentPanel.add(btnCuenta);
 		btnCuenta.addActionListener(this);
 
 		btnTienda = new JButton("");
 		btnTienda.setBackground(new Color(43, 45, 47));
 		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/tienda.png")));
-		btnTienda.setBounds(496, 896, 100, 100);
+		btnTienda.setBounds(398, 711, 70, 70);
 		contentPanel.add(btnTienda);
 		btnTienda.addActionListener(this);
 
 		btnSubir = new JButton("");
 		btnSubir.setBackground(new Color(43, 45, 47));
 		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/subir.png")));
-		btnSubir.setBounds(347, 896, 100, 100);
+		btnSubir.setBounds(281, 711, 70, 70);
 		contentPanel.add(btnSubir);
 		btnSubir.addActionListener(this);
 
 		btnBuscar = new JButton("");
 		btnBuscar.setBackground(new Color(43, 45, 47));
 		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/buscar.png")));
-		btnBuscar.setBounds(198, 896, 100, 100);
+		btnBuscar.setBounds(164, 711, 70, 70);
 		contentPanel.add(btnBuscar);
 		btnBuscar.addActionListener(this);
 
 		btnParaTi = new JButton("");
 		btnParaTi.setBackground(new Color(43, 45, 47));
 		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/para ti.png")));
-		btnParaTi.setBounds(49, 896, 100, 100);
+		btnParaTi.setBounds(47, 711, 70, 70);
 		contentPanel.add(btnParaTi);
 		btnParaTi.addActionListener(this);
-
-		btnNext = new JButton("Siguiente");
-		btnNext.setBackground(SystemColor.controlHighlight);
-		btnNext.setBounds(656, 424, 89, 23);
-		contentPanel.add(btnNext);
 		setLocationRelativeTo(null);
-		btnNext.addActionListener(this);
 
 		JTextPane textPane = new JTextPane();
 		textPane.setBackground(new Color(43, 45, 47));
-		textPane.setBounds(0, 0, 794, 112);
+		textPane.setBounds(0, 0, 632, 112);
 		contentPanel.add(textPane);
 
 		JTextPane textPane_1 = new JTextPane();
 		textPane_1.setBackground(new Color(43, 45, 47));
-		textPane_1.setBounds(0, 839, 794, 202);
+		textPane_1.setBounds(-162, 665, 794, 160);
 		contentPanel.add(textPane_1);
 
 		JLabel perfil = new JLabel("");
 		perfil.setBounds(177, 140, 40, 40);
 		contentPanel.add(perfil);
 
-		JLabel nombreUsuario = new JLabel("Usuario");
-		nombreUsuario.setFont(new Font("Serif", Font.PLAIN, 20));
-		nombreUsuario.setForeground(Color.WHITE);
-		nombreUsuario.setBounds(247, 147, 370, 27);
-		contentPanel.add(nombreUsuario);
-
 		lblNewLabel = new JLabel("Me gustas");
 		lblNewLabel.setBounds(195, 711, 78, 14);
 		contentPanel.add(lblNewLabel);
 
 		imagen = new JLabel("");
-		imagen.setBounds(177, 191, 450, 500);
+		imagen.setBounds(86, 174, 450, 500);
 		contentPanel.add(imagen);
 
 	}
@@ -159,10 +142,7 @@ public class ParaTi extends JDialog implements ActionListener {
 			abrirTienda();
 		} else if (e.getSource().equals(btnCuenta)) {
 			abrirCuenta();
-		} else if (e.getSource().equals(btnNext)) {
-			next();
 		}
-
 	}
 
 	private void next() {
@@ -187,7 +167,9 @@ public class ParaTi extends JDialog implements ActionListener {
 	}
 
 	private void abrirSubir() {
-		// TODO Auto-generated method stub
+		Subir subir = new Subir(this, true, dao);
+		this.setVisible(false);
+		subir.setVisible(true);
 
 	}
 
