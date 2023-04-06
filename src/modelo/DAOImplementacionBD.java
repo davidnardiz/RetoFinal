@@ -10,9 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import clases.Cancion;
 import clases.Publicacion;
+import clases.TipoHistoria;
 
 public class DAOImplementacionBD implements DAO {
 
@@ -22,8 +26,11 @@ public class DAOImplementacionBD implements DAO {
 	// Sentencias SQL
 
 	// Selects
-	final private String bucarPublicacionId = "SELECT * FROM publicacion WHERE id_publicacion = ?";
-	final private String numPublicaciones = "SELECT count(*) FROM publicacion";
+	final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
+	final private String NUM_PUBLICACIONES = "SELECT count(*) FROM publicacion";
+
+	final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
+	final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
 
 	public void abrirConexion() {
 
@@ -89,7 +96,7 @@ public class DAOImplementacionBD implements DAO {
 		this.abrirConexion();
 
 		try {
-			stmt = con.prepareStatement(bucarPublicacionId);
+			stmt = con.prepareStatement(BUSCAR_PUBLICACIO_X_ID);
 			stmt.setString(1, id);
 			ResultSet rs = stmt.executeQuery();
 
@@ -100,7 +107,7 @@ public class DAOImplementacionBD implements DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		this.cerrarConexion();
 
 		return publi;
@@ -110,21 +117,67 @@ public class DAOImplementacionBD implements DAO {
 	public int numPublicaciones() {
 		int numPubli = 0;
 		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(NUM_PUBLICACIONES);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				numPubli = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		this.cerrarConexion();
+		return numPubli;
+	}
+
+	@Override
+	public List<Cancion> listarCanciones() {
+		List<Cancion> canciones = new ArrayList<>();
+
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(LISTAR_MUSICA);
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Cancion can = new Cancion();
+				can.setTitulo(rs.getString("titulo"));
+				canciones.add(can);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+
+		return canciones;
+	}
+
+	@Override
+	public List<TipoHistoria> listarTipoHistorias() {
+		List<TipoHistoria> tipoHistoria = new ArrayList<>();
+		
+		this.abrirConexion();
 		
 		try {
-			stmt = con.prepareStatement(numPublicaciones);
+			stmt = con.prepareStatement(LISTAR_TIPO_HISTORIA);
 			ResultSet rs = stmt.executeQuery();
 			
-			if(rs.next()) {
-				numPubli = rs.getInt(1);
+			while(rs.next()) {
+				TipoHistoria tp = new TipoHistoria();
+				tp.setTipo(rs.getString("tipo"));
+				tipoHistoria.add(tp);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		this.cerrarConexion();
-		return numPubli;
+		return tipoHistoria;
 	}
 
 }
