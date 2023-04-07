@@ -8,7 +8,7 @@ public class Historia extends Publicacion {
 	/********** METODOS **********/
 	@Override
 	public String toString() {
-		return "Historia [mejores_amigos=" + mejores_amigos + ", cod_tipo=" + cod_tipo + "]";
+		return super.toString() + "Historia [mejores_amigos=" + mejores_amigos + ", cod_tipo=" + cod_tipo + "]";
 	}
 
 	/********** CONSTRUCOR **********/

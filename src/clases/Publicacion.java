@@ -23,6 +23,7 @@ public class Publicacion {
 	}
 
 	/********** CONSTRUCTORES **********/
+	
 	/********** GETTERS && SETTERS **********/
 	public String getId_publicacion() {
 		return id_publicacion;
@@ -72,7 +73,7 @@ public class Publicacion {
 		this.ubicacion = ubicacion;
 	}
 
-	public String getUusuario() {
+	public String getUsuario() {
 		return usuario;
 	}
 

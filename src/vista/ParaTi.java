@@ -167,7 +167,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	}
 
 	private void abrirSubir() {
-		Subir subir = new Subir(this, true, dao);
+		Subir subir = new Subir(this, true, dao, null);
 		this.setVisible(false);
 		subir.setVisible(true);
 

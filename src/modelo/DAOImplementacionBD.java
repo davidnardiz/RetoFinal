@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +16,10 @@ import java.util.List;
 import java.util.Properties;
 
 import clases.Cancion;
+import clases.Foto;
+import clases.Historia;
 import clases.Publicacion;
+import clases.Reel;
 import clases.TipoHistoria;
 
 public class DAOImplementacionBD implements DAO {
@@ -25,12 +29,24 @@ public class DAOImplementacionBD implements DAO {
 
 	// Sentencias SQL
 
+	// Inserts
+	final private String PUBLICAR = "INSERT INTO publicacion VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	final private String INSERTAR_FOTO = "INSERT INTO foto VALUES (?, ?, ?, ?)";
+	final private String INSERTAR_REEL = "INSERT INTRO reel VALUES (?, ?, ?)";
+	final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
+
 	// Selects
 	final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
 	final private String NUM_PUBLICACIONES = "SELECT count(*) FROM publicacion";
 
 	final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
+	final private String BUSCAR_CANCION_X_TITULO = "SELECT * FROM cancion WHERE titulo = ?";
+
 	final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
+
+	final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
+
+	final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
 
 	public void abrirConexion() {
 
@@ -89,6 +105,24 @@ public class DAOImplementacionBD implements DAO {
 		return publi;
 	}
 
+	public PreparedStatement setPublicacion(Publicacion publi, PreparedStatement stmt) {
+		try {
+			stmt.setString(1, publi.getId_publicacion());
+			stmt.setString(2, publi.getImagen());
+			stmt.setInt(3, publi.getNumLikes());
+			stmt.setInt(4, publi.getNumComentarios());
+			stmt.setDate(5, Date.valueOf(publi.getFecha_subida()));
+			stmt.setString(6, publi.getUbicacion());
+			stmt.setString(7, publi.getUsuario());
+			stmt.setString(8, publi.getId_cancion());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return stmt;
+	}
+
 	@Override
 	public Publicacion buscarPublicacionXId(String id) {
 		Publicacion publi = new Publicacion();
@@ -111,6 +145,49 @@ public class DAOImplementacionBD implements DAO {
 		this.cerrarConexion();
 
 		return publi;
+	}
+
+	@Override
+	public void publicar(Publicacion publi) {
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(PUBLICAR);
+			stmt = setPublicacion(publi, stmt);
+			
+			System.out.println(stmt);
+			stmt.execute();
+
+			
+			if (publi instanceof Foto) {
+				stmt = con.prepareStatement(INSERTAR_FOTO);
+				stmt.setString(1, publi.getId_publicacion());
+				stmt.setString(2, ((Foto) publi).getDescripcion());
+				stmt.setString(3, ((Foto) publi).getResolucion());
+				stmt.setString(4, ((Foto) publi).getEtiquetado());
+
+			} else if (publi instanceof Reel) {
+				stmt = con.prepareStatement(INSERTAR_REEL);
+				stmt.setString(1, publi.getId_publicacion());
+				stmt.setInt(2, ((Reel) publi).getDuracion());
+				stmt.setInt(3, ((Reel) publi).getReproducciones());
+
+			} else {
+				stmt = con.prepareStatement(INSERTAR_HISTORIA);
+				stmt.setString(1, publi.getId_publicacion());
+				stmt.setBoolean(2, ((Historia) publi).isMejores_amigos());
+				stmt.setString(3, ((Historia) publi).getCod_tipo());
+
+			}
+			
+			System.out.println(stmt);
+			stmt.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		this.cerrarConexion();
 	}
 
 	@Override
@@ -160,24 +237,94 @@ public class DAOImplementacionBD implements DAO {
 	@Override
 	public List<TipoHistoria> listarTipoHistorias() {
 		List<TipoHistoria> tipoHistoria = new ArrayList<>();
-		
+
 		this.abrirConexion();
-		
+
 		try {
 			stmt = con.prepareStatement(LISTAR_TIPO_HISTORIA);
 			ResultSet rs = stmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				TipoHistoria tp = new TipoHistoria();
 				tp.setTipo(rs.getString("tipo"));
 				tipoHistoria.add(tp);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		this.cerrarConexion();
 		return tipoHistoria;
+	}
+
+	@Override
+	public String calcularId(String string) {
+		String cod = "";
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(ULTIMA_PUBLICACION);
+			stmt.setString(1, string);
+			
+			System.out.println(stmt);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				cod = rs.getString("id_publicacion");
+			}else{
+				cod = "00000";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return cod;
+	}
+
+	@Override
+	public Cancion buscarCancionXTitulo(String titulo) {
+		Cancion can = null;
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(BUSCAR_CANCION_X_TITULO);
+			stmt.setString(1, titulo);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				can = new Cancion();
+
+				can.setId_cancion(rs.getString("id_cancion"));
+				can.setTitulo(rs.getString("titulo"));
+				can.setArtista(rs.getString("artista"));
+				can.setDuracion(rs.getFloat("duracion"));
+				can.setCod_genero(rs.getString("cod_genero"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return can;
+	}
+
+	@Override
+	public String tipoHistoria(String tipo) {
+		String cod = null;
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(TIPO_HISTORIA);
+			stmt.setString(1, tipo);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				cod = rs.getString("cod_tipo");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return cod;
 	}
 
 }
