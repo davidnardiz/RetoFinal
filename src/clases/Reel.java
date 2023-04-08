@@ -3,16 +3,17 @@ package clases;
 public class Reel extends Publicacion{
 
 	private String id_publicacion;
+	private String descripcion;
 	private int duracion;
 	private int reproducciones;
 
 	/********** METODOS **********/
 	@Override
 	public String toString() {
-		return super.toString() + "Reel [id_publicacion=" + id_publicacion + ", duracion=" + duracion + ", reproducciones="
-				+ reproducciones + "]";
+		return "Reel [id_publicacion=" + id_publicacion + ", descripcion=" + descripcion + ", duracion=" + duracion
+				+ ", reproducciones=" + reproducciones + "]";
 	}
-
+	
 	/********** CONSTRUCTOR **********/
 	/********** GETTER && SETTER **********/
 
@@ -22,6 +23,14 @@ public class Reel extends Publicacion{
 
 	public void setId_publicacion(String id_publicacion) {
 		this.id_publicacion = id_publicacion;
+	}
+	
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public int getDuracion() {

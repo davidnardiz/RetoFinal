@@ -32,20 +32,17 @@ public class DAOImplementacionBD implements DAO {
 	// Inserts
 	final private String PUBLICAR = "INSERT INTO publicacion VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	final private String INSERTAR_FOTO = "INSERT INTO foto VALUES (?, ?, ?, ?)";
-	final private String INSERTAR_REEL = "INSERT INTRO reel VALUES (?, ?, ?)";
+	final private String INSERTAR_REEL = "INSERT INTO reel VALUES (?, ?, ?, ?)";
 	final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
 
 	// Selects
 	final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
 	final private String NUM_PUBLICACIONES = "SELECT count(*) FROM publicacion";
-
+	final private String NUM_PUBLICACIONES_POR_TIPO = "SELECT count(*) FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ?";
 	final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
 	final private String BUSCAR_CANCION_X_TITULO = "SELECT * FROM cancion WHERE titulo = ?";
-
 	final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
-
 	final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
-
 	final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
 
 	public void abrirConexion() {
@@ -154,35 +151,35 @@ public class DAOImplementacionBD implements DAO {
 		try {
 			stmt = con.prepareStatement(PUBLICAR);
 			stmt = setPublicacion(publi, stmt);
-			
+
 			System.out.println(stmt);
-			stmt.execute();
 
-			
-			if (publi instanceof Foto) {
-				stmt = con.prepareStatement(INSERTAR_FOTO);
-				stmt.setString(1, publi.getId_publicacion());
-				stmt.setString(2, ((Foto) publi).getDescripcion());
-				stmt.setString(3, ((Foto) publi).getResolucion());
-				stmt.setString(4, ((Foto) publi).getEtiquetado());
+			if (stmt.executeUpdate() == 1) {
+				if (publi instanceof Foto) {
+					stmt = con.prepareStatement(INSERTAR_FOTO);
+					stmt.setString(1, publi.getId_publicacion());
+					stmt.setString(2, ((Foto) publi).getDescripcion());
+					stmt.setString(3, ((Foto) publi).getResolucion());
+					stmt.setString(4, ((Foto) publi).getEtiquetado());
 
-			} else if (publi instanceof Reel) {
-				stmt = con.prepareStatement(INSERTAR_REEL);
-				stmt.setString(1, publi.getId_publicacion());
-				stmt.setInt(2, ((Reel) publi).getDuracion());
-				stmt.setInt(3, ((Reel) publi).getReproducciones());
+				} else if (publi instanceof Reel) {
+					stmt = con.prepareStatement(INSERTAR_REEL);
+					stmt.setString(1, publi.getId_publicacion());
+					stmt.setInt(2, ((Reel) publi).getDuracion());
+					stmt.setInt(3, ((Reel) publi).getReproducciones());
+					stmt.setString(4, ((Reel) publi).getDescripcion());
 
-			} else {
-				stmt = con.prepareStatement(INSERTAR_HISTORIA);
-				stmt.setString(1, publi.getId_publicacion());
-				stmt.setBoolean(2, ((Historia) publi).isMejores_amigos());
-				stmt.setString(3, ((Historia) publi).getCod_tipo());
+				} else {
+					stmt = con.prepareStatement(INSERTAR_HISTORIA);
+					stmt.setString(1, publi.getId_publicacion());
+					stmt.setBoolean(2, ((Historia) publi).isMejores_amigos());
+					stmt.setString(3, ((Historia) publi).getCod_tipo());
 
+				}
+
+				System.out.println(stmt);
+				stmt.execute();
 			}
-			
-			System.out.println(stmt);
-			stmt.execute();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -265,13 +262,13 @@ public class DAOImplementacionBD implements DAO {
 		try {
 			stmt = con.prepareStatement(ULTIMA_PUBLICACION);
 			stmt.setString(1, string);
-			
+
 			System.out.println(stmt);
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				cod = rs.getString("id_publicacion");
-			}else{
+			} else {
 				cod = "00000";
 			}
 		} catch (SQLException e) {
@@ -325,6 +322,27 @@ public class DAOImplementacionBD implements DAO {
 		}
 		this.cerrarConexion();
 		return cod;
+	}
+
+	@Override
+	public int numPublicacionesHerencia(String tipo) {
+		int numPubli = 0;
+		this.abrirConexion();
+		
+		try {
+			stmt = con.prepareStatement(NUM_PUBLICACIONES_POR_TIPO);
+			stmt.setString(1, tipo);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				numPubli = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return numPubli;
 	}
 
 }

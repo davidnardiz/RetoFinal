@@ -51,7 +51,7 @@ public class IniciarSesion extends JDialog implements ActionListener  {
 		}
 	}
 	private void mostrarParaTi() {
-		ParaTi parati = new ParaTi(this, true, dao);
+		ParaTi parati = new ParaTi(this, true, dao, usu);
 		parati.setVisible(true);
 		
 	}

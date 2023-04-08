@@ -14,15 +14,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
-import clases.Publicacion;
+import clases.Usuario;
 import modelo.DAO;
-import modelo.DAOImplementacionBD;
 
 public class ParaTi extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private DAO dao;
+	private Usuario usu;
 
 	private JButton btnParaTi;
 	private JButton btnBuscar;
@@ -32,15 +32,6 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JLabel lblNewLabel;
 	private JLabel imagen;
 
-	public static void main(String[] args) {
-		try {
-			ParaTi dialog = new ParaTi(null, true, null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
@@ -50,16 +41,15 @@ public class ParaTi extends JDialog implements ActionListener {
 	 * @param iniciarSesion
 	 **/
 
-	public ParaTi(IniciarSesion iniciarSesion, boolean b, DAO dao) {
+	public ParaTi(IniciarSesion iniciarSesion, boolean b, DAO dao, Usuario usu) {
 		super(iniciarSesion);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ParaTi.class.getResource("/utilidades/logo.png")));
 		setTitle("Para Ti");
 		setResizable(false);
 		this.setModal(b);
-		// this.dao = dao;
-		this.dao = new DAOImplementacionBD();
-		
-		//int alto = Toolkit.getDefaultToolkit().getScreenSize().height;
+		this.dao = dao;
+		this.usu = usu;
+			
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
 
@@ -145,20 +135,8 @@ public class ParaTi extends JDialog implements ActionListener {
 		}
 	}
 
-	private void next() {
-		//Generar el id de una publicacion aleatoria
-		
-		//Pasarle el id
-		Publicacion publi = dao.buscarPublicacionXId("id");
-
-		System.out.print(publi.toString());
-
-		//Vincular los datos de la pagina a la de la publicacion
-	}
-
 	private void abrirCuenta() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	private void abrirTienda() {
@@ -167,7 +145,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	}
 
 	private void abrirSubir() {
-		Subir subir = new Subir(this, true, dao, null);
+		Subir subir = new Subir(this, true, dao, usu);
 		this.setVisible(false);
 		subir.setVisible(true);
 

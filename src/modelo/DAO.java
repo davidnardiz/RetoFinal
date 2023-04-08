@@ -8,19 +8,28 @@ import clases.TipoHistoria;
 
 public interface DAO {
 
-	public Publicacion buscarPublicacionXId(String id);
-	
+	// Inserts
 	public void publicar(Publicacion publi);
-	
+
+	// Selects
+	public Publicacion buscarPublicacionXId(String id);
+
 	public int numPublicaciones();
 	
+	public int numPublicacionesHerencia(String tipo);
+
 	public List<Cancion> listarCanciones();
-	
+
 	public List<TipoHistoria> listarTipoHistorias();
 
 	public String calcularId(String string);
-	
+
 	public Cancion buscarCancionXTitulo(String titulo);
-	
+
 	public String tipoHistoria(String tipo);
+
+	// Alters
+
+	// Deletes
+
 }
