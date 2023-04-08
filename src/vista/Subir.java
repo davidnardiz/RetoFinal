@@ -309,6 +309,8 @@ public class Subir extends JDialog implements ActionListener {
 		String codigo;
 		String ultimoCodigo;
 		int numCod;
+		
+		usu = new Usuario();
 
 		int minLikes = (int) (usu.getNumSeguidores() * 0.12);
 		int maxLikes = (int) (usu.getNumSeguidores() * 0.9);

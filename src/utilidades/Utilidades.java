@@ -1,7 +1,16 @@
 package utilidades;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,38 +18,87 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Utilidades {
 
 	public static int numeros_aleatorios(int min, int max) {
-		return (int) ((Math.random() * (max - min)) + min);
+		return new Random().nextInt((max - min) + 1) + min;
 	}
 
 	public static String exploradorArchivos(JDialog ventana) {
 		String fotoSeleccionada = "";
+		Path rutaAntigua;
+		Path rutaNueva = null;
 
-		// Crear un objeto JFileChooser
+		// Crear el Explorador
 		JFileChooser fileChooser = new JFileChooser();
 
-		// Establecer una carpeta predeterminada
+		// Decir donde abrir
 		String rutaProyecto = System.getProperty("user.dir");
-		File defaultDir = new File(rutaProyecto + "/src/img");
-		fileChooser.setCurrentDirectory(defaultDir);
+		File rutaExplorador = new File(rutaProyecto + "/src/img");
+		fileChooser.setCurrentDirectory(rutaExplorador);
 
-		// Establecer un filtro para mostrar solo archivos de imagen
+		// Decir que solo puede abrir fotos
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "jpg", "jpeg", "png", "gif");
 		fileChooser.setFileFilter(filter);
 
 		// Mostrar el cuadro de diálogo del selector de archivos
 		int result = fileChooser.showOpenDialog(ventana);
 
-		// Si el usuario selecciona un archivo, mostrar su ruta
+		// Si se a elegido una foto
 		if (result == JFileChooser.APPROVE_OPTION) {
+
+			// Coger la ruta absoluta
 			fotoSeleccionada = fileChooser.getSelectedFile().getPath();
-			
-			if(fotoSeleccionada.contains("RetoFinal\\src\\img")) {
-				fotoSeleccionada = fileChooser.getSelectedFile().getName();
+
+			// Si no esta dentro de la carpeta imagenes la copiamos a esa carpeta
+			if (!fotoSeleccionada.contains("RetoFinal\\src\\img")) {
+
+				File nuevaFoto = new File(fotoSeleccionada);
+				nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 311, 367);
+				
+				// Ruta origina del archivo
+				rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
+
+				// Ruta donde vamos a pegar
+				rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
+
+				// Copia la imagen al nuevo destino
+
+				try {
+					Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
+							StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 			}
-			
-			System.out.println(fotoSeleccionada);
+
+			// En la bda unicamente guardamos el nombre del archivo
+			fotoSeleccionada = fileChooser.getSelectedFile().getName();
+
 		}
 
 		return fotoSeleccionada;
 	}
+
+	public static File redimensionarImagenes(File imagen, int width, int height) {
+		BufferedImage inputImage;
+		File outputFile = null;
+
+		try {
+			inputImage = ImageIO.read(imagen);
+			Image scaledImage = inputImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+			BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+			Graphics2D g2d = outputImage.createGraphics();
+			g2d.drawImage(scaledImage, 0, 0, null);
+			g2d.dispose();
+			outputFile = new File(imagen.getName());
+			ImageIO.write(outputImage, "jpg", outputFile);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return outputFile;
+	}
+
 }
