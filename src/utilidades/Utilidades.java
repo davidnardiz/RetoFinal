@@ -50,24 +50,34 @@ public class Utilidades {
 			// Si no esta dentro de la carpeta imagenes la copiamos a esa carpeta
 			if (!fotoSeleccionada.contains("RetoFinal\\src\\img")) {
 
-				File nuevaFoto = new File(fotoSeleccionada);
-				nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 311, 367);
-				
-				// Ruta origina del archivo
-				rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
-
-				// Ruta donde vamos a pegar
-				rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
-
-				// Copia la imagen al nuevo destino
-
 				try {
+					File nuevaFoto = new File(fotoSeleccionada);
+					BufferedImage image = ImageIO.read(nuevaFoto);
+
+					// Si la foto esta en vertical redimensionarla con unos valores
+					if (image.getHeight() > image.getWidth()) {
+						nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 300, 400);
+
+						// Si no redimensionarla con otrs
+					} else {
+						nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 400, 300);
+					}
+
+					// Ruta origina del archivo
+					rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
+
+					// Ruta donde vamos a pegar
+					rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
+
+					// Copia la imagen al nuevo destino
 					Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
 							StandardCopyOption.REPLACE_EXISTING);
+
+					nuevaFoto.delete();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 
 			// En la bda unicamente guardamos el nombre del archivo

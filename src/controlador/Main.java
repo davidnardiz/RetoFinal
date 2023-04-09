@@ -3,7 +3,6 @@ package controlador;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
 import vista.ParaTi;
-import vista.Principal;
 
 public class Main {
 

@@ -2,9 +2,12 @@ package vista;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,22 +15,24 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import clases.Publicacion;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
 import utilidades.Utilidades;
-
-import javax.swing.SwingConstants;
-import javax.swing.JCheckBox;
-import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ParaTi extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private DAO dao;
+	private List<String> hanSalido = new ArrayList<>();
 
 	private JButton btnParaTi;
 	private JButton btnBuscar;
@@ -37,13 +42,12 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
 	private JButton btnDm;
-	private JLabel lblImagen;
-	private JLabel lblNewLabel_3;
-	private JLabel lblNewLabel_4;
-	private JLabel lblNewLabel_5;
-	private JLabel lblNewLabel_6;
-	private JLabel lblNewLabel_7;
-	private JButton btnNext;
+	private JLabel lblIcono;
+	private JLabel btnLike;
+	private JLabel lblDescripcion;
+	private JLabel lblUsuario;
+	private JLabel lblMegusta;
+	private JLabel imagen;
 
 	/**
 	 * Create the dialog.
@@ -83,12 +87,12 @@ public class ParaTi extends JDialog implements ActionListener {
 
 		lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/6666-removebg-preview.png")));
-		lblNewLabel_1.setBounds(87, 30, 282, 70);
+		lblNewLabel_1.setBounds(95, 21, 282, 70);
 		contentPanel.add(lblNewLabel_1);
 
 		JLabel icono = new JLabel("New label");
 		icono.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logo2.png")));
-		icono.setBounds(28, 26, 58, 58);
+		icono.setBounds(27, 21, 58, 58);
 		contentPanel.add(icono);
 
 		btnCuenta = new JButton("");
@@ -134,7 +138,7 @@ public class ParaTi extends JDialog implements ActionListener {
 
 		JTextPane textPane = new JTextPane();
 		textPane.setBackground(new Color(43, 45, 47));
-		textPane.setBounds(0, 0, 632, 112);
+		textPane.setBounds(0, 0, 632, 100);
 		contentPanel.add(textPane);
 
 		JTextPane textPane_1 = new JTextPane();
@@ -146,47 +150,57 @@ public class ParaTi extends JDialog implements ActionListener {
 		lblNewLabel.setBounds(195, 711, 78, 14);
 		contentPanel.add(lblNewLabel);
 
-		lblImagen = new JLabel("");
-		lblImagen.setBackground(new Color(128, 64, 0));
-		lblImagen.setBounds(107, 190, 311, 367);
-		contentPanel.add(lblImagen);
+		lblIcono = new JLabel("");
+		lblIcono.setHorizontalAlignment(SwingConstants.LEFT);
+		lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logopersona3.png")));
+		lblIcono.setBounds(160, 102, 64, 64);
+		contentPanel.add(lblIcono);
 
-		abrirCuenta();
+		btnLike = new JLabel("");
+		btnLike.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/corazonBlanco3.png")));
+		btnLike.setBounds(164, 576, 46, 40);
+		contentPanel.add(btnLike);
 
-		lblNewLabel_3 = new JLabel("New label");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logopersona3.png")));
-		lblNewLabel_3.setBounds(107, 122, 58, 58);
-		contentPanel.add(lblNewLabel_3);
+		lblDescripcion = new JLabel("Aqu\u00ED va la descripci\u00F3n...");
+		lblDescripcion.setForeground(new Color(255, 255, 255));
+		lblDescripcion.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDescripcion.setBounds(164, 627, 332, 27);
+		contentPanel.add(lblDescripcion);
 
-		lblNewLabel_4 = new JLabel("New label");
-		lblNewLabel_4.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/corazonBlanco3.png")));
-		lblNewLabel_4.setBounds(107, 563, 46, 40);
-		contentPanel.add(lblNewLabel_4);
+		lblUsuario = new JLabel("Usuario");
+		lblUsuario.setForeground(Color.WHITE);
+		lblUsuario.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblUsuario.setBounds(234, 121, 332, 27);
+		contentPanel.add(lblUsuario);
 
-		lblNewLabel_5 = new JLabel("Aqu\u00ED va la descripci\u00F3n...");
-		lblNewLabel_5.setForeground(new Color(255, 255, 255));
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_5.setBounds(107, 613, 332, 27);
-		contentPanel.add(lblNewLabel_5);
+		lblMegusta = new JLabel("");
+		lblMegusta.setForeground(new Color(255, 255, 255));
+		lblMegusta.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblMegusta.setBounds(224, 574, 209, 40);
+		contentPanel.add(lblMegusta);
 
-		lblNewLabel_6 = new JLabel("Usuario");
-		lblNewLabel_6.setForeground(Color.WHITE);
-		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_6.setBounds(169, 144, 332, 27);
-		contentPanel.add(lblNewLabel_6);
+		imagen = new JLabel("");
+		getContentPane().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					next();
+				}
+				
+			}
+		});
+		imagen.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				next();
+			}
+		});
+		imagen.setHorizontalAlignment(SwingConstants.RIGHT);
+		imagen.setBounds(116, 165, 400, 400);
+		contentPanel.add(imagen);
 
-		lblNewLabel_7 = new JLabel("384");
-		lblNewLabel_7.setForeground(new Color(255, 255, 255));
-		lblNewLabel_7.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_7.setBounds(160, 567, 209, 40);
-		contentPanel.add(lblNewLabel_7);
 
-		btnNext = new JButton("Siguiente");
-		btnNext.setBounds(494, 359, 89, 23);
-		contentPanel.add(btnNext);
-		btnNext.addActionListener(this);
-
+		next();
 	}
 
 	@Override
@@ -201,9 +215,8 @@ public class ParaTi extends JDialog implements ActionListener {
 			abrirTienda();
 		} else if (e.getSource().equals(btnCuenta)) {
 			abrirCuenta();
-		} else if (e.getSource().equals(btnNext)) {
-			next();
-		}
+		} 
+
 	}
 
 	private void abrirTienda() {
@@ -227,29 +240,33 @@ public class ParaTi extends JDialog implements ActionListener {
 
 	}
 
-	private void next() {
-
-		String publiActual = "";
-		publiActual = generarPublicacionAleatoria(publiActual);
-
-		Publicacion publi = dao.buscarPublicacionXId(publiActual); // Buscamos la publicacion con esa id
-
-		if (publi.getImagen().contains("\\")) {
-			
-			lblImagen.setIcon(new ImageIcon(publi.getImagen()));
-
-		} else {
-			lblImagen.setIcon(new ImageIcon(ParaTi.class.getResource("/img/" + publi.getImagen())));
-		}
+	private void abrirCuenta() {
 
 	}
 
-	private String generarPublicacionAleatoria(String publiAnterior) {
+	private void next() {
+
+
+		//Buscamos una publicacion con una id aleatoria
+		Publicacion publi = dao.buscarPublicacionXId(generarPublicacionAleatoria()); 
+		
+		System.out.println(publi.toString());
+	
+		
+		imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/img/" + publi.getImagen())));
+		lblUsuario.setText(publi.getUsuario());
+		lblMegusta.setText(publi.getNumLikes() + "");
+
+	}
+
+	private String generarPublicacionAleatoria() {
 		String publiActual = "";
 		int tipoPubli;
 		int numPubli;
+		boolean salir;
 
 		do {
+			salir = true;
 			tipoPubli = Utilidades.numeros_aleatorios(0, 2);
 
 			switch (tipoPubli) {
@@ -272,12 +289,30 @@ public class ParaTi extends JDialog implements ActionListener {
 			// Generamos bien el codigo
 			publiActual += "-" + String.format("%03d", Utilidades.numeros_aleatorios(0, numPubli));
 
-		} while (publiActual.substring(2, 5).equalsIgnoreCase("000") && !publiActual.equalsIgnoreCase(publiAnterior));
+			//Si el ya han salido todas las fotos borrar el arrayList
+			if (hanSalido.size() == dao.numPublicaciones()) {
+				hanSalido.clear();
+			}
 
+			//Mirar si la foto ya a salido
+			for (String i : hanSalido) {
+				if (i.equalsIgnoreCase(publiActual)) {
+					salir = false;
+				}
+			}
+
+			//Comprobar que el codigo no esta vacio
+			if (publiActual.substring(2, 5).equalsIgnoreCase("000")) {
+				salir = false;
+			}
+
+		} while (!salir);
+
+		System.out.println(publiActual);
+		
+		//Añadimos el codigo a la lista de los que han salido
+		hanSalido.add(publiActual);
 		return publiActual;
 	}
 
-	private void abrirCuenta() {
-
-	}
 }

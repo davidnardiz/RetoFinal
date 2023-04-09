@@ -130,7 +130,7 @@ public class DAOImplementacionBD implements DAO {
 			stmt = con.prepareStatement(BUSCAR_PUBLICACIO_X_ID);
 			stmt.setString(1, id);
 			ResultSet rs = stmt.executeQuery();
-
+			
 			if (rs.next()) {
 				publi = this.getPublicacion(publi, rs);
 			}
