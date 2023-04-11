@@ -56,11 +56,11 @@ public class Utilidades {
 
 					// Si la foto esta en vertical redimensionarla con unos valores
 					if (image.getHeight() > image.getWidth()) {
-						nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 300, 400);
+						nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 356, 475);
 
 						// Si no redimensionarla con otrs
 					} else {
-						nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 400, 300);
+						nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 475, 356);
 					}
 
 					// Ruta origina del archivo

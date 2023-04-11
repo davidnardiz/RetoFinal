@@ -356,7 +356,7 @@ public class Subir extends JDialog implements ActionListener {
 
 				// Si el valor opcional esta vacio mejor null que ""
 				if (!descripcion.getText().equalsIgnoreCase("")) {
-					((Foto) publi).setDescripcion(descripcion.getText());
+					((Reel) publi).setDescripcion(descripcion.getText());
 				}
 				((Reel) publi).setDuracion(duracion.getValue());
 

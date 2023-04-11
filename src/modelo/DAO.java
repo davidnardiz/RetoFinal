@@ -5,14 +5,23 @@ import java.util.List;
 import clases.Cancion;
 import clases.Publicacion;
 import clases.TipoHistoria;
+import clases.Usuario;
 
 public interface DAO {
 
 	// Inserts
 	public void publicar(Publicacion publi);
+	
+	public void insertarLike(String usuario, String publicacion);
 
 	// Selects
 	public Publicacion buscarPublicacionXId(String id);
+	
+	public Usuario buscarUsuario(String usuario);
+	
+	public List<Usuario> listarUsuario();
+	
+	public List<Usuario> listarUsuarioXUsuario(String usuario);
 
 	public int numPublicaciones();
 	
@@ -28,8 +37,9 @@ public interface DAO {
 
 	public String tipoHistoria(String tipo);
 
+	public boolean comprobarLike(String usuario, String publicacion);
 	// Alters
 
 	// Deletes
-
+	public void quirarLike(String usuario, String publicacion);
 }
