@@ -21,6 +21,7 @@ import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
+import clases.Usuario;
 
 public class DAOImplementacionBD implements DAO {
 
@@ -35,6 +36,8 @@ public class DAOImplementacionBD implements DAO {
 	final private String INSERTAR_REEL = "INSERT INTO reel VALUES (?, ?, ?, ?)";
 	final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
 
+	final private String INSERTAR_LIKE = "INSERT INTO likes VALUES (?, ?)";
+
 	// Selects
 	final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
 	final private String NUM_PUBLICACIONES = "SELECT count(*) FROM publicacion";
@@ -44,6 +47,19 @@ public class DAOImplementacionBD implements DAO {
 	final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
 	final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
 	final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
+
+	final private String LISTAR_USUARIOS = "SELECT usuario, icono FROM usuario";
+	final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, icono FROM usuario WHERE usuario like ?";
+	final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
+
+	final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
+
+	// Alter
+	final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
+	final private String RESTAR_LIKE = "UPDATE publicacion set numLikes = numLikes - 1 WHERE id_publicacion = ?";
+
+	// Deletes
+	final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
 
 	public void abrirConexion() {
 
@@ -118,6 +134,49 @@ public class DAOImplementacionBD implements DAO {
 		}
 
 		return stmt;
+	}
+
+	public Usuario getUsuario(Usuario usu, ResultSet rs) {
+		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		try {
+			usu.setUsuario(rs.getString("usuario"));
+			usu.setContrasenia(rs.getString("contrasenia"));
+			usu.setDni(rs.getString("dni"));
+			usu.setNombre_completo(rs.getString("nombre_completo"));
+			usu.setCorreo(rs.getString("correo"));
+			usu.setTelefono(rs.getInt("telefono"));
+			usu.setGenero(rs.getString("genero"));
+			usu.setIcono(rs.getString("icono"));
+			usu.setFecha_nac(LocalDate.parse(rs.getString("fecha_nac"), formateador));
+			usu.setNumSeguidores(rs.getInt("numSeguidores"));
+			usu.setNumSeguidos(rs.getInt("numSeguidos"));
+			usu.setVerificado(rs.getBoolean("verificado"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return usu;
+	}
+
+	@Override
+	public Usuario buscarUsuario(String usuario) {
+		Usuario usu = new Usuario();
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(BUSCAR_USUARIO);
+			stmt.setString(1, usuario);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				usu = this.getUsuario(usu, rs);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return usu;
 	}
 
 	@Override
@@ -328,14 +387,14 @@ public class DAOImplementacionBD implements DAO {
 	public int numPublicacionesHerencia(String tipo) {
 		int numPubli = 0;
 		this.abrirConexion();
-		
+
 		try {
 			stmt = con.prepareStatement(NUM_PUBLICACIONES_POR_TIPO);
 			stmt.setString(1, tipo);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				numPubli = rs.getInt(1);
 			}
 		} catch (SQLException e) {
@@ -343,6 +402,123 @@ public class DAOImplementacionBD implements DAO {
 		}
 		this.cerrarConexion();
 		return numPubli;
+	}
+
+	@Override
+	public List<Usuario> listarUsuario() {
+		List<Usuario> usuarios = new ArrayList<>();
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(LISTAR_USUARIOS);
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Usuario usu = new Usuario();
+				usu.setUsuario(rs.getString("usuario"));
+				usu.setIcono(rs.getString("icono"));
+				usuarios.add(usu);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return usuarios;
+	}
+
+	@Override
+	public List<Usuario> listarUsuarioXUsuario(String usuario) {
+		List<Usuario> usuarios = new ArrayList<>();
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(LISTAR_USUARIOS_X_USUARIO);
+			stmt.setString(1, "%" + usuario + "%");
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Usuario usu = new Usuario();
+				usu.setUsuario(rs.getString("usuario"));
+				usu.setIcono(rs.getString("icono"));
+				usuarios.add(usu);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return usuarios;
+	}
+
+	@Override
+	public void insertarLike(String usuario, String publicacion) {
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(INSERTAR_LIKE);
+			stmt.setString(1, usuario);
+			stmt.setString(2, publicacion);
+			stmt.execute();
+
+			stmt = con.prepareStatement(SUMAR_LIKE);
+
+			stmt.setString(1, publicacion);
+			System.out.println(stmt);
+			stmt.execute();
+
+			System.out.println(stmt);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+
+	}
+
+	@Override
+	public void quirarLike(String usuario, String publicacion) {
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(QUITAR_LIKES);
+			stmt.setString(1, usuario);
+			stmt.setString(2, publicacion);
+
+			System.out.println(stmt);
+			stmt.execute();
+
+			stmt = con.prepareStatement(RESTAR_LIKE);
+			stmt.setString(1, publicacion);
+			stmt.execute();
+
+			System.out.println(stmt);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+
+	}
+
+	@Override
+	public boolean comprobarLike(String usuario, String publicacion) {
+		boolean like = false;
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(COMPROBAR_LIKE);
+			stmt.setString(1, usuario);
+			stmt.setString(2, publicacion);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				like = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		this.cerrarConexion();
+		return like;
 	}
 
 }

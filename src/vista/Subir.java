@@ -309,6 +309,8 @@ public class Subir extends JDialog implements ActionListener {
 		String codigo;
 		String ultimoCodigo;
 		int numCod;
+		
+		usu = new Usuario();
 
 		int minLikes = (int) (usu.getNumSeguidores() * 0.12);
 		int maxLikes = (int) (usu.getNumSeguidores() * 0.9);
@@ -354,7 +356,7 @@ public class Subir extends JDialog implements ActionListener {
 
 				// Si el valor opcional esta vacio mejor null que ""
 				if (!descripcion.getText().equalsIgnoreCase("")) {
-					((Foto) publi).setDescripcion(descripcion.getText());
+					((Reel) publi).setDescripcion(descripcion.getText());
 				}
 				((Reel) publi).setDuracion(duracion.getValue());
 
