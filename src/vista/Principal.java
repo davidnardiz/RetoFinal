@@ -31,6 +31,8 @@ public class Principal extends JFrame implements ActionListener {
 		
 		int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
 		int ancho = (alto/4) * 3;
+		int botonD = (int) (alto *0.6);
+		int botonA = (int) (alto *0.9);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, ancho, alto);
 		setLocationRelativeTo(null);
@@ -41,12 +43,12 @@ public class Principal extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		btnIniciar = new JButton("Iniciar");
-		btnIniciar.setBounds(443, 675, 107, 43);
+		btnIniciar.setBounds(botonD, botonA, 107, 43);
 		contentPane.add(btnIniciar);
 		btnIniciar.addActionListener(this);
 		
 		btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.setBounds(26, 675, 107, 43);
+		btnRegistrarse.setBounds(26, botonA, 107, 43);
 		contentPane.add(btnRegistrarse);
 		btnRegistrarse.addActionListener(this);
 	}
