@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -24,6 +25,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -47,6 +49,12 @@ public class Subir extends JDialog implements ActionListener {
 	private String fotoSeleccionada;
 	private ParaTi paraTi;
 
+	private JButton btnParaTi;
+	private JButton btnBuscar;
+	private JButton btnSubir;
+	private JButton btnTienda;
+	private JButton btnCuenta;
+
 	private JRadioButton rdbtnImagen;
 	private JRadioButton rdbtnReel;
 	private JRadioButton rdbtnHistoria;
@@ -55,7 +63,7 @@ public class Subir extends JDialog implements ActionListener {
 	private JComboBox<String> resolucion;
 	private JComboBox<String> tipoHistoria;
 	private JSlider duracion;
-	private JButton btnSubir;
+	private JButton btnSubirFoto;
 	private ButtonGroup tipoPublicacion = new ButtonGroup();
 	private JLabel lblTipoHistoria;
 	private JLabel lblCancion;
@@ -92,34 +100,97 @@ public class Subir extends JDialog implements ActionListener {
 		contentPanel.setLayout(null);
 		setLocationRelativeTo(null);
 
+		btnBuscar = new JButton("");
+		btnBuscar.setBackground(new Color(43, 45, 47));
+		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/buscar.png")));
+		btnBuscar.setBounds(176, 750, 50, 50);
+		btnBuscar.setBorder(null);
+		contentPanel.add(btnBuscar);
+		btnBuscar.addActionListener(this);
+
+		btnParaTi = new JButton("");
+		btnParaTi.setBackground(new Color(43, 45, 47));
+		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
+		btnParaTi.setBounds(63, 750, 50, 50);
+		btnParaTi.setBorder(null);
+		contentPanel.add(btnParaTi);
+		btnParaTi.addActionListener(this);
+
+		btnCuenta = new JButton("");
+		btnCuenta.setBackground(new Color(43, 45, 47));
+		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/cuenta.png")));
+		btnCuenta.setBounds(515, 750, 50, 50);
+		btnCuenta.setBorder(null);
+		contentPanel.add(btnCuenta);
+		btnCuenta.addActionListener(this);
+
+		btnTienda = new JButton("");
+		btnTienda.setBackground(new Color(43, 45, 47));
+		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/tienda.png")));
+		btnTienda.setBounds(402, 750, 50, 50);
+		btnTienda.setBorder(null);
+		contentPanel.add(btnTienda);
+		btnTienda.addActionListener(this);
+
+		btnSubir = new JButton("");
+		btnSubir.setBackground(new Color(43, 45, 47));
+		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/subir.png")));
+		btnSubir.setBounds(289, 750, 50, 50);
+		btnSubir.setBorder(null);
+		contentPanel.add(btnSubir);
+		btnSubir.addActionListener(this);
+
 		JLabel lblNewLabel = new JLabel("Que vas a subir?");
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Serif", Font.PLAIN, 31));
-		lblNewLabel.setBounds(215, 11, 202, 41);
+		lblNewLabel.setFont(new Font("Serif", Font.BOLD, 26));
+		lblNewLabel.setBounds(215, 84, 202, 41);
 		contentPanel.add(lblNewLabel);
 
+		JLabel lblLetrasInstagram = new JLabel("");
+		lblLetrasInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/letrasInstagram.png")));
+		lblLetrasInstagram.setBounds(98, 12, 282, 70);
+		contentPanel.add(lblLetrasInstagram);
+
+		JLabel lblLogoInstagram = new JLabel("");
+		lblLogoInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/logoPequeño.png")));
+		lblLogoInstagram.setBounds(27, 21, 50, 50);
+		contentPanel.add(lblLogoInstagram);
+
+		JTextPane franjaArriba = new JTextPane();
+		franjaArriba.setEditable(false);
+		franjaArriba.setBackground(new Color(43, 45, 47));
+		franjaArriba.setBounds(0, 0, 632, 83);
+		contentPanel.add(franjaArriba);
+
+		JTextPane franjaAbajo = new JTextPane();
+		franjaAbajo.setEditable(false);
+		franjaAbajo.setBackground(new Color(43, 45, 47));
+		franjaAbajo.setBounds(0, 725, 632, 100);
+		contentPanel.add(franjaAbajo);
+		setLocationRelativeTo(null);
+
 		rdbtnImagen = new JRadioButton("Imagen");
-		rdbtnImagen.setFont(new Font("Serif", Font.PLAIN, 20));
+		rdbtnImagen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnImagen.setForeground(Color.WHITE);
 		rdbtnImagen.setBackground(new Color(49, 51, 53));
-		rdbtnImagen.setBounds(76, 110, 109, 23);
+		rdbtnImagen.setBounds(110, 135, 71, 25);
 		contentPanel.add(rdbtnImagen);
 		rdbtnImagen.addActionListener(this);
 		rdbtnImagen.setSelected(true);
 
 		rdbtnReel = new JRadioButton("Reel");
-		rdbtnReel.setFont(new Font("Serif", Font.PLAIN, 20));
+		rdbtnReel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnReel.setForeground(Color.WHITE);
 		rdbtnReel.setBackground(new Color(49, 51, 53));
-		rdbtnReel.setBounds(261, 110, 109, 23);
+		rdbtnReel.setBounds(291, 135, 51, 25);
 		contentPanel.add(rdbtnReel);
 		rdbtnReel.addActionListener(this);
 
 		rdbtnHistoria = new JRadioButton("Historia");
-		rdbtnHistoria.setFont(new Font("Serif", Font.PLAIN, 20));
+		rdbtnHistoria.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnHistoria.setForeground(Color.WHITE);
 		rdbtnHistoria.setBackground(new Color(49, 51, 53));
-		rdbtnHistoria.setBounds(446, 110, 109, 23);
+		rdbtnHistoria.setBounds(452, 135, 69, 25);
 		contentPanel.add(rdbtnHistoria);
 		rdbtnHistoria.addActionListener(this);
 
@@ -128,24 +199,24 @@ public class Subir extends JDialog implements ActionListener {
 		tipoPublicacion.add(rdbtnHistoria);
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 158, 612, 13);
+		separator.setBounds(10, 167, 612, 13);
 		contentPanel.add(separator);
 
 		btnElegir = new JButton("Elegir foto");
-		btnElegir.setFont(new Font("Serif", Font.PLAIN, 20));
+		btnElegir.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnElegir.setBackground(SystemColor.controlHighlight);
-		btnElegir.setBounds(215, 193, 210, 55);
+		btnElegir.setBounds(263, 318, 106, 41);
 		contentPanel.add(btnElegir);
 
 		lblCancion = new JLabel("Cancion:");
 		lblCancion.setForeground(Color.WHITE);
-		lblCancion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblCancion.setBounds(103, 289, 71, 27);
+		lblCancion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCancion.setBounds(92, 200, 54, 17);
 		contentPanel.add(lblCancion);
 
 		List<Cancion> canciones = dao.listarCanciones();
 		cancion = new JComboBox<String>();
-		cancion.setBounds(301, 289, 228, 34);
+		cancion.setBounds(238, 191, 300, 34);
 		contentPanel.add(cancion);
 
 		for (int i = 0; i < canciones.size(); i++) {
@@ -154,27 +225,27 @@ public class Subir extends JDialog implements ActionListener {
 
 		lblUbicacion = new JLabel("Ubicacion:");
 		lblUbicacion.setForeground(Color.WHITE);
-		lblUbicacion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblUbicacion.setBounds(103, 358, 87, 27);
+		lblUbicacion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblUbicacion.setBounds(92, 269, 63, 17);
 		contentPanel.add(lblUbicacion);
 
 		ubicacion = new JTextField();
-		ubicacion.setBounds(301, 358, 228, 34);
+		ubicacion.setBounds(238, 260, 300, 34);
 		contentPanel.add(ubicacion);
 		ubicacion.setColumns(10);
 
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(10, 428, 612, 13);
+		separator_1.setBounds(10, 378, 612, 13);
 		contentPanel.add(separator_1);
 
 		lblResolucion = new JLabel("Resolucion:");
 		lblResolucion.setForeground(Color.WHITE);
-		lblResolucion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblResolucion.setBounds(103, 456, 95, 27);
+		lblResolucion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblResolucion.setBounds(92, 402, 70, 17);
 		contentPanel.add(lblResolucion);
 
 		resolucion = new JComboBox<String>();
-		resolucion.setBounds(301, 452, 228, 34);
+		resolucion.setBounds(238, 393, 300, 34);
 		contentPanel.add(resolucion);
 		resolucion.addItem("144p");
 		resolucion.addItem("240p");
@@ -186,36 +257,36 @@ public class Subir extends JDialog implements ActionListener {
 
 		lblEtiquetado = new JLabel("Etiquetado:");
 		lblEtiquetado.setForeground(Color.WHITE);
-		lblEtiquetado.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblEtiquetado.setBounds(103, 525, 95, 27);
+		lblEtiquetado.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblEtiquetado.setBounds(92, 473, 71, 17);
 		contentPanel.add(lblEtiquetado);
 
 		etiquetado = new JTextField();
-		etiquetado.setBounds(301, 519, 228, 34);
+		etiquetado.setBounds(238, 464, 300, 34);
 		contentPanel.add(etiquetado);
 		etiquetado.setColumns(10);
 
 		lblDescripcion = new JLabel("Descripcion");
 		lblDescripcion.setForeground(Color.WHITE);
-		lblDescripcion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblDescripcion.setBounds(103, 595, 97, 27);
+		lblDescripcion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDescripcion.setBounds(92, 547, 70, 17);
 		contentPanel.add(lblDescripcion);
 
 		descripcion = new JTextArea();
-		descripcion.setBounds(301, 583, 228, 106);
+		descripcion.setBounds(238, 532, 300, 106);
 		contentPanel.add(descripcion);
 
 		segundos = new JLabel("");
 		segundos.setForeground(new Color(255, 255, 255));
-		segundos.setFont(new Font("Serif", Font.PLAIN, 20));
-		segundos.setBounds(508, 497, 61, 23);
+		segundos.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		segundos.setBounds(511, 438, 0, 0);
 		contentPanel.add(segundos);
 		segundos.setVisible(false);
 
 		lblDuracion = new JLabel("Duracion:");
 		lblDuracion.setForeground(Color.WHITE);
-		lblDuracion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblDuracion.setBounds(275, 461, 95, 27);
+		lblDuracion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDuracion.setBounds(286, 402, 60, 17);
 		contentPanel.add(lblDuracion);
 		lblDuracion.setVisible(false);
 
@@ -224,7 +295,7 @@ public class Subir extends JDialog implements ActionListener {
 		duracion.setBackground(new Color(49, 51, 53));
 		duracion.setForeground(new Color(49, 51, 53));
 		duracion.setMaximum(120);
-		duracion.setBounds(76, 524, 494, 41);
+		duracion.setBounds(79, 465, 494, 41);
 		contentPanel.add(duracion);
 		duracion.setVisible(false);
 		duracion.addChangeListener(new ChangeListener() {
@@ -235,15 +306,15 @@ public class Subir extends JDialog implements ActionListener {
 
 		lblTipoHistoria = new JLabel("Tipo de Historia:");
 		lblTipoHistoria.setForeground(Color.WHITE);
-		lblTipoHistoria.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblTipoHistoria.setBounds(88, 599, 138, 27);
+		lblTipoHistoria.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTipoHistoria.setBounds(92, 547, 98, 17);
 		contentPanel.add(lblTipoHistoria);
 		lblTipoHistoria.setVisible(false);
 
 		List<TipoHistoria> tipoHistorias = dao.listarTipoHistorias();
 
 		tipoHistoria = new JComboBox<String>();
-		tipoHistoria.setBounds(301, 595, 228, 34);
+		tipoHistoria.setBounds(286, 538, 228, 34);
 		contentPanel.add(tipoHistoria);
 		tipoHistoria.setVisible(false);
 
@@ -253,24 +324,24 @@ public class Subir extends JDialog implements ActionListener {
 
 		lblMejoresAmigos = new JLabel("Subir a mejores amigos?");
 		lblMejoresAmigos.setForeground(Color.WHITE);
-		lblMejoresAmigos.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblMejoresAmigos.setBounds(69, 504, 195, 27);
+		lblMejoresAmigos.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblMejoresAmigos.setBounds(92, 473, 149, 17);
 		contentPanel.add(lblMejoresAmigos);
 		lblMejoresAmigos.setVisible(false);
 
 		rdbtnSi = new JRadioButton("Si");
 		rdbtnSi.setForeground(new Color(255, 255, 255));
-		rdbtnSi.setFont(new Font("Serif", Font.PLAIN, 20));
+		rdbtnSi.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnSi.setBackground(new Color(49, 51, 53));
-		rdbtnSi.setBounds(301, 508, 109, 23);
+		rdbtnSi.setBounds(301, 469, 35, 25);
 		contentPanel.add(rdbtnSi);
 		rdbtnSi.setVisible(false);
 
 		rdbtnNo = new JRadioButton("No");
 		rdbtnNo.setForeground(new Color(255, 255, 255));
-		rdbtnNo.setFont(new Font("Serif", Font.PLAIN, 20));
+		rdbtnNo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnNo.setBackground(new Color(49, 51, 53));
-		rdbtnNo.setBounds(412, 508, 109, 23);
+		rdbtnNo.setBounds(412, 469, 43, 25);
 		contentPanel.add(rdbtnNo);
 		btnElegir.addActionListener(this);
 		rdbtnNo.setVisible(false);
@@ -278,19 +349,27 @@ public class Subir extends JDialog implements ActionListener {
 		mejos.add(rdbtnSi);
 		mejos.add(rdbtnNo);
 
-		btnSubir = new JButton("Subir");
-		btnSubir.setBackground(SystemColor.controlHighlight);
-		btnSubir.setForeground(new Color(0, 0, 0));
-		btnSubir.setFont(new Font("Serif", Font.PLAIN, 20));
-		btnSubir.setBounds(211, 719, 210, 53);
-		contentPanel.add(btnSubir);
-		btnSubir.addActionListener(this);
+		btnSubirFoto = new JButton("Subir");
+		btnSubirFoto.setBackground(SystemColor.controlHighlight);
+		btnSubirFoto.setForeground(new Color(0, 0, 0));
+		btnSubirFoto.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnSubirFoto.setBounds(263, 673, 106, 41);
+		contentPanel.add(btnSubirFoto);
+		btnSubirFoto.addActionListener(this);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(rdbtnImagen)) {
+		if (e.getSource().equals(btnParaTi)) {
+			abrirParaTi();
+		} else if (e.getSource().equals(btnBuscar)) {
+			abrirBuscar();
+		} else if (e.getSource().equals(btnTienda)) {
+			abrirTienda();
+		} else if (e.getSource().equals(btnCuenta)) {
+			abrirCuenta();
+		} else if (e.getSource().equals(rdbtnImagen)) {
 			imagen();
 		} else if (e.getSource().equals(rdbtnReel)) {
 			reel();
@@ -298,10 +377,33 @@ public class Subir extends JDialog implements ActionListener {
 			historia();
 		} else if (e.getSource().equals(btnElegir)) {
 			elegirFoto();
-		} else if (e.getSource().equals(btnSubir)) {
+		} else if (e.getSource().equals(btnSubirFoto)) {
 			subirFoto();
 		}
 
+	}
+
+	private void abrirCuenta() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void abrirTienda() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void abrirBuscar() {
+		Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+		this.dispose();
+		buscar.setVisible(true);
+
+	}
+
+	private void abrirParaTi() {
+		this.dispose();
+		paraTi.setVisible(true);
+		
 	}
 
 	private void subirFoto() {
@@ -309,7 +411,7 @@ public class Subir extends JDialog implements ActionListener {
 		String codigo;
 		String ultimoCodigo;
 		int numCod;
-		
+
 		usu = new Usuario();
 
 		int minLikes = (int) (usu.getNumSeguidores() * 0.12);

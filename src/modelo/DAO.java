@@ -22,6 +22,8 @@ public interface DAO {
 	public List<Usuario> listarUsuario();
 	
 	public List<Usuario> listarUsuarioXUsuario(String usuario);
+	
+	public List<Publicacion> listarId();
 
 	public int numPublicaciones();
 	

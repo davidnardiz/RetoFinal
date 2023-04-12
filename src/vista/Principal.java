@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import clases.Usuario;
 import modelo.DAO;
 
 import javax.swing.JButton;
@@ -22,6 +23,7 @@ public class Principal extends JFrame implements ActionListener {
 	private JButton btnIniciar;
 	private JButton btnRegistrarse;
 	private DAO dao;
+	private Usuario usu;
 	
 	/**
 	 * Create the frame.
@@ -65,7 +67,7 @@ public class Principal extends JFrame implements ActionListener {
 
 
 	private void Registrarse() {
-		IniciarSesion ini = new IniciarSesion(this, true, dao);
+		IniciarSesion ini = new IniciarSesion(this, true, dao, usu);
 		this.setVisible(false);
 		ini.setVisible(true);
 		

@@ -48,11 +48,13 @@ public class DAOImplementacionBD implements DAO {
 	final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
 	final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
 
-	final private String LISTAR_USUARIOS = "SELECT usuario, icono FROM usuario";
-	final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, icono FROM usuario WHERE usuario like ?";
+	final private String LISTAR_USUARIOS = "SELECT usuario, icono, numSeguidores FROM usuario";
+	final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, icono, numSeguidores FROM usuario WHERE usuario like ?";
 	final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
 
 	final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
+	
+	final private String LISTAR_ID = "SELECT id_publicacion FROM publicacion";
 
 	// Alter
 	final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
@@ -211,8 +213,6 @@ public class DAOImplementacionBD implements DAO {
 			stmt = con.prepareStatement(PUBLICAR);
 			stmt = setPublicacion(publi, stmt);
 
-			System.out.println(stmt);
-
 			if (stmt.executeUpdate() == 1) {
 				if (publi instanceof Foto) {
 					stmt = con.prepareStatement(INSERTAR_FOTO);
@@ -236,7 +236,6 @@ public class DAOImplementacionBD implements DAO {
 
 				}
 
-				System.out.println(stmt);
 				stmt.execute();
 			}
 		} catch (SQLException e) {
@@ -245,6 +244,30 @@ public class DAOImplementacionBD implements DAO {
 
 		this.cerrarConexion();
 	}
+	
+	@Override
+	public List<Publicacion> listarId() {
+		List<Publicacion> id = new ArrayList<>();
+		this.abrirConexion();
+		
+		try {
+			stmt = con.prepareStatement(LISTAR_ID);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Publicacion publi = new Publicacion();
+				publi.setId_publicacion(rs.getString("id_publicacion"));
+				id.add(publi);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return id;
+	}
+
+	
 
 	@Override
 	public int numPublicaciones() {
@@ -322,7 +345,6 @@ public class DAOImplementacionBD implements DAO {
 			stmt = con.prepareStatement(ULTIMA_PUBLICACION);
 			stmt.setString(1, string);
 
-			System.out.println(stmt);
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
@@ -417,6 +439,7 @@ public class DAOImplementacionBD implements DAO {
 				Usuario usu = new Usuario();
 				usu.setUsuario(rs.getString("usuario"));
 				usu.setIcono(rs.getString("icono"));
+				usu.setNumSeguidores(rs.getInt("numSeguidores"));
 				usuarios.add(usu);
 			}
 
@@ -441,6 +464,7 @@ public class DAOImplementacionBD implements DAO {
 				Usuario usu = new Usuario();
 				usu.setUsuario(rs.getString("usuario"));
 				usu.setIcono(rs.getString("icono"));
+				usu.setNumSeguidores(rs.getInt("numSeguidores"));
 				usuarios.add(usu);
 			}
 
@@ -464,10 +488,8 @@ public class DAOImplementacionBD implements DAO {
 			stmt = con.prepareStatement(SUMAR_LIKE);
 
 			stmt.setString(1, publicacion);
-			System.out.println(stmt);
 			stmt.execute();
 
-			System.out.println(stmt);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -483,15 +505,12 @@ public class DAOImplementacionBD implements DAO {
 			stmt = con.prepareStatement(QUITAR_LIKES);
 			stmt.setString(1, usuario);
 			stmt.setString(2, publicacion);
-
-			System.out.println(stmt);
 			stmt.execute();
 
 			stmt = con.prepareStatement(RESTAR_LIKE);
 			stmt.setString(1, publicacion);
 			stmt.execute();
 
-			System.out.println(stmt);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -520,5 +539,6 @@ public class DAOImplementacionBD implements DAO {
 		this.cerrarConexion();
 		return like;
 	}
+
 
 }

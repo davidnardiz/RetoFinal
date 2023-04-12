@@ -1,35 +1,37 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import clases.Usuario;
 import modelo.DAO;
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JTextPane;
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.awt.event.InputMethodListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.VetoableChangeListener;
-import java.beans.PropertyChangeEvent;
+import javax.swing.ScrollPaneConstants;
+import java.awt.Toolkit;
 
 public class Buscar extends JDialog implements ActionListener {
 
@@ -37,32 +39,31 @@ public class Buscar extends JDialog implements ActionListener {
 	private final JPanel contentPanel = new JPanel();
 	private DAO dao;
 	private Usuario usu;
+	private boolean conver;
+	private ParaTi paraTi;
 
 	private JTextField buscador;
-	private int bucle;
+	private JButton btnVolver;
+	private JTable tablaUsuarios;
 
-	private JLabel lblIcono;
-	private JLabel lblIcono_1;
-	private JLabel lblIcono_2;
-	private JLabel lblIcono_3;
-	private JLabel lblIcono_4;
-	private JLabel lblUsuario;
-	private JLabel lblUsuario_1;
-	private JLabel lblUsuario_2;
-	private JLabel lblUsuario_3;
-	private JLabel lblUsuario_4;
-
-	private JLabel[] iconos = { lblIcono, lblIcono_1, lblIcono_2, lblIcono_3, lblIcono_4 };
-	private JLabel[] usuarios = { lblUsuario, lblUsuario_1, lblUsuario_2, lblUsuario_3, lblUsuario_4 };
+	private JButton btnParaTi;
+	private JButton btnBuscar;
+	private JButton btnSubir;
+	private JButton btnTienda;
+	private JButton btnCuenta;
 
 	private List<Usuario> usuariosList;
 
-	private JButton btnBuscar;
-
-	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu) {
+	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu, boolean conver) {
 		super(paraTi);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Buscar.class.getResource("/imagenes/pantalla/logo.png")));
+		setTitle("Buscar");
+		setResizable(false);
 		this.setModal(b);
+		this.paraTi = paraTi;
 		this.dao = dao;
+		this.usu = usu;
+		this.conver = conver;
 
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
@@ -74,132 +75,231 @@ public class Buscar extends JDialog implements ActionListener {
 		contentPanel.setLayout(null);
 		setLocationRelativeTo(null);
 
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/6666-removebg-preview.png")));
-		lblNewLabel_1.setBounds(95, 21, 282, 70);
-		contentPanel.add(lblNewLabel_1);
+		btnParaTi = new JButton("");
+		btnParaTi.setBackground(new Color(43, 45, 47));
+		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
+		btnParaTi.setBounds(63, 750, 50, 50);
+		btnParaTi.setBorder(null);
+		contentPanel.add(btnParaTi);
+		btnParaTi.addActionListener(this);
 
-		JLabel icono = new JLabel("New label");
-		icono.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/logo2.png")));
-		icono.setBounds(27, 21, 58, 58);
-		contentPanel.add(icono);
+		btnTienda = new JButton("");
+		btnTienda.setBackground(new Color(43, 45, 47));
+		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/tienda.png")));
+		btnTienda.setBounds(402, 750, 50, 50);
+		btnTienda.setBorder(null);
+		contentPanel.add(btnTienda);
+		btnTienda.addActionListener(this);
 
-		JTextPane textPane = new JTextPane();
-		textPane.setBackground(new Color(43, 45, 47));
-		textPane.setBounds(0, 0, 632, 100);
-		contentPanel.add(textPane);
+		btnCuenta = new JButton("");
+		btnCuenta.setBackground(new Color(43, 45, 47));
+		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/cuenta.png")));
+		btnCuenta.setBounds(515, 750, 50, 50);
+		btnCuenta.setBorder(null);
+		contentPanel.add(btnCuenta);
+		btnCuenta.addActionListener(this);
 
-		buscador = new JTextField();
-		buscador.addVetoableChangeListener(new VetoableChangeListener() {
-			public void vetoableChange(PropertyChangeEvent evt) {
-				buscar();
-			}
-		});
-		buscador.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buscar();
-			}
-		});
-		buscador.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == 10) {
-					buscar();
-				}
-			}
-		});
-
-		buscador.setBounds(166, 121, 300, 31);
-		contentPanel.add(buscador);
-		buscador.setColumns(10);
-
-		btnBuscar = new JButton("Buscar");
-		btnBuscar.setBackground(SystemColor.controlHighlight);
-		btnBuscar.setBounds(493, 125, 89, 23);
+		btnBuscar = new JButton("");
+		btnBuscar.setBackground(new Color(43, 45, 47));
+		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/buscar.png")));
+		btnBuscar.setBounds(176, 750, 50, 50);
+		btnBuscar.setBorder(null);
 		contentPanel.add(btnBuscar);
 		btnBuscar.addActionListener(this);
 
-		JSeparator separator = new JSeparator();
-		separator.setBounds(27, 180, 595, 17);
-		contentPanel.add(separator);
+		btnSubir = new JButton("");
+		btnSubir.setBackground(new Color(43, 45, 47));
+		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/subir.png")));
+		btnSubir.setBounds(289, 750, 50, 50);
+		btnSubir.setBorder(null);
+		contentPanel.add(btnSubir);
+		btnSubir.addActionListener(this);
+
+		JLabel lblLetrasInstagram = new JLabel("");
+		lblLetrasInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/letrasInstagram.png")));
+		lblLetrasInstagram.setBounds(98, 12, 282, 70);
+		contentPanel.add(lblLetrasInstagram);
+
+		JLabel lblLogoInstagram = new JLabel("");
+		lblLogoInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/logoPequeño.png")));
+		lblLogoInstagram.setBounds(27, 21, 50, 50);
+		contentPanel.add(lblLogoInstagram);
+
+		JTextPane franjaArriba = new JTextPane();
+		franjaArriba.setEditable(false);
+		franjaArriba.setBackground(new Color(43, 45, 47));
+		franjaArriba.setBounds(0, 0, 632, 83);
+		contentPanel.add(franjaArriba);
+
+		JTextPane franjaAbajo = new JTextPane();
+		franjaAbajo.setEditable(false);
+		franjaAbajo.setBackground(new Color(43, 45, 47));
+		franjaAbajo.setBounds(0, 725, 632, 100);
+		contentPanel.add(franjaAbajo);
+		setLocationRelativeTo(null);
 
 		usuariosList = dao.listarUsuario();
+		presentarTabla(usuariosList);
 
-		int[] y_icono = { 214, 335, 456, 577, 698 };
-		int[] y_usuario = { 224, 345, 466, 587, 708 };
+		buscador = new JTextField();
+		buscador.setBounds(220, 127, 338, 35);
+		contentPanel.add(buscador);
+		buscador.setColumns(10);
 
-		if (usuariosList.size() > iconos.length) {
-			bucle = iconos.length;
-		} else {
-			bucle = usuariosList.size();
-		}
+		buscador.getDocument().addDocumentListener(new DocumentListener() {
 
-		for (int i = 0; i < bucle; i++) {
-			iconos[i] = new JLabel("");
-			iconos[i].setHorizontalAlignment(SwingConstants.CENTER);
-			iconos[i].setIcon(new ImageIcon(Buscar.class.getResource("/utilidades/" + usuariosList.get(i).getIcono())));
-			iconos[i].setBounds(79, y_icono[i], 64, 64);
-			contentPanel.add(iconos[i]);
-			iconos[i].addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					abrirPerfil();
-				}
-			});
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				buscar();
 
-			usuarios[i] = new JLabel(usuariosList.get(i).getUsuario());
-			usuarios[i].setForeground(Color.WHITE);
-			usuarios[i].setFont(new Font("Tahoma", Font.BOLD, 18));
-			usuarios[i].setBounds(222, y_usuario[i], 330, 44);
-			contentPanel.add(usuarios[i]);
-			usuarios[i].addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					abrirPerfil();
-				}
-			});
-		}
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				buscar();
+
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				buscar();
+
+			}
+		});
+
+		JSeparator separator = new JSeparator();
+		separator.setBounds(27, 186, 595, 17);
+		contentPanel.add(separator);
+
+		btnVolver = new JButton("Vovler");
+		btnVolver.setBackground(SystemColor.controlHighlight);
+		btnVolver.setForeground(new Color(0, 0, 0));
+		btnVolver.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnVolver.setBounds(255, 771, 121, 29);
+		contentPanel.add(btnVolver);
+
+		JLabel lblNewLabel = new JLabel("Usuario:");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblNewLabel.setBounds(72, 133, 76, 22);
+		contentPanel.add(lblNewLabel);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btnBuscar)) {
-			buscar();
+		if (e.getSource().equals(btnParaTi)) {
+			abrirParaTi();
+		} else if (e.getSource().equals(btnSubir)) {
+			abrirSubir();
+		} else if (e.getSource().equals(btnTienda)) {
+			abrirTienda();
+		} else if (e.getSource().equals(btnCuenta)) {
+			abrirCuenta();
 		}
 
 	}
 
-	private void abrirPerfil() {
-		Perfil perfil = new Perfil(this, true, dao);
+	private void abrirCuenta() {
+		
+
+	}
+
+	private void abrirTienda() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void abrirSubir() {
+		Subir subir = new Subir(paraTi, true, dao, usu);
+		this.dispose();
+		subir.setVisible(true);
+	}
+
+	private void abrirParaTi() {
+		this.dispose();
+		paraTi.setVisible(true);
+	}
+
+	private void abrirPerfil(String usuario) {
+		Perfil perfil = new Perfil(paraTi, true, dao, usuario);
 		this.setVisible(false);
 		perfil.setVisible(true);
 	}
 
 	private void buscar() {
 		usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
+		presentarTabla(usuariosList);
+	}
 
-		// Si hay mas usuarios que iconos iterar sobre iconos
-		if (usuariosList.size() > iconos.length) {
-			bucle = iconos.length;
+	public void presentarTabla(List<Usuario> usuariosList) {
+		JScrollPane scroll = new JScrollPane();
+		scroll.setViewportBorder(null);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		tablaUsuarios = this.cargarTabla(usuariosList);
+		tablaUsuarios.setFillsViewportHeight(true);
+		tablaUsuarios.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		tablaUsuarios.setForeground(new Color(255, 255, 255));
+		tablaUsuarios.setBackground(new Color(49, 51, 53));
+		tablaUsuarios.setRowHeight(85);
+		tablaUsuarios.setShowVerticalLines(false);
+		tablaUsuarios.setShowHorizontalLines(false);
+		tablaUsuarios.setShowGrid(false);
+		tablaUsuarios.setEnabled(false);
+		tablaUsuarios.setTableHeader(null);
 
-			// Si hay mas iconos que usuarios iterar sobre usuarios
-		} else {
-			bucle = usuariosList.size();
-		}
+		TableColumnModel columnModel = tablaUsuarios.getColumnModel();
+		columnModel.getColumn(0).setCellRenderer(new ImageRenderer());
 
-		// Mostramos los usuarios y sus iconos
-		for (int i = 0; i < bucle; i++) {
-			usuarios[i].setText(usuariosList.get(i).getUsuario());
-			iconos[i].setIcon(new ImageIcon(Buscar.class.getResource("/utilidades/" + usuariosList.get(i).getIcono())));
-		}
+		scroll.setViewportView(tablaUsuarios);
+		contentPanel.add(scroll);
+		scroll.setBackground(new Color(49, 51, 53));
+		scroll.setBounds(27, 214, 581, 495);
 
-		// Si hay menos usarios que labels, vaciomos los que sobren
-		if (usuariosList.size() < iconos.length) {
-			for (int i = iconos.length - 1; i >= bucle; i--) {
-				usuarios[i].setText("");
-				iconos[i].setIcon(null);
+		tablaUsuarios.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int fila = tablaUsuarios.rowAtPoint(e.getPoint());
+
+				if (conver) {
+
+				} else {
+					abrirPerfil(tablaUsuarios.getValueAt(fila, 1).toString());
+				}
+
 			}
+		});
+	}
+
+	public JTable cargarTabla(List<Usuario> usuariosList) {
+		String[] cabezeras = { "icono", "usuario", "seguidores" };
+		Object[] fila = new Object[3];
+
+		DefaultTableModel model = new DefaultTableModel(null, cabezeras);
+		String rutaProyecto = System.getProperty("user.dir");
+
+		for (Usuario j : usuariosList) {
+			fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + j.getIcono());
+			fila[1] = j.getUsuario();
+			fila[2] = j.getNumSeguidores() + " ";
+
+			model.addRow(fila);
+		}
+
+		return new JTable(model);
+	}
+
+	class ImageRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = 1L;
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			JLabel label = new JLabel();
+			if (value != null) {
+				label.setHorizontalAlignment(JLabel.CENTER);
+				label.setIcon((ImageIcon) value);
+			}
+			return label;
 		}
 	}
 }
