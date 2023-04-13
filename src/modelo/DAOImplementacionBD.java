@@ -18,6 +18,7 @@ import java.util.Properties;
 import clases.Cancion;
 import clases.Foto;
 import clases.Historia;
+import clases.Mensaje;
 import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
@@ -38,6 +39,9 @@ public class DAOImplementacionBD implements DAO {
 
 	final private String INSERTAR_LIKE = "INSERT INTO likes VALUES (?, ?)";
 
+	final private String INSERTAR_MENSAJE = "INSERT INTO conversa VALUES(?, ?, ?, ?)";
+	
+
 	// Selects
 	final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
 	final private String NUM_PUBLICACIONES = "SELECT count(*) FROM publicacion";
@@ -46,6 +50,7 @@ public class DAOImplementacionBD implements DAO {
 	final private String BUSCAR_CANCION_X_TITULO = "SELECT * FROM cancion WHERE titulo = ?";
 	final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
 	final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
+	final private String ULTIMO_MENSAJE = "SELECT id_mensaje FROM conversa WHERE SUBSTRING(id_mensaje, 1, 1) = ? ORDER BY id_mensaje desc LIMIT 1;";
 	final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
 
 	final private String LISTAR_USUARIOS = "SELECT usuario, icono FROM usuario";
@@ -53,6 +58,9 @@ public class DAOImplementacionBD implements DAO {
 	final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
 
 	final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
+	
+	final private String comprobarConver = "SELECT * FROM conversa where usuario = ? and usuario2 = ?";
+	final private String SACAR_CONVERSACION = "SELECT * FROM conversa where usuario = ? or usuario2 = ? or usuario = ? ";
 
 	// Alter
 	final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
@@ -66,7 +74,7 @@ public class DAOImplementacionBD implements DAO {
 		try {
 			Properties configBDA = new Properties();
 			FileInputStream fis = new FileInputStream(
-					"C:\\Users\\arceu\\Desktop\\RetoFinal\\src\\configBDA.properties");
+					"C:\\Users\\bayro\\Desktop\\RetoFinal\\src\\configBDA.properties");
 			configBDA.load(fis);
 
 			final String URL = configBDA.getProperty("url");
@@ -519,6 +527,103 @@ public class DAOImplementacionBD implements DAO {
 		
 		this.cerrarConexion();
 		return like;
+	}
+
+	@Override
+	public boolean buscarConver(String usuario) {
+		boolean existeConver = false;
+		
+		this.abrirConexion();
+		
+		try {
+			stmt = con.prepareStatement(comprobarConver);
+			stmt.setString(1, usuario);
+			stmt.setString(2, usuario);
+			ResultSet rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				existeConver = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return existeConver;
+	}
+
+	@Override
+	public String calcularIdMensaje(String string) {
+		String cod = "";
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(ULTIMO_MENSAJE);
+			stmt.setString(1, string);
+
+			System.out.println(stmt);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				cod = rs.getString("id_mensaje");
+			} else {
+				cod = "00000";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return cod;
+	}
+	
+	@Override
+	public void insertarMensaje(Mensaje men, String usuario, String usuario2) {
+		this.abrirConexion();
+		
+		try {
+			stmt = con.prepareStatement(INSERTAR_MENSAJE);
+			stmt.setString(1, men.getUsuario1());
+			stmt.setString(2, men.getUsuario2());
+			stmt.setString(3, men.getIdMensaje());
+			stmt.setString(4, men.getMensaje());
+			
+			stmt.execute();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+	}
+
+	@Override
+	public List<Mensaje> sacarIdMensajes(String usuario1, String usuario2) {
+		List<Mensaje> mensajes = new ArrayList<>();
+		
+		this.abrirConexion();
+		
+		try {
+			stmt = con.prepareStatement(SACAR_CONVERSACION);
+			stmt.setString(1, usuario1);
+			stmt.setString(2, usuario2);
+			stmt.setString(3, usuario2);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Mensaje men = new Mensaje();
+				men.setUsuario1(rs.getString("usuario"));
+				men.setUsuario2(rs.getString("usuario2"));
+				men.setIdMensaje(rs.getString("id_mensaje"));
+				men.setMensaje(rs.getString("mensaje"));
+				mensajes.add(men);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.cerrarConexion();
+		return mensajes;
+		
 	}
 
 }

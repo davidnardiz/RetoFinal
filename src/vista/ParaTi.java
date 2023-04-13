@@ -88,6 +88,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		btnDm.setBounds(550, 12, 50, 50);
 		btnDm.setBorder(null);
 		contentPanel.add(btnDm);
+		btnDm.addActionListener(this);
 
 		lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/6666-removebg-preview.png")));
@@ -212,8 +213,17 @@ public class ParaTi extends JDialog implements ActionListener {
 			abrirCuenta();
 		} else if (e.getSource().equals(btnLike)) {
 			darLike();
+		} else if(e.getSource().equals(btnDm)){
+			abrirConversacion();
 		}
 
+	}
+
+	private void abrirConversacion() {
+		Conversacion conver  = new Conversacion(this, true, dao, usu);
+		this.setVisible(false);
+		conver.setVisible(true);
+		
 	}
 
 	private void darLike() {
@@ -241,7 +251,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	}
 
 	private void abrirBuscar() {
-		Buscar buscar = new Buscar(this, true, dao, usu);
+		Buscar buscar = new Buscar(this, true, dao, usu, false);
 		this.setVisible(false);
 		buscar.setVisible(true);
 

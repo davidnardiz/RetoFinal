@@ -13,6 +13,7 @@ import clases.Usuario;
 import modelo.DAO;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
@@ -51,7 +52,8 @@ public class Buscar extends JDialog implements ActionListener {
 	private JLabel lblUsuario_2;
 	private JLabel lblUsuario_3;
 	private JLabel lblUsuario_4;
-
+	private boolean conver;
+	
 	private JLabel[] iconos = { lblIcono, lblIcono_1, lblIcono_2, lblIcono_3, lblIcono_4 };
 	private JLabel[] usuarios = { lblUsuario, lblUsuario_1, lblUsuario_2, lblUsuario_3, lblUsuario_4 };
 
@@ -59,11 +61,13 @@ public class Buscar extends JDialog implements ActionListener {
 
 	private JButton btnBuscar;
 
-	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu) {
+	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu, boolean conver) {
 		super(paraTi);
 		this.setModal(b);
 		this.dao = dao;
-
+		this.conver = conver;
+		this.usu = usu;
+		
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
 		setBounds(100, 100, ancho, alto);
@@ -143,7 +147,12 @@ public class Buscar extends JDialog implements ActionListener {
 			iconos[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					abrirPerfil();
+					if(!conver) {
+						abrirPerfil();
+					}else {
+						iniciarConver();
+					}
+						
 				}
 			});
 
@@ -155,11 +164,22 @@ public class Buscar extends JDialog implements ActionListener {
 			usuarios[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					abrirPerfil();
+					if(!conver) {
+						abrirPerfil();
+					}else {
+						iniciarConver();
+					}
 				}
 			});
 		}
 
+	}
+
+	protected void iniciarConver() {
+		Chat men = new Chat(this, true, dao, usu);
+		this.setVisible(false);
+		men.setVisible(true);
+		
 	}
 
 	@Override
