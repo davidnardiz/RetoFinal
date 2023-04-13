@@ -64,7 +64,9 @@ public class Conversacion extends JDialog implements ActionListener  {
 		contentPanel.add(btnIniciarConver);
 		btnIniciarConver.addActionListener(this);
 		
-		if(dao.buscarConver(nombre)) {
+		if(!dao.buscarConver(nombre)) {
+			
+		}else {
 			lblNewLabel_2.setVisible(false);
 			btnIniciarConver.setVisible(false);
 		}
