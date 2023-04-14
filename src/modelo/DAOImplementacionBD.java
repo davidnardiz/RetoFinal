@@ -60,7 +60,9 @@ public class DAOImplementacionBD implements DAO {
 	final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
 	final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
 
-	// Alter
+	final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
+
+// Alter
 	final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
 	final private String RESTAR_LIKE = "UPDATE publicacion set numLikes = numLikes - 1 WHERE id_publicacion = ?";
 
@@ -569,13 +571,13 @@ public class DAOImplementacionBD implements DAO {
 	public String calcularId(String tipo) {
 		String cod = "";
 		this.abrirConexion();
-		
+
 		try {
 			stmt = con.prepareStatement(ULTIMA_PUBLICACION);
 			stmt.setString(1, tipo);
 			ResultSet rs = stmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				cod = rs.getString("id_publicacion");
 			}
 		} catch (SQLException e) {
@@ -583,6 +585,46 @@ public class DAOImplementacionBD implements DAO {
 		}
 		this.cerrarConexion();
 		return cod;
+	}
+
+	@Override
+	public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) {
+		List<Publicacion> publicaciones = new ArrayList<>();
+		Publicacion publi = null;
+		this.abrirConexion();
+
+		try {
+			stmt = con.prepareStatement(LISTAR_PUBLICACIONES_USUARIO);
+			stmt.setString(1, usuario);
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				String tipoPubli = tipo.substring(0, 1);
+				
+				if (tipoPubli.equals(rs.getString("id_publicacion").substring(0, 1))) {
+
+					switch (tipoPubli) {
+					case "F":
+						publi = new Foto();
+						break;
+					case "R":
+						publi = new Reel();
+						break;
+					case "H":
+						publi = new Historia();
+						break;
+					}
+					publi = this.getPublicacion(publi, rs);
+					publicaciones.add(publi);
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		this.cerrarConexion();
+		return publicaciones;
 	}
 
 }

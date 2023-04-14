@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -22,6 +23,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -31,10 +33,6 @@ import javax.swing.table.TableColumnModel;
 
 import clases.Usuario;
 import modelo.DAO;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-
-import java.awt.Toolkit;
 
 public class Buscar extends JDialog implements ActionListener {
 
@@ -235,7 +233,7 @@ public class Buscar extends JDialog implements ActionListener {
 	}
 
 	private void abrirPerfil(String usuario) {
-		Perfil perfil = new Perfil(paraTi, true, dao, usuario);
+		Perfil perfil = new Perfil(paraTi, true, dao, dao.buscarUsuario(usuario), false);
 		this.setVisible(false);
 		perfil.setVisible(true);
 	}

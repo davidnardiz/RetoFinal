@@ -27,6 +27,8 @@ public interface DAO {
 
 	public int numPublicaciones();
 	
+	public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
+	
 	public int numPublicacionesHerencia(String tipo);
 	
 	public String calcularId(String tipo);

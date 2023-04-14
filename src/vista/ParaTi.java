@@ -71,8 +71,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		setTitle("Para Ti");
 		setResizable(false);
 		this.setModal(b);
-		// this.dao = dao;
-		this.dao = new DAOImplementacionBD();
+		this.dao = dao;
 		this.usu = usu;
 
 		int alto = 864;
@@ -253,7 +252,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	}
 
 	private void abrirPerfil() {
-		Perfil perfil = new Perfil(this, true, dao, lblUsuario.getText());
+		Perfil perfil = new Perfil(this, true, dao, dao.buscarUsuario(lblUsuario.getText()), false);
 		this.setVisible(false);
 		perfil.setVisible(true);
 
@@ -291,7 +290,9 @@ public class ParaTi extends JDialog implements ActionListener {
 	}
 
 	private void abrirCuenta() {
-
+		Perfil perfil = new Perfil(null, true, dao, usu, true);
+		this.setVisible(false);
+		perfil.setVisible(true);
 	}
 
 	private void next() {
