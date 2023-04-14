@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -31,12 +32,16 @@ import javax.swing.table.TableColumnModel;
 import clases.Usuario;
 import modelo.DAO;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+
 import java.awt.Toolkit;
 
 public class Buscar extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	@SuppressWarnings("unused")
+	private Usuario etiquetado;
 	private DAO dao;
 	private Usuario usu;
 	private boolean conver;
@@ -54,7 +59,7 @@ public class Buscar extends JDialog implements ActionListener {
 
 	private List<Usuario> usuariosList;
 
-	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu, boolean conver) {
+	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu, boolean conver, Usuario etiquetado) {
 		super(paraTi);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Buscar.class.getResource("/imagenes/pantalla/logo.png")));
 		setTitle("Buscar");
@@ -64,6 +69,7 @@ public class Buscar extends JDialog implements ActionListener {
 		this.dao = dao;
 		this.usu = usu;
 		this.conver = conver;
+		this.etiquetado = etiquetado;
 
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
@@ -138,9 +144,6 @@ public class Buscar extends JDialog implements ActionListener {
 		contentPanel.add(franjaAbajo);
 		setLocationRelativeTo(null);
 
-		usuariosList = dao.listarUsuario();
-		presentarTabla(usuariosList);
-
 		buscador = new JTextField();
 		buscador.setBounds(220, 127, 338, 35);
 		contentPanel.add(buscador);
@@ -166,6 +169,17 @@ public class Buscar extends JDialog implements ActionListener {
 
 			}
 		});
+
+		if (etiquetado == null) {
+			usuariosList = dao.listarUsuario();
+
+		} else {
+			usuariosList = new ArrayList<>();
+			usuariosList.add(etiquetado);
+			buscador.setText(etiquetado.getUsuario());
+		}
+
+		presentarTabla(usuariosList);
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(27, 186, 595, 17);
@@ -201,7 +215,6 @@ public class Buscar extends JDialog implements ActionListener {
 	}
 
 	private void abrirCuenta() {
-		
 
 	}
 
@@ -237,19 +250,22 @@ public class Buscar extends JDialog implements ActionListener {
 		scroll.setViewportBorder(null);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tablaUsuarios = this.cargarTabla(usuariosList);
+		tablaUsuarios.setShowVerticalLines(false);
+		tablaUsuarios.setShowHorizontalLines(false);
+		tablaUsuarios.setShowGrid(false);
+		tablaUsuarios.setRowSelectionAllowed(false);
 		tablaUsuarios.setFillsViewportHeight(true);
 		tablaUsuarios.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		tablaUsuarios.setForeground(new Color(255, 255, 255));
 		tablaUsuarios.setBackground(new Color(49, 51, 53));
 		tablaUsuarios.setRowHeight(85);
-		tablaUsuarios.setShowVerticalLines(false);
-		tablaUsuarios.setShowHorizontalLines(false);
-		tablaUsuarios.setShowGrid(false);
-		tablaUsuarios.setEnabled(false);
 		tablaUsuarios.setTableHeader(null);
 
 		TableColumnModel columnModel = tablaUsuarios.getColumnModel();
 		columnModel.getColumn(0).setCellRenderer(new ImageRenderer());
+		columnModel.getColumn(1).setCellRenderer(new ImageRenderer());
+		columnModel.getColumn(1).setResizable(true);
+		columnModel.getColumn(1).setPreferredWidth(-1);
 
 		scroll.setViewportView(tablaUsuarios);
 		contentPanel.add(scroll);
@@ -263,24 +279,29 @@ public class Buscar extends JDialog implements ActionListener {
 				if (conver) {
 
 				} else {
-					abrirPerfil(tablaUsuarios.getValueAt(fila, 1).toString());
+					abrirPerfil(tablaUsuarios.getValueAt(fila, 2).toString());
 				}
-
 			}
 		});
 	}
 
 	public JTable cargarTabla(List<Usuario> usuariosList) {
-		String[] cabezeras = { "icono", "usuario", "seguidores" };
-		Object[] fila = new Object[3];
+		String[] cabezeras = { "icono", "verificado", "usuario", "seguidores" };
+		Object[] fila = new Object[4];
 
 		DefaultTableModel model = new DefaultTableModel(null, cabezeras);
 		String rutaProyecto = System.getProperty("user.dir");
 
 		for (Usuario j : usuariosList) {
 			fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + j.getIcono());
-			fila[1] = j.getUsuario();
-			fila[2] = j.getNumSeguidores() + " ";
+
+			if (j.isVerificado()) {
+				System.out.println("Entre");
+				fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
+			}
+
+			fila[2] = j.getUsuario();
+			fila[3] = j.getNumSeguidores() + " ";
 
 			model.addRow(fila);
 		}
@@ -296,7 +317,13 @@ public class Buscar extends JDialog implements ActionListener {
 				int row, int column) {
 			JLabel label = new JLabel();
 			if (value != null) {
-				label.setHorizontalAlignment(JLabel.CENTER);
+
+				if (value.toString().contains("verificado")) {
+					label.setHorizontalAlignment(JLabel.RIGHT);
+				} else {
+					label.setHorizontalAlignment(JLabel.CENTER);
+				}
+
 				label.setIcon((ImageIcon) value);
 			}
 			return label;

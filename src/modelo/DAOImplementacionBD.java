@@ -48,13 +48,17 @@ public class DAOImplementacionBD implements DAO {
 	final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
 	final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
 
-	final private String LISTAR_USUARIOS = "SELECT usuario, icono, numSeguidores FROM usuario";
-	final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, icono, numSeguidores FROM usuario WHERE usuario like ?";
+	final private String LISTAR_USUARIOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario";
+	final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
 	final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
 
 	final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
-	
+
 	final private String LISTAR_ID = "SELECT id_publicacion FROM publicacion";
+
+	final private String BUSCAR_FOTO_ID = "SELECT * FROM foto WHERE id_publicacion = ?";
+	final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
+	final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
 
 	// Alter
 	final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
@@ -113,6 +117,37 @@ public class DAOImplementacionBD implements DAO {
 			publi.setUsuario(rs.getString("usuario"));
 			publi.setId_cancion(rs.getString("id_cancion"));
 
+			if (publi instanceof Foto) {
+				stmt = con.prepareStatement(BUSCAR_FOTO_ID);
+				stmt.setString(1, publi.getId_publicacion());
+				ResultSet rs2 = stmt.executeQuery();
+
+				if (rs2.next()) {
+					((Foto) publi).setDescripcion(rs2.getString("descripcion"));
+					((Foto) publi).setResolucion(rs2.getString("resolucion"));
+					((Foto) publi).setEtiquetado(rs2.getString("etiquetado"));
+				}
+
+			} else if (publi instanceof Reel) {
+				stmt = con.prepareStatement(BUSCAR_REEL_ID);
+				stmt.setString(1, publi.getId_publicacion());
+				ResultSet rs2 = stmt.executeQuery();
+
+				if (rs2.next()) {
+					((Reel) publi).setDuracion(rs2.getInt("duracion"));
+					((Reel) publi).setReproducciones(rs2.getInt("reproducciones"));
+					((Reel) publi).setDescripcion(rs2.getString("descripcion"));
+				}
+			} else if (publi instanceof Historia) {
+				stmt = con.prepareStatement(BUSCAR_HISTORIA_ID);
+				stmt.setString(1, publi.getId_publicacion());
+				ResultSet rs2 = stmt.executeQuery();
+
+				if (rs2.next()) {
+					((Historia) publi).setMejores_amigos(rs2.getBoolean("mejores_amigos"));
+					((Historia) publi).setCod_tipo(rs2.getString("cod_tipo"));
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -183,7 +218,7 @@ public class DAOImplementacionBD implements DAO {
 
 	@Override
 	public Publicacion buscarPublicacionXId(String id) {
-		Publicacion publi = new Publicacion();
+		Publicacion publi = null;
 
 		this.abrirConexion();
 
@@ -193,6 +228,20 @@ public class DAOImplementacionBD implements DAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
+				char tipoPubli = rs.getString("id_publicacion").charAt(0);
+
+				switch (tipoPubli) {
+				case 'F':
+					publi = new Foto();
+					break;
+				case 'R':
+					publi = new Reel();
+					break;
+				case 'H':
+					publi = new Historia();
+					break;
+				}
+
 				publi = this.getPublicacion(publi, rs);
 			}
 
@@ -244,30 +293,28 @@ public class DAOImplementacionBD implements DAO {
 
 		this.cerrarConexion();
 	}
-	
+
 	@Override
 	public List<Publicacion> listarId() {
 		List<Publicacion> id = new ArrayList<>();
 		this.abrirConexion();
-		
+
 		try {
 			stmt = con.prepareStatement(LISTAR_ID);
 			ResultSet rs = stmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				Publicacion publi = new Publicacion();
 				publi.setId_publicacion(rs.getString("id_publicacion"));
 				id.add(publi);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		this.cerrarConexion();
 		return id;
 	}
-
-	
 
 	@Override
 	public int numPublicaciones() {
@@ -334,29 +381,6 @@ public class DAOImplementacionBD implements DAO {
 		}
 		this.cerrarConexion();
 		return tipoHistoria;
-	}
-
-	@Override
-	public String calcularId(String string) {
-		String cod = "";
-		this.abrirConexion();
-
-		try {
-			stmt = con.prepareStatement(ULTIMA_PUBLICACION);
-			stmt.setString(1, string);
-
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				cod = rs.getString("id_publicacion");
-			} else {
-				cod = "00000";
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		this.cerrarConexion();
-		return cod;
 	}
 
 	@Override
@@ -438,6 +462,7 @@ public class DAOImplementacionBD implements DAO {
 			while (rs.next()) {
 				Usuario usu = new Usuario();
 				usu.setUsuario(rs.getString("usuario"));
+				usu.setVerificado(rs.getBoolean("verificado"));
 				usu.setIcono(rs.getString("icono"));
 				usu.setNumSeguidores(rs.getInt("numSeguidores"));
 				usuarios.add(usu);
@@ -535,10 +560,29 @@ public class DAOImplementacionBD implements DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		this.cerrarConexion();
 		return like;
 	}
 
+	@Override
+	public String calcularId(String tipo) {
+		String cod = "";
+		this.abrirConexion();
+		
+		try {
+			stmt = con.prepareStatement(ULTIMA_PUBLICACION);
+			stmt.setString(1, tipo);
+			ResultSet rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				cod = rs.getString("id_publicacion");
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+		}
+		this.cerrarConexion();
+		return cod;
+	}
 
 }

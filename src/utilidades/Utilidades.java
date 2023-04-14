@@ -31,7 +31,7 @@ public class Utilidades {
 
 		// Decir donde abrir
 		String rutaProyecto = System.getProperty("user.dir");
-		File rutaExplorador = new File(rutaProyecto + "/src/imagenes/publicacion/");
+		File rutaExplorador = new File(rutaProyecto + "/src/imagenes/publicaciones/");
 		fileChooser.setCurrentDirectory(rutaExplorador);
 
 		// Decir que solo puede abrir fotos
@@ -48,7 +48,7 @@ public class Utilidades {
 			fotoSeleccionada = fileChooser.getSelectedFile().getPath();
 
 			// Si no esta dentro de la carpeta imagenes la copiamos a esa carpeta
-			if (!fotoSeleccionada.contains("\\RetoFinal\\src\\imagenes\\publicacion")) {
+			if (!fotoSeleccionada.contains("\\RetoFinal\\src\\imagenes\\publicaciones")) {
 
 				try {
 					File nuevaFoto = new File(fotoSeleccionada);
@@ -82,7 +82,6 @@ public class Utilidades {
 
 			// En la bda unicamente guardamos el nombre del archivo
 			fotoSeleccionada = fileChooser.getSelectedFile().getName();
-
 		}
 
 		return fotoSeleccionada;
@@ -111,4 +110,7 @@ public class Utilidades {
 		return outputFile;
 	}
 
+	public static void recargarProyecto() {
+		
+	}
 }

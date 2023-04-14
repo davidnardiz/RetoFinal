@@ -394,7 +394,7 @@ public class Subir extends JDialog implements ActionListener {
 	}
 
 	private void abrirBuscar() {
-		Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+		Buscar buscar = new Buscar(paraTi, true, dao, usu, false, null);
 		this.dispose();
 		buscar.setVisible(true);
 
@@ -403,7 +403,7 @@ public class Subir extends JDialog implements ActionListener {
 	private void abrirParaTi() {
 		this.dispose();
 		paraTi.setVisible(true);
-		
+
 	}
 
 	private void subirFoto() {
@@ -411,8 +411,6 @@ public class Subir extends JDialog implements ActionListener {
 		String codigo;
 		String ultimoCodigo;
 		int numCod;
-
-		usu = new Usuario();
 
 		int minLikes = (int) (usu.getNumSeguidores() * 0.12);
 		int maxLikes = (int) (usu.getNumSeguidores() * 0.9);
@@ -510,6 +508,7 @@ public class Subir extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Publicacion subida con exito", "", 3);
 			this.dispose();
 			paraTi.setVisible(true);
+
 		}
 
 	}

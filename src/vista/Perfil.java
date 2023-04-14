@@ -171,7 +171,7 @@ public class Perfil extends JDialog implements ActionListener {
 	}
 
 	private void abrirBuscar() {
-		Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+		Buscar buscar = new Buscar(paraTi, true, dao, usu, false, null);
 		this.setVisible(false);
 		buscar.setVisible(true);
 

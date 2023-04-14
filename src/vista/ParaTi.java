@@ -21,7 +21,10 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import clases.Foto;
+import clases.Historia;
 import clases.Publicacion;
+import clases.Reel;
 import clases.Usuario;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
@@ -51,6 +54,8 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JLabel lblMegusta;
 	private JLabel imagen;
 	private JLabel lblVerificado;
+	private JLabel lblHistoria;
+	private JButton btnEtiquetado;
 
 	/**
 	 * Create the dialog.
@@ -154,7 +159,7 @@ public class ParaTi extends JDialog implements ActionListener {
 
 		lblIcono = new JLabel();
 		lblIcono.setHorizontalAlignment(SwingConstants.LEFT);
-		lblIcono.setBounds(119, 93, 64, 64);
+		lblIcono.setBounds(119, 89, 64, 64);
 		contentPanel.add(lblIcono);
 		lblIcono.addMouseListener(new MouseAdapter() {
 			@Override
@@ -163,11 +168,14 @@ public class ParaTi extends JDialog implements ActionListener {
 			}
 		});
 
+		lblHistoria = new JLabel("");
+		lblHistoria.setBounds(101, 71, 100, 100);
+		contentPanel.add(lblHistoria);
 
 		lblUsuario = new JLabel("Usuario");
 		lblUsuario.setForeground(Color.WHITE);
 		lblUsuario.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblUsuario.setBounds(239, 114, 91, 22);
+		lblUsuario.setBounds(239, 110, 141, 22);
 		contentPanel.add(lblUsuario);
 		lblUsuario.addMouseListener(new MouseAdapter() {
 			@Override
@@ -189,15 +197,22 @@ public class ParaTi extends JDialog implements ActionListener {
 		lblDescripcion = new JLabel("Aqu\u00ED va la descripci\u00F3n...");
 		lblDescripcion.setForeground(new Color(255, 255, 255));
 		lblDescripcion.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblDescripcion.setBounds(137, 687, 332, 27);
+		lblDescripcion.setBounds(137, 687, 463, 27);
 		contentPanel.add(lblDescripcion);
-
 
 		lblMegusta = new JLabel("");
 		lblMegusta.setForeground(new Color(255, 255, 255));
 		lblMegusta.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblMegusta.setBounds(199, 640, 209, 40);
 		contentPanel.add(lblMegusta);
+
+		btnEtiquetado = new JButton("");
+		btnEtiquetado.setBackground(new Color(49, 51, 53));
+		btnEtiquetado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/etiquedado.png")));
+		btnEtiquetado.setBounds(504, 593, 30, 30);
+		contentPanel.add(btnEtiquetado);
+		btnEtiquetado.addActionListener(this);
+		btnEtiquetado.setBorder(null);
 
 		imagen = new JLabel();
 		imagen.addMouseListener(new MouseAdapter() {
@@ -212,7 +227,7 @@ public class ParaTi extends JDialog implements ActionListener {
 
 		lblVerificado = new JLabel("");
 		lblVerificado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/verificado.png")));
-		lblVerificado.setBounds(199, 110, 30, 30);
+		lblVerificado.setBounds(199, 106, 30, 30);
 		lblVerificado.setVisible(false);
 		contentPanel.add(lblVerificado);
 
@@ -222,7 +237,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnBuscar)) {
-			abrirBuscar();
+			abrirBuscar(null);
 		} else if (e.getSource().equals(btnSubir)) {
 			abrirSubir();
 		} else if (e.getSource().equals(btnTienda)) {
@@ -231,6 +246,8 @@ public class ParaTi extends JDialog implements ActionListener {
 			abrirCuenta();
 		} else if (e.getSource().equals(btnLike)) {
 			darLike();
+		} else if (e.getSource().equals(btnEtiquetado)) {
+			abrirBuscar((dao.buscarUsuario(((Foto) publi).getEtiquetado())));
 		}
 
 	}
@@ -266,8 +283,8 @@ public class ParaTi extends JDialog implements ActionListener {
 
 	}
 
-	private void abrirBuscar() {
-		Buscar buscar = new Buscar(this, true, dao, usu, false);
+	private void abrirBuscar(Usuario etiquetado) {
+		Buscar buscar = new Buscar(this, true, dao, usu, false, etiquetado);
 		this.setVisible(false);
 		buscar.setVisible(true);
 
@@ -288,16 +305,44 @@ public class ParaTi extends JDialog implements ActionListener {
 			btnLike.setSelected(false);
 		}
 
+		lblDescripcion.setVisible(true);
+		lblVerificado.setVisible(false);
+		lblUsuario.setLocation(213, 110);
+		lblHistoria.setVisible(false);
+		btnEtiquetado.setVisible(false);
 		if (usuPubli.isVerificado()) {
 			lblVerificado.setVisible(true);
-			lblUsuario.setLocation(239, 114);
+			lblUsuario.setLocation(239, 110);
 
-		} else {
-			lblVerificado.setVisible(false);
-			lblUsuario.setLocation(213, 114);
 		}
-	
 
+		if (publi instanceof Foto) {
+			lblDescripcion.setText(((Foto) publi).getDescripcion());
+
+			if (((Foto) publi).getEtiquetado() != null) {
+				btnEtiquetado.setVisible(true);
+
+			}
+
+		} else if (publi instanceof Reel) {
+			lblDescripcion.setText(((Reel) publi).getDescripcion());
+
+		} else if (publi instanceof Historia) {
+			lblHistoria.setVisible(true);
+			lblDescripcion.setVisible(false);
+
+			if (((Historia) publi).isMejores_amigos()) {
+				lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esMejos.png")));
+
+			} else {
+				lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
+			}
+		}
+
+		System.out.println(publi.toString());
+		System.out.println(usuPubli.toString());
+		System.out.println();
+		
 		lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
 		imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
 		lblUsuario.setText(publi.getUsuario());

@@ -28,12 +28,12 @@ public interface DAO {
 	public int numPublicaciones();
 	
 	public int numPublicacionesHerencia(String tipo);
+	
+	public String calcularId(String tipo);
 
 	public List<Cancion> listarCanciones();
 
 	public List<TipoHistoria> listarTipoHistorias();
-
-	public String calcularId(String string);
 
 	public Cancion buscarCancionXTitulo(String titulo);
 
