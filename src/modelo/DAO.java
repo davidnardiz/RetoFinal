@@ -17,22 +17,24 @@ public interface DAO {
 	// Selects
 	public Publicacion buscarPublicacionXId(String id);
 	
+	public List<Publicacion> listarPublicaciones();
+	
+	public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
+	
+	public String calcularId(String tipo);
+	
+	
+	
 	public Usuario buscarUsuario(String usuario);
 	
 	public List<Usuario> listarUsuario();
 	
 	public List<Usuario> listarUsuarioXUsuario(String usuario);
 	
-	public List<Publicacion> listarId();
-
-	public int numPublicaciones();
+	public int numPublicacionesUsuario(String usuario);
 	
-	public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
 	
-	public int numPublicacionesHerencia(String tipo);
 	
-	public String calcularId(String tipo);
-
 	public List<Cancion> listarCanciones();
 
 	public List<TipoHistoria> listarTipoHistorias();
@@ -40,8 +42,11 @@ public interface DAO {
 	public Cancion buscarCancionXTitulo(String titulo);
 
 	public String tipoHistoria(String tipo);
+	
 
+	
 	public boolean comprobarLike(String usuario, String publicacion);
+	
 	// Alters
 
 	// Deletes

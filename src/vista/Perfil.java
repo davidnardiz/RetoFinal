@@ -22,6 +22,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -43,8 +44,8 @@ public class Perfil extends JDialog implements ActionListener {
 
 	private ParaTi paraTi;
 	private DAO dao;
-	private Usuario usu;
-	private boolean nosotros;
+	private Usuario nosotros;
+	private Usuario usuarioPerfil;
 	private List<Publicacion> publicaciones;
 
 	private JButton btnParaTi;
@@ -61,7 +62,7 @@ public class Perfil extends JDialog implements ActionListener {
 
 	private JButton btnEditarPerfil;
 	private JButton btn;
-	private JButton btnSeguir;
+	private JToggleButton btnSeguir;
 	private JButton btnEnviarMensaje;
 	private JTable tablaPublicaciones;
 
@@ -70,6 +71,7 @@ public class Perfil extends JDialog implements ActionListener {
 	private JRadioButton rdbtnHistorias;
 
 	private ButtonGroup tipo = new ButtonGroup();
+	
 
 	/**
 	 * Create the dialog.
@@ -80,7 +82,7 @@ public class Perfil extends JDialog implements ActionListener {
 	 * @param usuario
 	 * @param nosotros
 	 */
-	public Perfil(ParaTi paraTi, boolean b, DAO dao, Usuario usuario, boolean nosotros) {
+	public Perfil(ParaTi paraTi, boolean b, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
 		super(paraTi);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Buscar.class.getResource("/imagenes/pantalla/logo.png")));
 		setTitle("Buscar");
@@ -88,9 +90,9 @@ public class Perfil extends JDialog implements ActionListener {
 		this.setModal(b);
 		this.paraTi = paraTi;
 		this.dao = dao;
-		this.usu = usuario;
 		this.nosotros = nosotros;
-
+		this.usuarioPerfil = usuarioPerfil;
+		
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
 		setBounds(100, 100, ancho, alto);
@@ -164,31 +166,31 @@ public class Perfil extends JDialog implements ActionListener {
 		contentPanel.add(franjaAbajo);
 
 		lblIcono = new JLabel();
-		lblIcono.setIcon(new ImageIcon(Perfil.class.getResource("/imagenes/iconos/" + usu.getIcono())));
+		lblIcono.setIcon(new ImageIcon(Perfil.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
 		lblIcono.setBounds(78, 120, 64, 64);
 		contentPanel.add(lblIcono);
 
-		lblUsuario = new JLabel(usu.getUsuario());
+		lblUsuario = new JLabel(usuarioPerfil.getUsuario());
 		lblUsuario.setForeground(new Color(255, 255, 255));
 		lblUsuario.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblUsuario.setBounds(78, 196, 120, 20);
 		contentPanel.add(lblUsuario);
 
-		lblNumPubli = new JLabel();
+		lblNumPubli = new JLabel(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
 		lblNumPubli.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumPubli.setForeground(new Color(255, 255, 255));
 		lblNumPubli.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		lblNumPubli.setBounds(212, 120, 94, 28);
 		contentPanel.add(lblNumPubli);
 
-		lblSeguidores = new JLabel(usu.getNumSeguidores() + "");
+		lblSeguidores = new JLabel(usuarioPerfil.getNumSeguidores() + "");
 		lblSeguidores.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSeguidores.setForeground(new Color(255, 255, 255));
 		lblSeguidores.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		lblSeguidores.setBounds(352, 120, 78, 28);
 		contentPanel.add(lblSeguidores);
 
-		lblSiguiendo = new JLabel(usu.getNumSeguidos() + "");
+		lblSiguiendo = new JLabel(usuarioPerfil.getNumSeguidos() + "");
 		lblSiguiendo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSiguiendo.setForeground(new Color(255, 255, 255));
 		lblSiguiendo.setFont(new Font("Tahoma", Font.PLAIN, 19));
@@ -231,8 +233,8 @@ public class Perfil extends JDialog implements ActionListener {
 		contentPanel.add(btnEnviarMensaje);
 		btnEnviarMensaje.setBorder(null);
 
-		btnSeguir = new JButton("Seguir");
-		btnSeguir.setBackground(SystemColor.controlHighlight);
+		btnSeguir = new JToggleButton("Seguir");
+		btnSeguir.setBackground(SystemColor.textHighlight);
 		btnSeguir.setBounds(130, 242, 120, 42);
 		contentPanel.add(btnSeguir);
 		btnSeguir.setBorder(null);
@@ -266,15 +268,56 @@ public class Perfil extends JDialog implements ActionListener {
 		tipo.add(rdbtnReels);
 		tipo.add(rdbtnHistorias);
 
-		tablaPublicaciones = new JTable();
-
-		if (!nosotros) {
+		if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario()) ) {
 			btn.setVisible(false);
 			btnEditarPerfil.setVisible(false);
 		}
 
-		publicaciones = dao.listarPublicacionesUsuario(usu.getUsuario(), "Foto");
+		tablaPublicaciones = new JTable();
+		publicaciones = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
 		presentarTabla(publicaciones);
+
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(btnParaTi)) {
+			abrirParaTi();
+		} else if (e.getSource().equals(btnBuscar)) {
+			abrirBuscar();
+		} else if (e.getSource().equals(btnSubir)) {
+			abrirSubir();
+		} else if (e.getSource().equals(btnTienda)) {
+			abrirTienda();
+		}
+
+		if (e.getSource().equals(rdbtnFoto)) {
+			publicaciones = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+			presentarTabla(publicaciones);
+
+		} else if (e.getSource().equals(rdbtnReels)) {
+			publicaciones = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
+			presentarTabla(publicaciones);
+
+		} else if (e.getSource().equals(rdbtnHistorias)) {
+			publicaciones = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
+			presentarTabla(publicaciones);
+		}
+
+	}
+
+	private void abrirFoto(String foto) {
+		String rutaProyecto = System.getProperty("user.dir");
+		Publicacion publi = null;
+
+		for (Publicacion i : publicaciones) {
+			if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
+				publi = i;
+				break;
+			}
+		}
+
+		PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, dao, publi, nosotros, usuarioPerfil);
+		publiPop.setVisible(true);
 
 	}
 
@@ -283,10 +326,10 @@ public class Perfil extends JDialog implements ActionListener {
 		scroll.setViewportBorder(null);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tablaPublicaciones = this.cargarTabla(publicacionesList);
+		tablaPublicaciones.setEnabled(false);
 		tablaPublicaciones.setShowVerticalLines(false);
 		tablaPublicaciones.setShowHorizontalLines(false);
 		tablaPublicaciones.setShowGrid(false);
-		tablaPublicaciones.setRowSelectionAllowed(false);
 		tablaPublicaciones.setFillsViewportHeight(true);
 		tablaPublicaciones.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		tablaPublicaciones.setForeground(new Color(255, 255, 255));
@@ -313,6 +356,7 @@ public class Perfil extends JDialog implements ActionListener {
 
 			}
 		});
+
 	}
 
 	public JTable cargarTabla(List<Publicacion> publicacionesList) {
@@ -337,7 +381,6 @@ public class Perfil extends JDialog implements ActionListener {
 			if (publicacionesList.size() > i + 2) {
 				fila[2] = new ImageIcon(
 						rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i + 2).getImagen());
-				System.out.println(i + 2);
 			} else {
 				fila[2] = null;
 			}
@@ -363,46 +406,6 @@ public class Perfil extends JDialog implements ActionListener {
 		}
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btnParaTi)) {
-			abrirParaTi();
-		} else if (e.getSource().equals(btnBuscar)) {
-			abrirBuscar();
-		} else if (e.getSource().equals(btnSubir)) {
-			abrirSubir();
-		} else if (e.getSource().equals(btnTienda)) {
-			abrirTienda();
-		} else if (e.getSource().equals(btnCuenta)) {
-			abrirCuenta();
-		}
-
-		if (e.getSource().equals(rdbtnFoto)) {
-			presentarTabla(dao.listarPublicacionesUsuario(usu.getUsuario(), "Foto"));
-		} else if (e.getSource().equals(rdbtnReels)) {
-			presentarTabla(dao.listarPublicacionesUsuario(usu.getUsuario(), "Reel"));
-		} else if (e.getSource().equals(rdbtnHistorias)) {
-			presentarTabla(dao.listarPublicacionesUsuario(usu.getUsuario(), "Historia"));
-		}
-
-	}
-
-	private void abrirFoto(String foto) {
-		String rutaProyecto = System.getProperty("user.dir");
-		Publicacion publi = null;
-
-		for (Publicacion i : publicaciones) {
-			if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
-
-				publi = i;
-				break;
-			}
-		}
-		System.out.println(publi.toString());
-		PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, publi, usu);
-		publiPop.setVisible(true);
-
-	}
-
 	private void abrirParaTi() {
 		this.dispose();
 		paraTi.setVisible(true);
@@ -415,20 +418,17 @@ public class Perfil extends JDialog implements ActionListener {
 	}
 
 	private void abrirSubir() {
-		Subir subir = new Subir(paraTi, true, dao, usu);
-		this.setVisible(false);
+		Subir subir = new Subir(paraTi, true, dao, nosotros);
+		this.dispose();
 		subir.setVisible(true);
 
 	}
 
 	private void abrirBuscar() {
-		Buscar buscar = new Buscar(paraTi, true, dao, usu, false, null);
-		this.setVisible(false);
+		Buscar buscar = new Buscar(paraTi, true, dao, nosotros, false);
+		this.dispose();
 		buscar.setVisible(true);
 
 	}
 
-	private void abrirCuenta() {
-
-	}
 }

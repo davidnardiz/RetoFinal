@@ -383,29 +383,6 @@ public class Subir extends JDialog implements ActionListener {
 
 	}
 
-	private void abrirCuenta() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void abrirTienda() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void abrirBuscar() {
-		Buscar buscar = new Buscar(paraTi, true, dao, usu, false, null);
-		this.dispose();
-		buscar.setVisible(true);
-
-	}
-
-	private void abrirParaTi() {
-		this.dispose();
-		paraTi.setVisible(true);
-
-	}
-
 	private void subirFoto() {
 		Publicacion publi;
 		String codigo;
@@ -425,8 +402,7 @@ public class Subir extends JDialog implements ActionListener {
 				// Genero el codigo de las fotos
 				ultimoCodigo = dao.calcularId("f");
 				numCod = Integer.parseInt(ultimoCodigo.substring(2));
-				numCod++;
-				codigo = "F-" + String.format("%03d", numCod);
+				codigo = "F-" + String.format("%03d", numCod + 1);
 
 				// Creo una nueva foto y le doy los valores
 				publi = new Foto();
@@ -448,8 +424,7 @@ public class Subir extends JDialog implements ActionListener {
 				// Genero el codigo de los reels
 				ultimoCodigo = dao.calcularId("r");
 				numCod = Integer.parseInt(ultimoCodigo.substring(2));
-				numCod++;
-				codigo = "R-" + String.format("%03d", numCod);
+				codigo = "R-" + String.format("%03d", numCod + 1);
 
 				// Creo un nuevo reel y le doy los datos
 				publi = new Reel();
@@ -470,8 +445,7 @@ public class Subir extends JDialog implements ActionListener {
 				// Genero el codigo de las historias
 				ultimoCodigo = dao.calcularId("h");
 				numCod = Integer.parseInt(ultimoCodigo.substring(2));
-				numCod++;
-				codigo = "H-" + String.format("%03d", numCod);
+				codigo = "H-" + String.format("%03d", numCod + 1);
 
 				// Creo una nueva historia y le doy los datos
 				publi = new Historia();
@@ -688,6 +662,31 @@ public class Subir extends JDialog implements ActionListener {
 		for (int i = 0; i < ocultar.length; i++) {
 			ocultar[i].setVisible(false);
 		}
+
+	}
+
+	private void abrirCuenta() {
+		Perfil perf = new Perfil(paraTi, true, dao, usu, usu);
+		this.dispose();
+		perf.setVisible(true);
+		
+	}
+
+	private void abrirTienda() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void abrirBuscar() {
+		Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+		this.dispose();
+		buscar.setVisible(true);
+
+	}
+
+	private void abrirParaTi() {
+		this.dispose();
+		paraTi.setVisible(true);
 
 	}
 }

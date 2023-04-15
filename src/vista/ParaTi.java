@@ -27,7 +27,6 @@ import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
 import modelo.DAO;
-import modelo.DAOImplementacionBD;
 import utilidades.Utilidades;
 
 public class ParaTi extends JDialog implements ActionListener {
@@ -47,15 +46,17 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JButton btnTienda;
 	private JButton btnCuenta;
 	private JButton btnDm;
-	private JLabel lblIcono;
+	private JButton btnEtiquetado;
 	private JToggleButton btnLike;
+	
+	private JLabel lblIcono;
 	private JLabel lblDescripcion;
 	private JLabel lblUsuario;
 	private JLabel lblMegusta;
 	private JLabel imagen;
 	private JLabel lblVerificado;
 	private JLabel lblHistoria;
-	private JButton btnEtiquetado;
+
 
 	/**
 	 * Create the dialog.
@@ -236,7 +237,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnBuscar)) {
-			abrirBuscar(null);
+			abrirBuscar();
 		} else if (e.getSource().equals(btnSubir)) {
 			abrirSubir();
 		} else if (e.getSource().equals(btnTienda)) {
@@ -246,53 +247,9 @@ public class ParaTi extends JDialog implements ActionListener {
 		} else if (e.getSource().equals(btnLike)) {
 			darLike();
 		} else if (e.getSource().equals(btnEtiquetado)) {
-			abrirBuscar((dao.buscarUsuario(((Foto) publi).getEtiquetado())));
+			abrirPerfil();
 		}
 
-	}
-
-	private void abrirPerfil() {
-		Perfil perfil = new Perfil(this, true, dao, dao.buscarUsuario(lblUsuario.getText()), false);
-		this.setVisible(false);
-		perfil.setVisible(true);
-
-	}
-
-	private void darLike() {
-		if (btnLike.isSelected()) {
-			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
-			dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
-
-		} else {
-			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
-			dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
-		}
-
-	}
-
-	private void abrirTienda() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void abrirSubir() {
-		Subir subir = new Subir(this, true, dao, usu);
-		this.setVisible(false);
-		subir.setVisible(true);
-
-	}
-
-	private void abrirBuscar(Usuario etiquetado) {
-		Buscar buscar = new Buscar(this, true, dao, usu, false, etiquetado);
-		this.setVisible(false);
-		buscar.setVisible(true);
-
-	}
-
-	private void abrirCuenta() {
-		Perfil perfil = new Perfil(null, true, dao, usu, true);
-		this.setVisible(false);
-		perfil.setVisible(true);
 	}
 
 	private void next() {
@@ -311,6 +268,12 @@ public class ParaTi extends JDialog implements ActionListener {
 		lblUsuario.setLocation(213, 110);
 		lblHistoria.setVisible(false);
 		btnEtiquetado.setVisible(false);
+		lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+		imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+		lblUsuario.setText(publi.getUsuario());
+		lblMegusta.setText(publi.getNumLikes() + "");
+		
+		
 		if (usuPubli.isVerificado()) {
 			lblVerificado.setVisible(true);
 			lblUsuario.setLocation(239, 110);
@@ -328,7 +291,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		} else if (publi instanceof Reel) {
 			lblDescripcion.setText(((Reel) publi).getDescripcion());
 
-		} else if (publi instanceof Historia) {
+		} else  {
 			lblHistoria.setVisible(true);
 			lblDescripcion.setVisible(false);
 
@@ -339,20 +302,13 @@ public class ParaTi extends JDialog implements ActionListener {
 				lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
 			}
 		}
-
-		System.out.println(publi.toString());
-		System.out.println(usuPubli.toString());
-		System.out.println();
 		
-		lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
-		imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
-		lblUsuario.setText(publi.getUsuario());
-		lblMegusta.setText(publi.getNumLikes() + "");
+	
 
 	}
 
 	private String generarPublicacionAleatoria() {
-		List<Publicacion> id = dao.listarId();
+		List<Publicacion> id = dao.listarPublicaciones();
 		String publiActual = "";
 		int numRandom;
 		boolean salir;
@@ -378,4 +334,52 @@ public class ParaTi extends JDialog implements ActionListener {
 
 		return publiActual;
 	}
+	
+	private void darLike() {
+		if (btnLike.isSelected()) {
+			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
+			dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
+
+		} else {
+			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
+			dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
+		}
+
+	}
+	
+	private void abrirPerfil() {
+		Usuario per = dao.buscarUsuario(lblUsuario.getText());
+		Perfil perfil = new Perfil(this, true, dao, usu, per);
+		this.setVisible(false);
+		perfil.setVisible(true);
+
+	}
+	
+
+	private void abrirTienda() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void abrirSubir() {
+		Subir subir = new Subir(this, true, dao, usu);
+		this.setVisible(false);
+		subir.setVisible(true);
+
+	}
+
+	private void abrirBuscar() {
+		Buscar buscar = new Buscar(this, true, dao, usu, false);
+		this.setVisible(false);
+		buscar.setVisible(true);
+
+	}
+
+	private void abrirCuenta() {
+		Perfil perfil = new Perfil(this, true, dao, usu, usu);
+		this.setVisible(false);
+		perfil.setVisible(true);
+	}
+
+	
 }
