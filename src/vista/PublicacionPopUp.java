@@ -62,29 +62,48 @@ public class PublicacionPopUp extends JDialog implements ActionListener {
 		lblIcono.setHorizontalAlignment(SwingConstants.LEFT);
 		lblIcono.setBounds(59, 15, 64, 64);
 		contentPanel.add(lblIcono);
-		lblIcono.setIcon(new ImageIcon(PublicacionPopUp.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+		lblIcono.setIcon(
+				new ImageIcon(PublicacionPopUp.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+
+		lblDescripcion = new JLabel();
+		lblDescripcion.setForeground(new Color(255, 255, 255));
+		lblDescripcion.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDescripcion.setBounds(74, 623, 410, 27);
+		contentPanel.add(lblDescripcion);
+		
+		if (publi instanceof Foto) {
+			if (((Foto) publi).getEtiquetado() != null) {
+				btnEtiquetado = new JButton("");
+				btnEtiquetado.setBackground(new Color(49, 51, 53));
+				btnEtiquetado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/etiquedado.png")));
+				btnEtiquetado.setBounds(504, 450, 30, 30);
+				contentPanel.add(btnEtiquetado);
+				btnEtiquetado.addActionListener(this);
+				btnEtiquetado.setBorder(null);
+
+				lblDescripcion.setText(((Foto) publi).getDescripcion());
+
+			}
+
+		} else if (publi instanceof Reel) {
+			lblDescripcion.setText(((Reel) publi).getDescripcion());
+			
+		}
+
 
 		if (publi instanceof Historia) {
 			lblHistoria = new JLabel("");
-			lblHistoria.setBounds(101, 71, 100, 100);
+			lblHistoria.setBounds(41, -3, 100, 100);
 			contentPanel.add(lblHistoria);
-
 			if (!((Historia) publi).isMejores_amigos()) {
-				lblHistoria.setIcon(new ImageIcon(PublicacionPopUp.class.getResource("/imagenes/pantalla/esHistoria")));
+				lblHistoria.setIcon(
+						new ImageIcon(PublicacionPopUp.class.getResource("/imagenes/pantalla/esHistoria.png")));
 			} else {
-				lblHistoria.setIcon(new ImageIcon(PublicacionPopUp.class.getResource("/imagenes/pantalla/esMejos")));
+				lblHistoria
+						.setIcon(new ImageIcon(PublicacionPopUp.class.getResource("/imagenes/pantalla/esMejos.png")));
 			}
-		}
-
-		if (((Foto) publi).getEtiquetado() != null) {
-
-			btnEtiquetado = new JButton("");
-			btnEtiquetado.setBackground(new Color(49, 51, 53));
-			btnEtiquetado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/etiquedado.png")));
-			btnEtiquetado.setBounds(504, 450, 30, 30);
-			contentPanel.add(btnEtiquetado);
-			btnEtiquetado.addActionListener(this);
-			btnEtiquetado.setBorder(null);
+			lblDescripcion.setVisible(false);
+			
 		}
 
 		lblUsuario = new JLabel(usuarioPerfil.getUsuario());
@@ -104,38 +123,11 @@ public class PublicacionPopUp extends JDialog implements ActionListener {
 		btnLike.addActionListener(this);
 		btnLike.setSelected(dao.comprobarLike(nosotros.getUsuario(), publi.getId_publicacion()));
 
-		lblDescripcion = new JLabel();
-		lblDescripcion.setForeground(new Color(255, 255, 255));
-		lblDescripcion.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblDescripcion.setBounds(74, 623, 410, 27);
-		contentPanel.add(lblDescripcion);
-
-		if (publi instanceof Foto) {
-			lblDescripcion.setText(((Foto) publi).getDescripcion());
-
-		} else if (publi instanceof Reel) {
-			lblDescripcion.setText(((Reel) publi).getDescripcion());
-
-		} else {
-			lblDescripcion.setVisible(false);
-		}
-
 		lblMegusta = new JLabel(publi.getNumLikes() + "");
 		lblMegusta.setForeground(new Color(255, 255, 255));
 		lblMegusta.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblMegusta.setBounds(136, 576, 209, 40);
 		contentPanel.add(lblMegusta);
-
-		if (publi instanceof Foto) {
-			btnEtiquetado = new JButton("");
-			btnEtiquetado.setBackground(new Color(49, 51, 53));
-			btnEtiquetado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/etiquedado.png")));
-			btnEtiquetado.setBounds(504, 593, 30, 30);
-			contentPanel.add(btnEtiquetado);
-			btnEtiquetado.addActionListener(this);
-			btnEtiquetado.setBorder(null);
-
-		}
 
 		imagen = new JLabel();
 		imagen.setHorizontalAlignment(SwingConstants.CENTER);

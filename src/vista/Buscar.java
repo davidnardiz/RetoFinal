@@ -20,7 +20,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -63,6 +62,10 @@ public class Buscar extends JDialog implements ActionListener {
 
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
+		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Buscar.class.getResource("/imagenes/pantalla/logo.png")));
+		setTitle("Buscar");
+		setResizable(false);
 		setBounds(100, 100, ancho, alto);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(49, 51, 53));
@@ -70,10 +73,7 @@ public class Buscar extends JDialog implements ActionListener {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		setLocationRelativeTo(null);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Buscar.class.getResource("/imagenes/pantalla/logo.png")));
-		setTitle("Buscar");
-		setResizable(false);
-
+	
 		btnParaTi = new JButton("");
 		btnParaTi.setBackground(new Color(43, 45, 47));
 		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
@@ -124,18 +124,16 @@ public class Buscar extends JDialog implements ActionListener {
 		lblLogoInstagram.setBounds(27, 21, 50, 50);
 		contentPanel.add(lblLogoInstagram);
 
-		JTextPane franjaArriba = new JTextPane();
-		franjaArriba.setEditable(false);
+		JPanel franjaArriba = new JPanel();
 		franjaArriba.setBackground(new Color(43, 45, 47));
 		franjaArriba.setBounds(0, 0, 632, 83);
 		contentPanel.add(franjaArriba);
 
-		JTextPane franjaAbajo = new JTextPane();
-		franjaAbajo.setEditable(false);
+		JPanel franjaAbajo = new JPanel();
 		franjaAbajo.setBackground(new Color(43, 45, 47));
 		franjaAbajo.setBounds(0, 725, 632, 100);
 		contentPanel.add(franjaAbajo);
-		setLocationRelativeTo(null);
+		
 
 		buscador = new JTextField();
 		buscador.setBounds(220, 127, 338, 35);

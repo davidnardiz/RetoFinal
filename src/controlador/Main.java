@@ -11,7 +11,6 @@ public class Main {
 		DAO dao = new DAOImplementacionBD();
 		Usuario usu = dao.buscarUsuario("xDoble_Jx");
 		
-		//Principal prin = new Principal(dao);
 		ParaTi prin = new ParaTi(null, false, dao, usu);
 		prin.setVisible(true);
 

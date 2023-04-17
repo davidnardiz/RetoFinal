@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -71,7 +70,6 @@ public class Perfil extends JDialog implements ActionListener {
 	private JRadioButton rdbtnHistorias;
 
 	private ButtonGroup tipo = new ButtonGroup();
-	
 
 	/**
 	 * Create the dialog.
@@ -92,7 +90,7 @@ public class Perfil extends JDialog implements ActionListener {
 		this.dao = dao;
 		this.nosotros = nosotros;
 		this.usuarioPerfil = usuarioPerfil;
-		
+
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
 		setBounds(100, 100, ancho, alto);
@@ -153,17 +151,44 @@ public class Perfil extends JDialog implements ActionListener {
 		lblLogoInstagram.setBounds(27, 21, 50, 50);
 		contentPanel.add(lblLogoInstagram);
 
-		JTextPane franjaArriba = new JTextPane();
-		franjaArriba.setEditable(false);
+		JPanel franjaArriba = new JPanel();
 		franjaArriba.setBackground(new Color(43, 45, 47));
 		franjaArriba.setBounds(0, 0, 632, 83);
 		contentPanel.add(franjaArriba);
 
-		JTextPane franjaAbajo = new JTextPane();
-		franjaAbajo.setEditable(false);
+		JPanel franjaAbajo = new JPanel();
 		franjaAbajo.setBackground(new Color(43, 45, 47));
 		franjaAbajo.setBounds(0, 725, 632, 100);
 		contentPanel.add(franjaAbajo);
+
+		btnEditarPerfil = new JButton("Editar Perfil");
+		btnEditarPerfil.setBackground(SystemColor.controlHighlight);
+		btnEditarPerfil.setBounds(130, 242, 120, 42);
+		contentPanel.add(btnEditarPerfil);
+		btnEditarPerfil.setBorder(null);
+
+		btn = new JButton("???");
+		btn.setBackground(SystemColor.controlHighlight);
+		btn.setBounds(380, 242, 120, 42);
+		contentPanel.add(btn);
+		btn.setBorder(null);
+
+		btnEnviarMensaje = new JButton("Enviar Mensaje");
+		btnEnviarMensaje.setBackground(SystemColor.controlHighlight);
+		btnEnviarMensaje.setBounds(380, 242, 120, 42);
+		contentPanel.add(btnEnviarMensaje);
+		btnEnviarMensaje.setBorder(null);
+
+		btnSeguir = new JToggleButton("Seguir");
+		btnSeguir.setBackground(SystemColor.textHighlight);
+		btnSeguir.setBounds(130, 242, 120, 42);
+		contentPanel.add(btnSeguir);
+		btnSeguir.setBorder(null);
+
+		if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+			btn.setVisible(false);
+			btnEditarPerfil.setVisible(false);
+		}
 
 		lblIcono = new JLabel();
 		lblIcono.setIcon(new ImageIcon(Perfil.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
@@ -215,30 +240,6 @@ public class Perfil extends JDialog implements ActionListener {
 		lblSeguidores_2.setBounds(352, 156, 78, 20);
 		contentPanel.add(lblSeguidores_2);
 
-		btnEditarPerfil = new JButton("Editar Perfil");
-		btnEditarPerfil.setBackground(SystemColor.controlHighlight);
-		btnEditarPerfil.setBounds(130, 242, 120, 42);
-		contentPanel.add(btnEditarPerfil);
-		btnEditarPerfil.setBorder(null);
-
-		btn = new JButton("???");
-		btn.setBackground(SystemColor.controlHighlight);
-		btn.setBounds(380, 242, 120, 42);
-		contentPanel.add(btn);
-		btn.setBorder(null);
-
-		btnEnviarMensaje = new JButton("Enviar Mensaje");
-		btnEnviarMensaje.setBackground(SystemColor.controlHighlight);
-		btnEnviarMensaje.setBounds(380, 242, 120, 42);
-		contentPanel.add(btnEnviarMensaje);
-		btnEnviarMensaje.setBorder(null);
-
-		btnSeguir = new JToggleButton("Seguir");
-		btnSeguir.setBackground(SystemColor.textHighlight);
-		btnSeguir.setBounds(130, 242, 120, 42);
-		contentPanel.add(btnSeguir);
-		btnSeguir.setBorder(null);
-
 		rdbtnFoto = new JRadioButton("Fotos");
 		rdbtnFoto.setForeground(new Color(255, 255, 255));
 		rdbtnFoto.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -267,11 +268,6 @@ public class Perfil extends JDialog implements ActionListener {
 		tipo.add(rdbtnFoto);
 		tipo.add(rdbtnReels);
 		tipo.add(rdbtnHistorias);
-
-		if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario()) ) {
-			btn.setVisible(false);
-			btnEditarPerfil.setVisible(false);
-		}
 
 		tablaPublicaciones = new JTable();
 		publicaciones = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");

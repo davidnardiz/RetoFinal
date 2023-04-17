@@ -25,7 +25,6 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -156,18 +155,16 @@ public class Subir extends JDialog implements ActionListener {
 		lblLogoInstagram.setBounds(27, 21, 50, 50);
 		contentPanel.add(lblLogoInstagram);
 
-		JTextPane franjaArriba = new JTextPane();
-		franjaArriba.setEditable(false);
+		JPanel franjaArriba = new JPanel();
 		franjaArriba.setBackground(new Color(43, 45, 47));
 		franjaArriba.setBounds(0, 0, 632, 83);
 		contentPanel.add(franjaArriba);
 
-		JTextPane franjaAbajo = new JTextPane();
-		franjaAbajo.setEditable(false);
+		JPanel franjaAbajo = new JPanel();
 		franjaAbajo.setBackground(new Color(43, 45, 47));
 		franjaAbajo.setBounds(0, 725, 632, 100);
 		contentPanel.add(franjaAbajo);
-		setLocationRelativeTo(null);
+		
 
 		rdbtnImagen = new JRadioButton("Imagen");
 		rdbtnImagen.setFont(new Font("Tahoma", Font.PLAIN, 14));

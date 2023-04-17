@@ -76,7 +76,7 @@ public class DAOImplementacionBD implements DAO {
 		try {
 			Properties configBDA = new Properties();
 			FileInputStream fis = new FileInputStream(
-					"C:\\Users\\arceu\\Desktop\\RetoFinal\\src\\configBDA.properties");
+					"C:\\Users\\1dam\\Desktop\\RetoFinal\\src\\configBDA.properties");
 			configBDA.load(fis);
 
 			final String URL = configBDA.getProperty("url");

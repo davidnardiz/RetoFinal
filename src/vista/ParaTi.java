@@ -16,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -48,7 +47,7 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JButton btnDm;
 	private JButton btnEtiquetado;
 	private JToggleButton btnLike;
-	
+
 	private JLabel lblIcono;
 	private JLabel lblDescripcion;
 	private JLabel lblUsuario;
@@ -56,7 +55,6 @@ public class ParaTi extends JDialog implements ActionListener {
 	private JLabel imagen;
 	private JLabel lblVerificado;
 	private JLabel lblHistoria;
-
 
 	/**
 	 * Create the dialog.
@@ -68,9 +66,7 @@ public class ParaTi extends JDialog implements ActionListener {
 
 	public ParaTi(IniciarSesion iniciarSesion, boolean b, DAO dao, Usuario usu) {
 		super(iniciarSesion);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ParaTi.class.getResource("/imagenes/pantalla/logo.png")));
-		setTitle("Para Ti");
-		setResizable(false);
+		
 		this.setModal(b);
 		this.dao = dao;
 		this.usu = usu;
@@ -78,21 +74,33 @@ public class ParaTi extends JDialog implements ActionListener {
 		int alto = 864;
 		int ancho = (alto / 4) * 3;
 
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ParaTi.class.getResource("/imagenes/pantalla/logo.png")));
+		setTitle("Para Ti");
+		setResizable(false);
 		setBounds(100, 100, ancho, alto);
 		getContentPane().setLayout(new BorderLayout());
-
 		contentPanel.setBackground(new Color(49, 51, 54));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 
-		btnTienda = new JButton("");
-		btnTienda.setBackground(new Color(43, 45, 47));
-		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/tienda.png")));
-		btnTienda.setBounds(402, 750, 50, 50);
-		btnTienda.setBorder(null);
-		contentPanel.add(btnTienda);
-		btnTienda.addActionListener(this);
+		
+		btnBuscar = new JButton("");
+		btnBuscar.setBackground(new Color(43, 45, 47));
+		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/buscar.png")));
+		btnBuscar.setBounds(176, 750, 50, 50);
+		btnBuscar.setBorder(null);
+		contentPanel.add(btnBuscar);
+		btnBuscar.addActionListener(this);
+
+		btnParaTi = new JButton("");
+		btnParaTi.setBackground(new Color(43, 45, 47));
+		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
+		btnParaTi.setBounds(63, 750, 50, 50);
+		btnParaTi.setBorder(null);
+		contentPanel.add(btnParaTi);
+		btnParaTi.addActionListener(this);
 
 		btnCuenta = new JButton("");
 		btnCuenta.setBackground(new Color(43, 45, 47));
@@ -102,14 +110,6 @@ public class ParaTi extends JDialog implements ActionListener {
 		contentPanel.add(btnCuenta);
 		btnCuenta.addActionListener(this);
 
-		btnBuscar = new JButton("");
-		btnBuscar.setBackground(new Color(43, 45, 47));
-		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/buscar.png")));
-		btnBuscar.setBounds(176, 750, 50, 50);
-		btnBuscar.setBorder(null);
-		contentPanel.add(btnBuscar);
-		btnBuscar.addActionListener(this);
-
 		btnSubir = new JButton("");
 		btnSubir.setBackground(new Color(43, 45, 47));
 		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/subir.png")));
@@ -118,13 +118,14 @@ public class ParaTi extends JDialog implements ActionListener {
 		contentPanel.add(btnSubir);
 		btnSubir.addActionListener(this);
 
-		btnParaTi = new JButton("");
-		btnParaTi.setBackground(new Color(43, 45, 47));
-		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
-		btnParaTi.setBounds(63, 750, 50, 50);
-		btnParaTi.setBorder(null);
-		contentPanel.add(btnParaTi);
-		btnParaTi.addActionListener(this);
+		btnTienda = new JButton("");
+		btnTienda.setBackground(new Color(43, 45, 47));
+		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/tienda.png")));
+		btnTienda.setBounds(402, 750, 50, 50);
+		btnTienda.setBorder(null);
+		contentPanel.add(btnTienda);
+		btnTienda.addActionListener(this);
+		System.out.println(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/cuenta.png")));
 
 		btnDm = new JButton("");
 		btnDm.setForeground(new Color(43, 45, 47));
@@ -144,18 +145,15 @@ public class ParaTi extends JDialog implements ActionListener {
 		lblLogoInstagram.setBounds(27, 21, 50, 50);
 		contentPanel.add(lblLogoInstagram);
 
-		JTextPane franjaArriba = new JTextPane();
-		franjaArriba.setEditable(false);
+		JPanel franjaArriba = new JPanel();
 		franjaArriba.setBackground(new Color(43, 45, 47));
 		franjaArriba.setBounds(0, 0, 632, 83);
 		contentPanel.add(franjaArriba);
 
-		JTextPane franjaAbajo = new JTextPane();
-		franjaAbajo.setEditable(false);
+		JPanel franjaAbajo = new JPanel();
 		franjaAbajo.setBackground(new Color(43, 45, 47));
 		franjaAbajo.setBounds(0, 725, 632, 100);
 		contentPanel.add(franjaAbajo);
-		setLocationRelativeTo(null);
 
 		lblIcono = new JLabel();
 		lblIcono.setHorizontalAlignment(SwingConstants.LEFT);
@@ -272,8 +270,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
 		lblUsuario.setText(publi.getUsuario());
 		lblMegusta.setText(publi.getNumLikes() + "");
-		
-		
+
 		if (usuPubli.isVerificado()) {
 			lblVerificado.setVisible(true);
 			lblUsuario.setLocation(239, 110);
@@ -291,7 +288,7 @@ public class ParaTi extends JDialog implements ActionListener {
 		} else if (publi instanceof Reel) {
 			lblDescripcion.setText(((Reel) publi).getDescripcion());
 
-		} else  {
+		} else {
 			lblHistoria.setVisible(true);
 			lblDescripcion.setVisible(false);
 
@@ -302,8 +299,6 @@ public class ParaTi extends JDialog implements ActionListener {
 				lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
 			}
 		}
-		
-	
 
 	}
 
@@ -334,7 +329,7 @@ public class ParaTi extends JDialog implements ActionListener {
 
 		return publiActual;
 	}
-	
+
 	private void darLike() {
 		if (btnLike.isSelected()) {
 			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
@@ -346,15 +341,14 @@ public class ParaTi extends JDialog implements ActionListener {
 		}
 
 	}
-	
+
 	private void abrirPerfil() {
-		Usuario per = dao.buscarUsuario(lblUsuario.getText());
+		Usuario per = dao.buscarUsuario(publi.getEtiquetado());
 		Perfil perfil = new Perfil(this, true, dao, usu, per);
 		this.setVisible(false);
 		perfil.setVisible(true);
 
 	}
-	
 
 	private void abrirTienda() {
 		// TODO Auto-generated method stub
@@ -380,6 +374,4 @@ public class ParaTi extends JDialog implements ActionListener {
 		this.setVisible(false);
 		perfil.setVisible(true);
 	}
-
-	
 }
