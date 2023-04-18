@@ -11,6 +11,7 @@ public class Publicacion {
 	private LocalDate fecha_subida;
 	private String ubicacion;
 	private String usuario;
+	private String etiquetado;
 	private String id_cancion;
 
 	/********** METODOS **********/
@@ -23,6 +24,7 @@ public class Publicacion {
 	}
 
 	/********** CONSTRUCTORES **********/
+	
 	/********** GETTERS && SETTERS **********/
 	public String getId_publicacion() {
 		return id_publicacion;
@@ -72,7 +74,7 @@ public class Publicacion {
 		this.ubicacion = ubicacion;
 	}
 
-	public String getUusuario() {
+	public String getUsuario() {
 		return usuario;
 	}
 
@@ -86,5 +88,13 @@ public class Publicacion {
 
 	public void setId_cancion(String id_cancion) {
 		this.id_cancion = id_cancion;
+	}
+
+	public String getEtiquetado() {
+		return etiquetado;
+	}
+
+	public void setEtiquetado(String etiquetado) {
+		this.etiquetado = etiquetado;
 	}
 }

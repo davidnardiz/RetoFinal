@@ -8,14 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import clases.Usuario;
 import modelo.DAO;
 
 import javax.swing.JButton;
-import java.awt.Color;
-import javax.swing.JTextPane;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.awt.Font;
 
 public class Principal extends JFrame implements ActionListener {
 
@@ -27,9 +23,7 @@ public class Principal extends JFrame implements ActionListener {
 	private JButton btnIniciar;
 	private JButton btnRegistrarse;
 	private DAO dao;
-	private JTextPane textPane;
-	private JLabel icono;
-	private JLabel lblNewLabel;
+	private Usuario usu;
 	
 	/**
 	 * Create the frame.
@@ -39,46 +33,26 @@ public class Principal extends JFrame implements ActionListener {
 	public Principal(DAO dao) {
 		this.dao = dao;
 		
-		int alto = 864;
+		int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
 		int ancho = (alto/4) * 3;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 648, 520);
+		setBounds(100, 100, ancho, alto);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(49, 51, 53));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Principal.class.getResource("/utilidades/6666-removebg-preview.png")));
-		lblNewLabel.setBounds(96, 31, 357, 73);
-		lblNewLabel.setVisible(true);
-		contentPane.add(lblNewLabel);
-		
-		icono = new JLabel("New label");
-		icono.setIcon(new ImageIcon(Principal.class.getResource("/utilidades/logo2.png")));
-		icono.setBounds(28, 26, 58, 58);
-		icono.setVisible(true);
-		contentPane.add(icono);
-		
-		btnIniciar = new JButton("Iniciar sesi\u00F3n");
-		btnIniciar.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnIniciar.setBounds(209, 193, 195, 58);
+		btnIniciar = new JButton("Iniciar");
+		btnIniciar.setBounds(443, 675, 107, 43);
 		contentPane.add(btnIniciar);
 		btnIniciar.addActionListener(this);
 		
 		btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnRegistrarse.setBounds(209, 315, 195, 58);
-		btnRegistrarse.addActionListener(this);
+		btnRegistrarse.setBounds(26, 675, 107, 43);
 		contentPane.add(btnRegistrarse);
-		
-		textPane = new JTextPane();
-		textPane.setBackground(new Color(43, 45, 47));
-		textPane.setBounds(0, 0, 632, 112);
-		contentPane.add(textPane);
+		btnRegistrarse.addActionListener(this);
 	}
 
 
@@ -93,7 +67,7 @@ public class Principal extends JFrame implements ActionListener {
 
 
 	private void Registrarse() {
-		IniciarSesion ini = new IniciarSesion(this, true, dao);
+		IniciarSesion ini = new IniciarSesion(this, true, dao, usu);
 		this.setVisible(false);
 		ini.setVisible(true);
 		
