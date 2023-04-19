@@ -1,162 +1,452 @@
 package vista;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.border.EmptyBorder;
-
+import clases.Foto;
+import clases.Historia;
+import clases.Publicacion;
+import clases.Reel;
 import clases.Usuario;
+import java.awt.Color;
+import java.awt.Frame;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ImageIcon;
 import modelo.DAO;
+import utilidades.Utilidades;
 
-public class ParaTi extends JDialog implements ActionListener {
+public class ParaTi extends javax.swing.JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private DAO dao;
-	private Usuario usu;
+    private DAO dao;
+    private Usuario usu;
 
-	private JButton btnParaTi;
-	private JButton btnBuscar;
-	private JButton btnSubir;
-	private JButton btnTienda;
-	private JButton btnCuenta;
-	private JLabel lblNewLabel;
-	private JLabel imagen;
+    private Publicacion publi;
+    private Usuario usuPubli;
+    private List<String> hanSalido = new ArrayList<>();
 
+    public ParaTi(Frame parent, boolean modal, DAO dao, Usuario usu) {
+        super(parent, modal);
+        this.setModal(modal);
+        this.dao = dao;
+        this.usu = usu;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param dao
-	 * @param b
-	 * @param iniciarSesion
-	 **/
+        setTitle("Para Ti");
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
+        getContentPane().setBackground(new Color(49, 51, 53));
+        initComponents();
 
-	public ParaTi(IniciarSesion iniciarSesion, boolean b, DAO dao, Usuario usu) {
-		super(iniciarSesion);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ParaTi.class.getResource("/utilidades/logo.png")));
-		setTitle("Para Ti");
-		setResizable(false);
-		this.setModal(b);
-		this.dao = dao;
-		this.usu = usu;
-			
-		int alto = 864;
-		int ancho = (alto / 4) * 3;
+        siguienteFoto();
+    }
 
-		setBounds(100, 100, ancho, alto);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBackground(new Color(49, 51, 54));
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
+    private void siguienteFoto() {
+        // Buscamos una publicacion con una id aleatoria
+        publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
+        usuPubli = dao.buscarUsuario(publi.getUsuario());
 
-		btnCuenta = new JButton("");
-		btnCuenta.setBackground(new Color(43, 45, 47));
-		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/cuenta.png")));
-		btnCuenta.setBounds(515, 711, 70, 70);
-		contentPanel.add(btnCuenta);
-		btnCuenta.addActionListener(this);
+        System.out.println(publi.toString());
+        System.out.println(usuPubli.toString());
 
-		btnTienda = new JButton("");
-		btnTienda.setBackground(new Color(43, 45, 47));
-		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/tienda.png")));
-		btnTienda.setBounds(398, 711, 70, 70);
-		contentPanel.add(btnTienda);
-		btnTienda.addActionListener(this);
+        if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
+            btnLike.setSelected(true);
+        } else {
+            btnLike.setSelected(false);
+        }
 
-		btnSubir = new JButton("");
-		btnSubir.setBackground(new Color(43, 45, 47));
-		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/subir.png")));
-		btnSubir.setBounds(281, 711, 70, 70);
-		contentPanel.add(btnSubir);
-		btnSubir.addActionListener(this);
+        lblDescripcion.setVisible(true);
+        lblVerificado.setVisible(false);
+        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
+        lblUsuario.setVisible(true);
+        lblHistoria.setVisible(false);
+        btnEtiquetado.setVisible(false);
+        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+        lblUsuario.setText(publi.getUsuario());
+        lblMegusta.setText(publi.getNumLikes() + "");
 
-		btnBuscar = new JButton("");
-		btnBuscar.setBackground(new Color(43, 45, 47));
-		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/buscar.png")));
-		btnBuscar.setBounds(164, 711, 70, 70);
-		contentPanel.add(btnBuscar);
-		btnBuscar.addActionListener(this);
+        System.out.println(lblUsuario.getText());
+        if (usuPubli.isVerificado()) {
+            lblVerificado.setVisible(true);
+            getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(239, 110, 170, 22));
 
-		btnParaTi = new JButton("");
-		btnParaTi.setBackground(new Color(43, 45, 47));
-		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/utilidades/para ti.png")));
-		btnParaTi.setBounds(47, 711, 70, 70);
-		contentPanel.add(btnParaTi);
-		btnParaTi.addActionListener(this);
-		setLocationRelativeTo(null);
+        }
 
-		JTextPane textPane = new JTextPane();
-		textPane.setBackground(new Color(43, 45, 47));
-		textPane.setBounds(0, 0, 632, 112);
-		contentPanel.add(textPane);
+        if (publi instanceof Foto) {
+            lblDescripcion.setText(((Foto) publi).getDescripcion());
 
-		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setBackground(new Color(43, 45, 47));
-		textPane_1.setBounds(-162, 665, 794, 160);
-		contentPanel.add(textPane_1);
+            if (((Foto) publi).getEtiquetado() != null) {
+                btnEtiquetado.setVisible(true);
 
-		JLabel perfil = new JLabel("");
-		perfil.setBounds(177, 140, 40, 40);
-		contentPanel.add(perfil);
+            }
 
-		lblNewLabel = new JLabel("Me gustas");
-		lblNewLabel.setBounds(195, 711, 78, 14);
-		contentPanel.add(lblNewLabel);
+        } else if (publi instanceof Reel) {
+            lblDescripcion.setText(((Reel) publi).getDescripcion());
 
-		imagen = new JLabel("");
-		imagen.setBounds(86, 174, 450, 500);
-		contentPanel.add(imagen);
+        } else {
+            lblHistoria.setVisible(true);
+            lblDescripcion.setVisible(false);
 
-	}
+            if (((Historia) publi).isMejores_amigos()) {
+                lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esMejos.png")));
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btnParaTi)) {
-			abrirParaTi();
-		} else if (e.getSource().equals(btnBuscar)) {
-			abrirBuscar();
-		} else if (e.getSource().equals(btnSubir)) {
-			abrirSubir();
-		} else if (e.getSource().equals(btnTienda)) {
-			abrirTienda();
-		} else if (e.getSource().equals(btnCuenta)) {
-			abrirCuenta();
-		}
-	}
+            } else {
+                lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
+            }
+        }
 
-	private void abrirCuenta() {
-		
-	}
+    }
 
-	private void abrirTienda() {
-		// TODO Auto-generated method stub
+    private String generarPublicacionAleatoria() {
+        List<Publicacion> id = dao.listarPublicaciones();
+        String publiActual = "";
+        int numRandom;
+        boolean salir;
 
-	}
+        if (hanSalido.size() == id.size()) {
+            hanSalido.clear();
+        }
 
-	private void abrirSubir() {
-		Subir subir = new Subir(this, true, dao, usu);
-		this.setVisible(false);
-		subir.setVisible(true);
+        do {
+            salir = true;
+            numRandom = Utilidades.numeros_aleatorios(0, id.size() - 1);
 
-	}
+            for (String i : hanSalido) {
+                if (i.equalsIgnoreCase(id.get(numRandom).getId_publicacion())) {
+                    salir = false;
+                }
+            }
 
-	private void abrirBuscar() {
-		// TODO Auto-generated method stub
+        } while (!salir);
 
-	}
+        publiActual = id.get(numRandom).getId_publicacion();
+        hanSalido.add(publiActual);
 
-	private void abrirParaTi() {
-		
-	}
+        return publiActual;
+    }
+
+    private void darLike() {
+        if (btnLike.isSelected()) {
+            lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
+            dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
+
+        } else {
+            lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
+            dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
+        }
+
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        franjaArriba = new javax.swing.JPanel();
+        btnMensaje = new javax.swing.JButton();
+        lblLogo = new javax.swing.JLabel();
+        lblLogoLetras = new javax.swing.JLabel();
+        franajAbajo = new javax.swing.JPanel();
+        btnParaTi = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnSubir = new javax.swing.JButton();
+        btnTienda = new javax.swing.JButton();
+        btnCuenta = new javax.swing.JButton();
+        imagen = new javax.swing.JLabel();
+        lblIcono = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
+        lblVerificado = new javax.swing.JLabel();
+        btnLike = new javax.swing.JToggleButton();
+        btnEtiquetado = new javax.swing.JButton();
+        lblMegusta = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
+        lblHistoria = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(49, 51, 53));
+        setModal(true);
+        setName("paraTi"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(648, 864));
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
+        franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
+
+        btnMensaje.setBackground(franjaArriba.getBackground());
+        btnMensaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/conversaciones.png"))); // NOI18N
+        btnMensaje.setToolTipText("");
+        btnMensaje.setAlignmentY(0.0F);
+        btnMensaje.setAutoscrolls(true);
+        btnMensaje.setBorder(null);
+        btnMensaje.setContentAreaFilled(false);
+        btnMensaje.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnMensaje.setFocusPainted(false);
+        btnMensaje.setFocusable(false);
+        btnMensaje.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnMensaje.setRolloverEnabled(false);
+        btnMensaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMensajeActionPerformed(evt);
+            }
+        });
+
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/logoPequeño.png"))); // NOI18N
+
+        lblLogoLetras.setForeground(getBackground());
+        lblLogoLetras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/letrasInstagram.png"))); // NOI18N
+        lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
+
+        javax.swing.GroupLayout franjaArribaLayout = new javax.swing.GroupLayout(franjaArriba);
+        franjaArriba.setLayout(franjaArribaLayout);
+        franjaArribaLayout.setHorizontalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaArribaLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(lblLogo)
+                .addGap(18, 18, 18)
+                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
+                .addComponent(btnMensaje)
+                .addGap(84, 84, 84))
+        );
+        franjaArribaLayout.setVerticalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaArribaLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLogo)
+                    .addComponent(btnMensaje)
+                    .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        lblLogoLetras.getAccessibleContext().setAccessibleName("");
+
+        getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, -1));
+
+        franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
+
+        btnParaTi.setBackground(franjaArriba.getBackground());
+        btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
+        btnParaTi.setToolTipText("");
+        btnParaTi.setAlignmentY(0.0F);
+        btnParaTi.setAutoscrolls(true);
+        btnParaTi.setBorder(null);
+        btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusable(false);
+        btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnParaTi.setRolloverEnabled(false);
+        btnParaTi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnParaTiActionPerformed(evt);
+            }
+        });
+
+        btnBuscar.setBackground(franjaArriba.getBackground());
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
+        btnBuscar.setToolTipText("");
+        btnBuscar.setAlignmentY(0.0F);
+        btnBuscar.setAutoscrolls(true);
+        btnBuscar.setBorder(null);
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusable(false);
+        btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBuscar.setRolloverEnabled(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        btnSubir.setBackground(franjaArriba.getBackground());
+        btnSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/subir.png"))); // NOI18N
+        btnSubir.setToolTipText("");
+        btnSubir.setAlignmentY(0.0F);
+        btnSubir.setAutoscrolls(true);
+        btnSubir.setBorder(null);
+        btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusable(false);
+        btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSubir.setRolloverEnabled(false);
+        btnSubir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubirActionPerformed(evt);
+            }
+        });
+
+        btnTienda.setBackground(franjaArriba.getBackground());
+        btnTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/tienda.png"))); // NOI18N
+        btnTienda.setToolTipText("");
+        btnTienda.setAlignmentY(0.0F);
+        btnTienda.setAutoscrolls(true);
+        btnTienda.setBorder(null);
+        btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusable(false);
+        btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTienda.setRolloverEnabled(false);
+        btnTienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTiendaActionPerformed(evt);
+            }
+        });
+
+        btnCuenta.setBackground(franjaArriba.getBackground());
+        btnCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cuenta.png"))); // NOI18N
+        btnCuenta.setToolTipText("");
+        btnCuenta.setAlignmentY(0.0F);
+        btnCuenta.setAutoscrolls(true);
+        btnCuenta.setBorder(null);
+        btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusable(false);
+        btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCuenta.setRolloverEnabled(false);
+        btnCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout franajAbajoLayout = new javax.swing.GroupLayout(franajAbajo);
+        franajAbajo.setLayout(franajAbajoLayout);
+        franajAbajoLayout.setHorizontalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(btnParaTi)
+                .addGap(66, 66, 66)
+                .addComponent(btnBuscar)
+                .addGap(64, 64, 64)
+                .addComponent(btnSubir)
+                .addGap(64, 64, 64)
+                .addComponent(btnTienda)
+                .addGap(66, 66, 66)
+                .addComponent(btnCuenta)
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+        franajAbajoLayout.setVerticalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 725, 632, 100));
+
+        imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imagen.setPreferredSize(new java.awt.Dimension(475, 475));
+        imagen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imagenClickada(evt);
+            }
+        });
+        getContentPane().add(imagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 161, -1, -1));
+
+        lblIcono.setPreferredSize(new java.awt.Dimension(64, 64));
+        getContentPane().add(lblIcono, new org.netbeans.lib.awtextra.AbsoluteConstraints(119, 89, -1, -1));
+
+        lblUsuario.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        lblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
+        lblUsuario.getAccessibleContext().setAccessibleName("");
+
+        lblVerificado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))); // NOI18N
+        lblVerificado.setPreferredSize(new java.awt.Dimension(30, 30));
+        getContentPane().add(lblVerificado, new org.netbeans.lib.awtextra.AbsoluteConstraints(199, 106, -1, -1));
+
+        btnLike.setBackground(getBackground());
+        btnLike.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(false).png"))); // NOI18N
+        btnLike.setBorder(null);
+        btnLike.setBorderPainted(false);
+        btnLike.setContentAreaFilled(false);
+        btnLike.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(True).png"))); // NOI18N
+        getContentPane().add(btnLike, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 640, -1, -1));
+        btnLike.setBounds(137, 640, 46, 40);
+
+        btnEtiquetado.setBackground(getBackground());
+        btnEtiquetado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/etiquedado.png"))); // NOI18N
+        btnEtiquetado.setBorder(null);
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(448, 645, -1, -1));
+
+        lblMegusta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblMegusta.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblMegusta, new org.netbeans.lib.awtextra.AbsoluteConstraints(199, 640, 209, 40));
+
+        lblDescripcion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblDescripcion.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 687, 463, 27));
+
+        lblHistoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHistoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/eshistoria.png"))); // NOI18N
+        lblHistoria.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        getContentPane().add(lblHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(101, 71, 100, 100));
+        lblHistoria.setBounds(101, 71, 100, 100);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMensajeActionPerformed
+
+    private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnParaTiActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        Buscar buscar = new Buscar(this, true, dao, usu, false);
+        this.setVisible(false);
+        buscar.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+        Subir subir = new Subir(this, true, dao, usu);
+        this.setVisible(false);
+        subir.setVisible(true);
+    }//GEN-LAST:event_btnSubirActionPerformed
+
+    private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
+        Tienda tienda = new Tienda(this, true, dao, usu);
+        this.setVisible(false);
+        tienda.setVisible(true);
+    }//GEN-LAST:event_btnTiendaActionPerformed
+
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        Perfil perfil = new Perfil(this, true, dao, usu, usu);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }//GEN-LAST:event_btnCuentaActionPerformed
+
+    private void imagenClickada(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenClickada
+        siguienteFoto();
+    }//GEN-LAST:event_imagenClickada
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCuenta;
+    private javax.swing.JButton btnEtiquetado;
+    private javax.swing.JToggleButton btnLike;
+    private javax.swing.JButton btnMensaje;
+    private javax.swing.JButton btnParaTi;
+    private javax.swing.JButton btnSubir;
+    private javax.swing.JButton btnTienda;
+    private javax.swing.JPanel franajAbajo;
+    private javax.swing.JPanel franjaArriba;
+    private javax.swing.JLabel imagen;
+    private javax.swing.JLabel lblDescripcion;
+    private javax.swing.JLabel lblHistoria;
+    private javax.swing.JLabel lblIcono;
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblLogoLetras;
+    private javax.swing.JLabel lblMegusta;
+    private javax.swing.JLabel lblUsuario;
+    private javax.swing.JLabel lblVerificado;
+    // End of variables declaration//GEN-END:variables
 }
