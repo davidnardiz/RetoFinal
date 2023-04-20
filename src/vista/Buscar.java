@@ -1,24 +1,15 @@
 package vista;
 
 import clases.Usuario;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
+import utilidades.textfield.SearchOptinEvent;
+import utilidades.textfield.SearchOption;
 
 public class Buscar extends javax.swing.JDialog {
 
@@ -41,32 +32,44 @@ public class Buscar extends javax.swing.JDialog {
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
 
-        buscador.getDocument().addDocumentListener(new DocumentListener() {
-
+        buscador.addEventOptionSelected(new SearchOptinEvent() {
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                buscar();
+            public void optionSelected(SearchOption option, int index) {
+                buscador.setHint("Buscar por " + option.getName() + "...");
             }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                buscar();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                buscar();
-            }
         });
-
-        //  presentarTabla(usuariosList);
+        buscador.addOption(new SearchOption("usuario", new ImageIcon(getClass().getResource("/utilidades/textfield/user.png"))));
+        buscador.addOption(new SearchOption("verificado", new ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))));
+        buscador.addOption(new SearchOption("seguidores", new ImageIcon(getClass().getResource("/utilidades/textfield/address.png"))));
+        buscador.setSelectedIndex(0);
         cargarTabla(usuariosList);
     }
 
-    private void buscar() {
-        usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
-        //  cargarTabla(usuariosList);
-        presentarTabla(usuariosList);
+    private void cargarTabla(List<Usuario> usuariosList) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
+        modelo.setRowCount(0);
+
+        TableColumnModel columnModel = tablaUsuarios.getColumnModel();
+        columnModel.getColumn(0).setCellRenderer(new ImageRenderer());
+        columnModel.getColumn(1).setCellRenderer(new ImageRenderer());
+        columnModel.getColumn(1).setResizable(true);
+        columnModel.getColumn(1).setPreferredWidth(-1);
+
+        String rutaProyecto = System.getProperty("user.dir");
+        for (int i = 0; i < usuariosList.size(); i++) {
+            Object[] fila = new Object[4];
+
+            fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + usuariosList.get(i).getIcono());
+            if (usuariosList.get(i).isVerificado()) {
+                fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
+            }
+            fila[2] = usuariosList.get(i).getUsuario();
+            fila[3] = usuariosList.get(i).getNumSeguidores() + " ";
+
+            modelo.addRow(fila);
+
+        }
 
     }
 
@@ -75,77 +78,6 @@ public class Buscar extends javax.swing.JDialog {
         Perfil perfil = new Perfil(paraTi, true, dao, usu, perf);
         this.setVisible(false);
         perfil.setVisible(true);
-    }
-
-    public void presentarTabla(List<Usuario> usuariosList) {
-
-    }
-
-    public JTable cargarTabla(List<Usuario> usuariosList) {
-        Object[] fila = new Object[4];
-
-        DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
-        String rutaProyecto = System.getProperty("user.dir");
-
-        for (Usuario u : usuariosList) {
-            fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + u.getIcono());
-
-            if (u.isVerificado()) {
-                fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
-            }
-
-            fila[2] = u.getUsuario();
-            fila[3] = u.getNumSeguidores() + " ";
-
-            modelo.addRow(fila);
-        }
-
-        //tablaUsuarios.setModel(modelo);
-        return new JTable(modelo);
-        /*
-        String[] cabezeras = {"icono", "verificado", "usuario", "seguidores"};
-        Object[] fila = new Object[4];
-
-        DefaultTableModel model = new DefaultTableModel(null, cabezeras);
-
-
-        for (Usuario j : usuariosList) {
-            fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + j.getIcono());
-
-            if (j.isVerificado()) {
-                fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
-            }
-
-            fila[2] = j.getUsuario();
-            fila[3] = j.getNumSeguidores() + " ";
-
-            model.addRow(fila);
-        }
-
-        return new JTable(model);
-
-         */
-    }
-
-    class ImageRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-                int row, int column) {
-            JLabel label = new JLabel();
-            if (value != null) {
-
-                if (value.toString().contains("verificado")) {
-                    label.setHorizontalAlignment(JLabel.RIGHT);
-                } else {
-                    label.setHorizontalAlignment(JLabel.CENTER);
-                }
-
-                label.setIcon((ImageIcon) value);
-            }
-            return label;
-        }
     }
 
     /**
@@ -166,11 +98,10 @@ public class Buscar extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        buscador = new javax.swing.JTextField();
-        lblUsuarioText = new javax.swing.JLabel();
+        buscador = new vista.textfield.TextFieldSearchOption();
         scroll = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
+        lblBuscadorText = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -223,9 +154,6 @@ public class Buscar extends javax.swing.JDialog {
         btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnParaTi.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnParaTi.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnParaTi.setPreferredSize(new java.awt.Dimension(50, 50));
         btnParaTi.setRolloverEnabled(false);
         btnParaTi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -242,9 +170,6 @@ public class Buscar extends javax.swing.JDialog {
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBuscar.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnBuscar.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnBuscar.setPreferredSize(new java.awt.Dimension(50, 50));
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -261,9 +186,6 @@ public class Buscar extends javax.swing.JDialog {
         btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSubir.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnSubir.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnSubir.setPreferredSize(new java.awt.Dimension(50, 50));
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -280,9 +202,6 @@ public class Buscar extends javax.swing.JDialog {
         btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnTienda.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnTienda.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnTienda.setPreferredSize(new java.awt.Dimension(50, 50));
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,9 +218,6 @@ public class Buscar extends javax.swing.JDialog {
         btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnCuenta.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnCuenta.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnCuenta.setPreferredSize(new java.awt.Dimension(50, 50));
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,15 +231,15 @@ public class Buscar extends javax.swing.JDialog {
             franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(franajAbajoLayout.createSequentialGroup()
                 .addGap(66, 66, 66)
-                .addComponent(btnParaTi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnParaTi)
                 .addGap(66, 66, 66)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar)
                 .addGap(64, 64, 64)
-                .addComponent(btnSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSubir)
                 .addGap(64, 64, 64)
-                .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnTienda)
                 .addGap(66, 66, 66)
-                .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCuenta)
                 .addContainerGap(72, Short.MAX_VALUE))
         );
         franajAbajoLayout.setVerticalGroup(
@@ -331,33 +247,32 @@ public class Buscar extends javax.swing.JDialog {
             .addGroup(franajAbajoLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnParaTi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        jSeparator1.setBackground(getBackground());
-        jSeparator1.setForeground(new java.awt.Color(255, 255, 255));
-
-        buscador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        buscador.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         buscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buscadorActionPerformed(evt);
             }
         });
-
-        lblUsuarioText.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lblUsuarioText.setForeground(new java.awt.Color(255, 255, 255));
-        lblUsuarioText.setText("Usuario:");
+        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscadorKeyReleased(evt);
+            }
+        });
 
         scroll.setBackground(getBackground());
-        scroll.setForeground(new java.awt.Color(0, 0, 0));
+        scroll.setForeground(new java.awt.Color(255, 255, 255));
+        scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         tablaUsuarios.setBackground(getBackground());
+        tablaUsuarios.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N
         tablaUsuarios.setForeground(new java.awt.Color(255, 255, 255));
         tablaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -366,10 +281,31 @@ public class Buscar extends javax.swing.JDialog {
             new String [] {
                 "Icono", "Verificado", "Usuario", "Seguidores"
             }
-        ));
-        tablaUsuarios.setRowHeight(85);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaUsuarios.setFillsViewportHeight(true);
+        tablaUsuarios.setFocusable(false);
+        tablaUsuarios.setRowHeight(109);
         tablaUsuarios.setRowSelectionAllowed(false);
+        tablaUsuarios.setShowGrid(false);
+        tablaUsuarios.setShowGrid(false);
+        tablaUsuarios.setTableHeader(null);
+        tablaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaUsuariosMouseClicked(evt);
+            }
+        });
         scroll.setViewportView(tablaUsuarios);
+
+        lblBuscadorText.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblBuscadorText.setText("Buscador:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -377,36 +313,33 @@ public class Buscar extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(franjaArriba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(franajAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(116, 116, 116)
-                .addComponent(lblUsuarioText)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator1)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblBuscadorText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(franjaArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUsuarioText))
-                .addGap(38, 38, 38)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                    .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBuscadorText))
+                .addGap(26, 26, 26)
+                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(franajAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        scroll.setBorder(BorderFactory.createEmptyBorder());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -446,19 +379,49 @@ public class Buscar extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_buscadorActionPerformed
 
+    private void buscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscadorKeyReleased
+        if (buscador.isSelected()) {
+            int opcion = buscador.getSelectedIndex();
+
+            switch (opcion) {
+                case 0:
+                    usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
+                    break;
+                case 1:
+                    usuariosList = dao.listarUsuariosVerificados(buscador.getText());
+                    break;
+                case 2:
+                    usuariosList = dao.listarUsuariosXSeguidores(buscador.getText());
+                    break;
+                default:
+
+            }
+            cargarTabla(usuariosList);
+        }
+    }//GEN-LAST:event_buscadorKeyReleased
+
+    private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
+        int fila = tablaUsuarios.rowAtPoint(evt.getPoint());
+
+        if (conver) {
+
+        } else {
+            buscarUsuario(tablaUsuarios.getValueAt(fila, 2).toString());
+        }
+    }//GEN-LAST:event_tablaUsuariosMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-    private javax.swing.JTextField buscador;
+    private vista.textfield.TextFieldSearchOption buscador;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblBuscadorText;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblLogoLetras;
-    private javax.swing.JLabel lblUsuarioText;
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTable tablaUsuarios;
     // End of variables declaration//GEN-END:variables

@@ -1,27 +1,103 @@
 package vista;
 
+import clases.Publicacion;
 import clases.Usuario;
 import java.awt.Color;
+import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
 public class Perfil extends javax.swing.JDialog {
 
     private DAO dao;
-    private Usuario usu;
     private ParaTi paraTi;
+    private Usuario usuarioPerfil;
+    private Usuario usu;
+    private List<Publicacion> publicacionesList;
 
-    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario usu, Usuario usu1) {
+    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usu) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
-        this.usu = usu;
+        this.usu = nosotros;
+        this.usuarioPerfil = usu;
         this.paraTi = parent;
 
         setTitle("Perfil");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
+
+        if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+            btn.setVisible(false);
+            btnEditarPerfil.setVisible(false);
+        }
+        if (!usuarioPerfil.isVerificado()) {
+            lblVerificado.setVisible(false);
+        }
+
+        lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
+        lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
+        lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
+        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+        lblUsuario.setText(usuarioPerfil.getUsuario());
+
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+        cargarTabla(publicacionesList);
+    }
+
+    private void cargarTabla(List<Publicacion> publicacionesList) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaPublicaciones.getModel();
+        modelo.setRowCount(0);
+
+        TableColumnModel columnModel = tablaPublicaciones.getColumnModel();
+        columnModel.getColumn(0).setCellRenderer(new ImageRenderer());
+        columnModel.getColumn(1).setCellRenderer(new ImageRenderer());
+        columnModel.getColumn(2).setCellRenderer(new ImageRenderer());
+
+        String rutaProyecto = System.getProperty("user.dir");
+        for (int i = 0; i < publicacionesList.size(); i = i + 3) {
+            Object[] fila = new Object[3];
+            fila[0] = new ImageIcon(
+                    rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i).getImagen());
+
+            if (publicacionesList.size() > i + 1) {
+                fila[1] = new ImageIcon(
+                        rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i + 1).getImagen());
+            } else {
+                fila[1] = null;
+            }
+
+            if (publicacionesList.size() > i + 2) {
+                fila[2] = new ImageIcon(
+                        rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i + 2).getImagen());
+            } else {
+                fila[2] = null;
+            }
+
+            modelo.addRow(fila);
+
+        }
+
+    }
+
+    private void abrirFoto(String foto) {
+        String rutaProyecto = System.getProperty("user.dir");
+        Publicacion publi = null;
+
+        for (Publicacion i : publicacionesList) {
+            if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
+                publi = i;
+                break;
+            }
+        }
+
+        PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, dao, publi, usu, usuarioPerfil);
+        publiPop.setVisible(true);
+
     }
 
     /**
@@ -33,6 +109,7 @@ public class Perfil extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tipoPublicacion = new javax.swing.ButtonGroup();
         franjaArriba = new javax.swing.JPanel();
         lblLogo = new javax.swing.JLabel();
         lblLogoLetras = new javax.swing.JLabel();
@@ -42,6 +119,28 @@ public class Perfil extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
+        lblNumPublicaciones = new javax.swing.JLabel();
+        lblSeguidores = new javax.swing.JLabel();
+        lblSeguidos = new javax.swing.JLabel();
+        lblPublicacionesText = new javax.swing.JLabel();
+        lblSeguidoresText = new javax.swing.JLabel();
+        lblSeguidosText = new javax.swing.JLabel();
+        lblIcono = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
+        lblVerificado = new javax.swing.JLabel();
+        btnEditarPerfil = new javax.swing.JButton();
+        btn = new javax.swing.JButton();
+        btnMensaje = new javax.swing.JButton();
+        btnSeguir = new javax.swing.JToggleButton();
+        rdbtnFoto = new javax.swing.JRadioButton();
+        rdbtnReel = new javax.swing.JRadioButton();
+        rdbtnHistoria = new javax.swing.JRadioButton();
+        scroll = new javax.swing.JScrollPane();
+        tablaPublicaciones = new javax.swing.JTable();
+
+        tipoPublicacion.add(rdbtnFoto);
+        tipoPublicacion.add(rdbtnReel);
+        tipoPublicacion.add(rdbtnHistoria);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -49,6 +148,7 @@ public class Perfil extends javax.swing.JDialog {
         setName("paraTi"); // NOI18N
         setPreferredSize(new java.awt.Dimension(648, 864));
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
         franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -68,7 +168,7 @@ public class Perfil extends javax.swing.JDialog {
                 .addComponent(lblLogo)
                 .addGap(18, 18, 18)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addContainerGap(392, Short.MAX_VALUE))
         );
         franjaArribaLayout.setVerticalGroup(
             franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,19 +183,20 @@ public class Perfil extends javax.swing.JDialog {
 
         lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
+        getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 682, -1));
+
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
+        franajAbajo.setPreferredSize(new java.awt.Dimension(632, 100));
 
         btnParaTi.setBackground(franjaArriba.getBackground());
         btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
         btnParaTi.setToolTipText("");
         btnParaTi.setAlignmentY(0.0F);
         btnParaTi.setAutoscrolls(true);
+        btnParaTi.setBorder(null);
         btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnParaTi.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnParaTi.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnParaTi.setPreferredSize(new java.awt.Dimension(50, 50));
         btnParaTi.setRolloverEnabled(false);
         btnParaTi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,12 +209,10 @@ public class Perfil extends javax.swing.JDialog {
         btnBuscar.setToolTipText("");
         btnBuscar.setAlignmentY(0.0F);
         btnBuscar.setAutoscrolls(true);
+        btnBuscar.setBorder(null);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBuscar.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnBuscar.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnBuscar.setPreferredSize(new java.awt.Dimension(50, 50));
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,12 +225,10 @@ public class Perfil extends javax.swing.JDialog {
         btnSubir.setToolTipText("");
         btnSubir.setAlignmentY(0.0F);
         btnSubir.setAutoscrolls(true);
+        btnSubir.setBorder(null);
         btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSubir.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnSubir.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnSubir.setPreferredSize(new java.awt.Dimension(50, 50));
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,12 +241,10 @@ public class Perfil extends javax.swing.JDialog {
         btnTienda.setToolTipText("");
         btnTienda.setAlignmentY(0.0F);
         btnTienda.setAutoscrolls(true);
+        btnTienda.setBorder(null);
         btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnTienda.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnTienda.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnTienda.setPreferredSize(new java.awt.Dimension(50, 50));
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,12 +257,10 @@ public class Perfil extends javax.swing.JDialog {
         btnCuenta.setToolTipText("");
         btnCuenta.setAlignmentY(0.0F);
         btnCuenta.setAutoscrolls(true);
+        btnCuenta.setBorder(null);
         btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnCuenta.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnCuenta.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnCuenta.setPreferredSize(new java.awt.Dimension(50, 50));
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -181,44 +274,209 @@ public class Perfil extends javax.swing.JDialog {
             franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(franajAbajoLayout.createSequentialGroup()
                 .addGap(66, 66, 66)
-                .addComponent(btnParaTi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnParaTi)
                 .addGap(66, 66, 66)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar)
                 .addGap(64, 64, 64)
-                .addComponent(btnSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSubir)
                 .addGap(64, 64, 64)
-                .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnTienda)
                 .addGap(66, 66, 66)
-                .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addComponent(btnCuenta)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         franajAbajoLayout.setVerticalGroup(
             franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(franajAbajoLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnParaTi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(franjaArriba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(franajAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(franjaArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 673, Short.MAX_VALUE)
-                .addComponent(franajAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 725, -1, -1));
+
+        lblNumPublicaciones.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblNumPublicaciones.setForeground(new java.awt.Color(255, 255, 255));
+        lblNumPublicaciones.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblNumPublicaciones.setText("0");
+        lblNumPublicaciones.setPreferredSize(new java.awt.Dimension(94, 28));
+        getContentPane().add(lblNumPublicaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 120, -1, -1));
+        lblNumPublicaciones.setBounds(212, 120, 94, 28);
+
+        lblSeguidores.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblSeguidores.setForeground(new java.awt.Color(255, 255, 255));
+        lblSeguidores.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeguidores.setText("0");
+        lblSeguidores.setPreferredSize(new java.awt.Dimension(78, 28));
+        getContentPane().add(lblSeguidores, new org.netbeans.lib.awtextra.AbsoluteConstraints(353, 120, -1, -1));
+        lblSeguidores.setBounds(352, 120, 78, 28);
+
+        lblSeguidos.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblSeguidos.setForeground(new java.awt.Color(255, 255, 255));
+        lblSeguidos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeguidos.setText("0");
+        lblSeguidos.setPreferredSize(new java.awt.Dimension(78, 28));
+        getContentPane().add(lblSeguidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(484, 120, -1, -1));
+
+        lblPublicacionesText.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblPublicacionesText.setForeground(new java.awt.Color(255, 255, 255));
+        lblPublicacionesText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPublicacionesText.setText("Publicaciones");
+        lblPublicacionesText.setPreferredSize(new java.awt.Dimension(94, 20));
+        getContentPane().add(lblPublicacionesText, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 156, -1, -1));
+
+        lblSeguidoresText.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblSeguidoresText.setForeground(new java.awt.Color(255, 255, 255));
+        lblSeguidoresText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeguidoresText.setText("Seguidores");
+        lblSeguidoresText.setPreferredSize(new java.awt.Dimension(78, 20));
+        getContentPane().add(lblSeguidoresText, new org.netbeans.lib.awtextra.AbsoluteConstraints(352, 156, -1, -1));
+
+        lblSeguidosText.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblSeguidosText.setForeground(new java.awt.Color(255, 255, 255));
+        lblSeguidosText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeguidosText.setText("Siguiendo");
+        lblSeguidosText.setPreferredSize(new java.awt.Dimension(70, 20));
+        getContentPane().add(lblSeguidosText, new org.netbeans.lib.awtextra.AbsoluteConstraints(488, 156, -1, -1));
+
+        lblIcono.setPreferredSize(new java.awt.Dimension(64, 64));
+        getContentPane().add(lblIcono, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 120, -1, -1));
+
+        lblUsuario.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        lblUsuario.setPreferredSize(new java.awt.Dimension(120, 20));
+        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 196, -1, -1));
+
+        lblVerificado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))); // NOI18N
+        getContentPane().add(lblVerificado, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, -1, -1));
+
+        btnEditarPerfil.setBackground(new java.awt.Color(227, 227, 227));
+        btnEditarPerfil.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnEditarPerfil.setForeground(new java.awt.Color(0, 0, 0));
+        btnEditarPerfil.setText("Editar Cuenta");
+        btnEditarPerfil.setBorder(null);
+        btnEditarPerfil.setBorderPainted(false);
+        btnEditarPerfil.setFocusPainted(false);
+        getContentPane().add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
+
+        btn.setBackground(new java.awt.Color(227, 227, 227));
+        btn.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btn.setForeground(new java.awt.Color(0, 0, 0));
+        btn.setText("???");
+        btn.setBorder(null);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        getContentPane().add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
+
+        btnMensaje.setBackground(new java.awt.Color(227, 227, 227));
+        btnMensaje.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnMensaje.setForeground(new java.awt.Color(0, 0, 0));
+        btnMensaje.setText("Enviar Mensaje");
+        btnMensaje.setBorder(null);
+        btnMensaje.setBorderPainted(false);
+        btnMensaje.setFocusPainted(false);
+        getContentPane().add(btnMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
+
+        btnSeguir.setBackground(new java.awt.Color(0, 149, 246));
+        btnSeguir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnSeguir.setForeground(new java.awt.Color(255, 255, 255));
+        btnSeguir.setText("Seguir");
+        btnSeguir.setBorder(null);
+        btnSeguir.setBorderPainted(false);
+        btnSeguir.setFocusPainted(false);
+        btnSeguir.setRolloverEnabled(false);
+        getContentPane().add(btnSeguir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
+
+        rdbtnFoto.setBackground(getBackground());
+        tipoPublicacion.add(rdbtnFoto);
+        rdbtnFoto.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rdbtnFoto.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnFoto.setSelected(true);
+        rdbtnFoto.setText("Foto");
+        rdbtnFoto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        rdbtnFoto.setFocusPainted(false);
+        rdbtnFoto.setPreferredSize(new java.awt.Dimension(109, 23));
+        rdbtnFoto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rdbtnFotoMouseClicked(evt);
+            }
+        });
+        getContentPane().add(rdbtnFoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(63, 314, -1, -1));
+
+        rdbtnReel.setBackground(getBackground());
+        tipoPublicacion.add(rdbtnReel);
+        rdbtnReel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rdbtnReel.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnReel.setText("Reels");
+        rdbtnReel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        rdbtnReel.setFocusPainted(false);
+        rdbtnReel.setPreferredSize(new java.awt.Dimension(109, 23));
+        rdbtnReel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rdbtnReelMouseClicked(evt);
+            }
+        });
+        rdbtnReel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbtnReelActionPerformed(evt);
+            }
+        });
+        getContentPane().add(rdbtnReel, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 314, -1, -1));
+
+        rdbtnHistoria.setBackground(getBackground());
+        tipoPublicacion.add(rdbtnHistoria);
+        rdbtnHistoria.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rdbtnHistoria.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnHistoria.setText("Historias");
+        rdbtnHistoria.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        rdbtnHistoria.setFocusPainted(false);
+        rdbtnHistoria.setPreferredSize(new java.awt.Dimension(109, 23));
+        rdbtnHistoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rdbtnHistoriaMouseClicked(evt);
+            }
+        });
+        getContentPane().add(rdbtnHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 314, -1, -1));
+
+        scroll.setBackground(getBackground());
+        scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setAutoscrolls(true);
+        scroll.setPreferredSize(new java.awt.Dimension(594, 351));
+
+        tablaPublicaciones.setBackground(getBackground());
+        tablaPublicaciones.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3"
+            }
+        ));
+        tablaPublicaciones.setFillsViewportHeight(true);
+        tablaPublicaciones.setPreferredSize(new java.awt.Dimension(594, 351));
+        tablaPublicaciones.setRowHeight(351);
+        tablaPublicaciones.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPublicaciones.setShowGrid(false);
+        tablaPublicaciones.setTableHeader(null);
+        tablaPublicaciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPublicacionesMouseClicked(evt);
+            }
+        });
+        scroll.setViewportView(tablaPublicaciones);
+
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+
+        getContentPane().add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 355, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -254,15 +512,60 @@ public class Perfil extends javax.swing.JDialog {
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
+    private void rdbtnReelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnReelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rdbtnReelActionPerformed
+
+    private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+        cargarTabla(publicacionesList);
+    }//GEN-LAST:event_rdbtnFotoMouseClicked
+
+    private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
+        cargarTabla(publicacionesList);
+    }//GEN-LAST:event_rdbtnReelMouseClicked
+
+    private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
+        cargarTabla(publicacionesList);
+    }//GEN-LAST:event_rdbtnHistoriaMouseClicked
+
+    private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
+        int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
+        int columna = tablaPublicaciones.columnAtPoint(evt.getPoint());
+
+        abrirFoto(tablaPublicaciones.getValueAt(fila, columna).toString());
+    }//GEN-LAST:event_tablaPublicacionesMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCuenta;
+    private javax.swing.JButton btnEditarPerfil;
+    private javax.swing.JButton btnMensaje;
     private javax.swing.JButton btnParaTi;
+    private javax.swing.JToggleButton btnSeguir;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
+    private javax.swing.JLabel lblIcono;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblLogoLetras;
+    private javax.swing.JLabel lblNumPublicaciones;
+    private javax.swing.JLabel lblPublicacionesText;
+    private javax.swing.JLabel lblSeguidores;
+    private javax.swing.JLabel lblSeguidoresText;
+    private javax.swing.JLabel lblSeguidos;
+    private javax.swing.JLabel lblSeguidosText;
+    private javax.swing.JLabel lblUsuario;
+    private javax.swing.JLabel lblVerificado;
+    private javax.swing.JRadioButton rdbtnFoto;
+    private javax.swing.JRadioButton rdbtnHistoria;
+    private javax.swing.JRadioButton rdbtnReel;
+    private javax.swing.JScrollPane scroll;
+    private javax.swing.JTable tablaPublicaciones;
+    private javax.swing.ButtonGroup tipoPublicacion;
     // End of variables declaration//GEN-END:variables
 }

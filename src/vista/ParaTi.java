@@ -339,6 +339,7 @@ public class ParaTi extends javax.swing.JDialog {
         getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 725, 632, 100));
 
         imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imagen.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         imagen.setPreferredSize(new java.awt.Dimension(475, 475));
         imagen.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -347,18 +348,27 @@ public class ParaTi extends javax.swing.JDialog {
         });
         getContentPane().add(imagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 161, -1, -1));
 
+        lblIcono.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblIcono.setPreferredSize(new java.awt.Dimension(64, 64));
+        lblIcono.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarPerfil(evt);
+            }
+        });
         getContentPane().add(lblIcono, new org.netbeans.lib.awtextra.AbsoluteConstraints(119, 89, -1, -1));
 
         lblUsuario.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
         lblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        lblUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarPerfil(evt);
+            }
+        });
         getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
-        lblUsuario.getAccessibleContext().setAccessibleName("");
 
         lblVerificado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))); // NOI18N
-        lblVerificado.setPreferredSize(new java.awt.Dimension(30, 30));
         getContentPane().add(lblVerificado, new org.netbeans.lib.awtextra.AbsoluteConstraints(199, 106, -1, -1));
 
         btnLike.setBackground(getBackground());
@@ -366,13 +376,25 @@ public class ParaTi extends javax.swing.JDialog {
         btnLike.setBorder(null);
         btnLike.setBorderPainted(false);
         btnLike.setContentAreaFilled(false);
+        btnLike.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnLike.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(True).png"))); // NOI18N
+        btnLike.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLikeMouseClicked(evt);
+            }
+        });
         getContentPane().add(btnLike, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 640, -1, -1));
         btnLike.setBounds(137, 640, 46, 40);
 
         btnEtiquetado.setBackground(getBackground());
         btnEtiquetado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/etiquedado.png"))); // NOI18N
         btnEtiquetado.setBorder(null);
+        btnEtiquetado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEtiquetado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarEtiquetado(evt);
+            }
+        });
         getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(448, 645, -1, -1));
 
         lblMegusta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -385,7 +407,7 @@ public class ParaTi extends javax.swing.JDialog {
 
         lblHistoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblHistoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/eshistoria.png"))); // NOI18N
-        lblHistoria.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        lblHistoria.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         getContentPane().add(lblHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(101, 71, 100, 100));
         lblHistoria.setBounds(101, 71, 100, 100);
 
@@ -427,6 +449,23 @@ public class ParaTi extends javax.swing.JDialog {
     private void imagenClickada(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenClickada
         siguienteFoto();
     }//GEN-LAST:event_imagenClickada
+
+    private void btnLikeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLikeMouseClicked
+        darLike();
+    }//GEN-LAST:event_btnLikeMouseClicked
+
+    private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
+        Perfil perfil = new Perfil(this, true, dao, usu, usuPubli);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }//GEN-LAST:event_buscarPerfil
+
+    private void buscarEtiquetado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarEtiquetado
+        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+        Perfil perfil = new Perfil(this, true, dao, usu, etiquetado);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }//GEN-LAST:event_buscarEtiquetado
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
