@@ -1,0 +1,4 @@
+vista.textfield.TextFieldSearchOption$2
+vista.textfield.TextFieldSearchOption$3
+vista.textfield.TextFieldSearchOption$1
+vista.textfield.TextFieldSearchOption

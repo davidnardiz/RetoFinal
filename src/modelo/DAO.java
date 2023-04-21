@@ -9,46 +9,43 @@ import clases.Usuario;
 
 public interface DAO {
 
-	// Inserts
-	public void publicar(Publicacion publi);
-	
-	public void insertarLike(String usuario, String publicacion);
+    // Inserts
+    public void publicar(Publicacion publi);
 
-	// Selects
-	public Publicacion buscarPublicacionXId(String id);
-	
-	public List<Publicacion> listarPublicaciones();
-	
-	public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
-	
-	public String calcularId(String tipo);
-	
-	
-	
-	public Usuario buscarUsuario(String usuario);
-	
-	public List<Usuario> listarUsuario();
-	
-	public List<Usuario> listarUsuarioXUsuario(String usuario);
-	
-	public int numPublicacionesUsuario(String usuario);
-	
-	
-	
-	public List<Cancion> listarCanciones();
+    public void insertarLike(String usuario, String publicacion);
 
-	public List<TipoHistoria> listarTipoHistorias();
+    // Selects
+    public Publicacion buscarPublicacionXId(String id);
 
-	public Cancion buscarCancionXTitulo(String titulo);
+    public List<Publicacion> listarPublicaciones();
 
-	public String tipoHistoria(String tipo);
-	
+    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
 
-	
-	public boolean comprobarLike(String usuario, String publicacion);
-	
-	// Alters
+    public String calcularId(String tipo);
 
-	// Deletes
-	public void quirarLike(String usuario, String publicacion);
+    public Usuario buscarUsuario(String usuario);
+
+    public List<Usuario> listarUsuario();
+
+    public List<Usuario> listarUsuarioXUsuario(String usuario);
+
+    public List<Usuario> listarUsuariosVerificados(String usuario);
+
+    public List<Usuario> listarUsuariosXSeguidores(String usuario);
+
+    public int numPublicacionesUsuario(String usuario);
+
+    public List<Cancion> listarCanciones();
+
+    public List<TipoHistoria> listarTipoHistorias();
+
+    public Cancion buscarCancionXTitulo(String titulo);
+
+    public String tipoHistoria(String tipo);
+
+    public boolean comprobarLike(String usuario, String publicacion);
+
+    // Alters
+    // Deletes
+    public void quirarLike(String usuario, String publicacion);
 }

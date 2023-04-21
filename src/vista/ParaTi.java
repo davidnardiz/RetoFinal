@@ -1,377 +1,491 @@
 package vista;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-
 import clases.Foto;
 import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
+import java.awt.Color;
+import java.awt.Frame;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ImageIcon;
 import modelo.DAO;
 import utilidades.Utilidades;
 
-public class ParaTi extends JDialog implements ActionListener {
+public class ParaTi extends javax.swing.JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private DAO dao;
-	private List<String> hanSalido = new ArrayList<>();
-	private Usuario usu;
+    private DAO dao;
+    private Usuario usu;
 
-	private Usuario usuPubli;
-	private Publicacion publi;
+    private Publicacion publi;
+    private Usuario usuPubli;
+    private List<String> hanSalido = new ArrayList<>();
 
-	private JButton btnParaTi;
-	private JButton btnBuscar;
-	private JButton btnSubir;
-	private JButton btnTienda;
-	private JButton btnCuenta;
-	private JButton btnDm;
-	private JButton btnEtiquetado;
-	private JToggleButton btnLike;
+    public ParaTi(Frame parent, boolean modal, DAO dao, Usuario usu) {
+        super(parent, modal);
+        this.setModal(modal);
+        this.dao = dao;
+        this.usu = usu;
 
-	private JLabel lblIcono;
-	private JLabel lblDescripcion;
-	private JLabel lblUsuario;
-	private JLabel lblMegusta;
-	private JLabel imagen;
-	private JLabel lblVerificado;
-	private JLabel lblHistoria;
+        setTitle("Para Ti");
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
+        getContentPane().setBackground(new Color(49, 51, 53));
+        initComponents();
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param dao
-	 * @param b
-	 * @param iniciarSesion
-	 **/
+        setLocationRelativeTo(null);
 
-	public ParaTi(IniciarSesion iniciarSesion, boolean b, DAO dao, Usuario usu) {
-		super(iniciarSesion);
-		
-		this.setModal(b);
-		this.dao = dao;
-		this.usu = usu;
+        siguienteFoto();
+    }
 
-		int alto = 864;
-		int ancho = (alto / 4) * 3;
+    private void siguienteFoto() {
+        // Buscamos una publicacion con una id aleatoria
+        publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
+        usuPubli = dao.buscarUsuario(publi.getUsuario());
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ParaTi.class.getResource("/imagenes/pantalla/logo.png")));
-		setTitle("Para Ti");
-		setResizable(false);
-		setBounds(100, 100, ancho, alto);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBackground(new Color(49, 51, 54));
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		setLocationRelativeTo(null);
+        System.out.println(publi.toString());
+        System.out.println(usuPubli.toString());
 
-		
-		btnBuscar = new JButton("");
-		btnBuscar.setBackground(new Color(43, 45, 47));
-		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/buscar.png")));
-		btnBuscar.setBounds(176, 750, 50, 50);
-		btnBuscar.setBorder(null);
-		contentPanel.add(btnBuscar);
-		btnBuscar.addActionListener(this);
+        if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
+            btnLike.setSelected(true);
+        } else {
+            btnLike.setSelected(false);
+        }
 
-		btnParaTi = new JButton("");
-		btnParaTi.setBackground(new Color(43, 45, 47));
-		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
-		btnParaTi.setBounds(63, 750, 50, 50);
-		btnParaTi.setBorder(null);
-		contentPanel.add(btnParaTi);
-		btnParaTi.addActionListener(this);
+        lblDescripcion.setVisible(true);
+        lblVerificado.setVisible(false);
+        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
+        lblUsuario.setVisible(true);
+        lblHistoria.setVisible(false);
+        btnEtiquetado.setVisible(false);
+        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+        lblUsuario.setText(publi.getUsuario());
+        lblMegusta.setText(publi.getNumLikes() + "");
 
-		btnCuenta = new JButton("");
-		btnCuenta.setBackground(new Color(43, 45, 47));
-		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/cuenta.png")));
-		btnCuenta.setBounds(515, 750, 50, 50);
-		btnCuenta.setBorder(null);
-		contentPanel.add(btnCuenta);
-		btnCuenta.addActionListener(this);
+        System.out.println(lblUsuario.getText());
+        if (usuPubli.isVerificado()) {
+            lblVerificado.setVisible(true);
+            getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(239, 110, 170, 22));
 
-		btnSubir = new JButton("");
-		btnSubir.setBackground(new Color(43, 45, 47));
-		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/subir.png")));
-		btnSubir.setBounds(289, 750, 50, 50);
-		btnSubir.setBorder(null);
-		contentPanel.add(btnSubir);
-		btnSubir.addActionListener(this);
+        }
 
-		btnTienda = new JButton("");
-		btnTienda.setBackground(new Color(43, 45, 47));
-		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/tienda.png")));
-		btnTienda.setBounds(402, 750, 50, 50);
-		btnTienda.setBorder(null);
-		contentPanel.add(btnTienda);
-		btnTienda.addActionListener(this);
-		System.out.println(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/cuenta.png")));
+        if (publi instanceof Foto) {
+            lblDescripcion.setText(((Foto) publi).getDescripcion());
 
-		btnDm = new JButton("");
-		btnDm.setForeground(new Color(43, 45, 47));
-		btnDm.setBackground(new Color(43, 45, 47));
-		btnDm.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/conversaciones.png")));
-		btnDm.setBounds(550, 12, 50, 50);
-		btnDm.setBorder(null);
-		contentPanel.add(btnDm);
+            if (((Foto) publi).getEtiquetado() != null) {
+                btnEtiquetado.setVisible(true);
 
-		JLabel lblLetrasInstagram = new JLabel("");
-		lblLetrasInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/letrasInstagram.png")));
-		lblLetrasInstagram.setBounds(98, 12, 282, 70);
-		contentPanel.add(lblLetrasInstagram);
+            }
 
-		JLabel lblLogoInstagram = new JLabel("");
-		lblLogoInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/logoPequeño.png")));
-		lblLogoInstagram.setBounds(27, 21, 50, 50);
-		contentPanel.add(lblLogoInstagram);
+        } else if (publi instanceof Reel) {
+            lblDescripcion.setText(((Reel) publi).getDescripcion());
 
-		JPanel franjaArriba = new JPanel();
-		franjaArriba.setBackground(new Color(43, 45, 47));
-		franjaArriba.setBounds(0, 0, 632, 83);
-		contentPanel.add(franjaArriba);
+        } else {
+            lblHistoria.setVisible(true);
+            lblDescripcion.setVisible(false);
 
-		JPanel franjaAbajo = new JPanel();
-		franjaAbajo.setBackground(new Color(43, 45, 47));
-		franjaAbajo.setBounds(0, 725, 632, 100);
-		contentPanel.add(franjaAbajo);
+            if (((Historia) publi).isMejores_amigos()) {
+                lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esMejos.png")));
 
-		lblIcono = new JLabel();
-		lblIcono.setHorizontalAlignment(SwingConstants.LEFT);
-		lblIcono.setBounds(119, 89, 64, 64);
-		contentPanel.add(lblIcono);
-		lblIcono.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				abrirPerfil();
-			}
-		});
+            } else {
+                lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
+            }
+        }
 
-		lblHistoria = new JLabel("");
-		lblHistoria.setBounds(101, 71, 100, 100);
-		contentPanel.add(lblHistoria);
+    }
 
-		lblUsuario = new JLabel("Usuario");
-		lblUsuario.setForeground(Color.WHITE);
-		lblUsuario.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblUsuario.setBounds(239, 110, 141, 22);
-		contentPanel.add(lblUsuario);
-		lblUsuario.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				abrirPerfil();
-			}
-		});
+    private String generarPublicacionAleatoria() {
+        List<Publicacion> id = dao.listarPublicaciones();
+        String publiActual = "";
+        int numRandom;
+        boolean salir;
 
-		btnLike = new JToggleButton("");
-		btnLike.setSelectedIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/btnLike(True).png")));
-		btnLike.setBackground(new Color(49, 51, 53));
-		btnLike.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/btnLike(false).png")));
-		btnLike.setBounds(137, 640, 46, 40);
-		contentPanel.add(btnLike);
-		btnLike.setBorder(null);
-		btnLike.setContentAreaFilled(false);
-		btnLike.addActionListener(this);
+        if (hanSalido.size() == id.size()) {
+            hanSalido.clear();
+        }
 
-		lblDescripcion = new JLabel("Aqu\u00ED va la descripci\u00F3n...");
-		lblDescripcion.setForeground(new Color(255, 255, 255));
-		lblDescripcion.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblDescripcion.setBounds(137, 687, 463, 27);
-		contentPanel.add(lblDescripcion);
+        do {
+            salir = true;
+            numRandom = Utilidades.numeros_aleatorios(0, id.size() - 1);
 
-		lblMegusta = new JLabel("");
-		lblMegusta.setForeground(new Color(255, 255, 255));
-		lblMegusta.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMegusta.setBounds(199, 640, 209, 40);
-		contentPanel.add(lblMegusta);
+            for (String i : hanSalido) {
+                if (i.equalsIgnoreCase(id.get(numRandom).getId_publicacion())) {
+                    salir = false;
+                }
+            }
 
-		btnEtiquetado = new JButton("");
-		btnEtiquetado.setBackground(new Color(49, 51, 53));
-		btnEtiquetado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/etiquedado.png")));
-		btnEtiquetado.setBounds(504, 593, 30, 30);
-		contentPanel.add(btnEtiquetado);
-		btnEtiquetado.addActionListener(this);
-		btnEtiquetado.setBorder(null);
+        } while (!salir);
 
-		imagen = new JLabel();
-		imagen.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				next();
-			}
-		});
-		imagen.setHorizontalAlignment(SwingConstants.CENTER);
-		imagen.setBounds(70, 161, 475, 475);
-		contentPanel.add(imagen);
+        publiActual = id.get(numRandom).getId_publicacion();
+        hanSalido.add(publiActual);
 
-		lblVerificado = new JLabel("");
-		lblVerificado.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/verificado.png")));
-		lblVerificado.setBounds(199, 106, 30, 30);
-		lblVerificado.setVisible(false);
-		contentPanel.add(lblVerificado);
+        return publiActual;
+    }
 
-		next();
-	}
+    private void darLike() {
+        if (btnLike.isSelected()) {
+            lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
+            dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btnBuscar)) {
-			abrirBuscar();
-		} else if (e.getSource().equals(btnSubir)) {
-			abrirSubir();
-		} else if (e.getSource().equals(btnTienda)) {
-			abrirTienda();
-		} else if (e.getSource().equals(btnCuenta)) {
-			abrirCuenta();
-		} else if (e.getSource().equals(btnLike)) {
-			darLike();
-		} else if (e.getSource().equals(btnEtiquetado)) {
-			abrirPerfil();
-		}
+        } else {
+            lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
+            dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
+        }
 
-	}
+    }
 
-	private void next() {
-		// Buscamos una publicacion con una id aleatoria
-		publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
-		usuPubli = dao.buscarUsuario(publi.getUsuario());
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
-			btnLike.setSelected(true);
-		} else {
-			btnLike.setSelected(false);
-		}
+        franjaArriba = new javax.swing.JPanel();
+        btnMensaje = new javax.swing.JButton();
+        lblLogo = new javax.swing.JLabel();
+        lblLogoLetras = new javax.swing.JLabel();
+        franajAbajo = new javax.swing.JPanel();
+        btnParaTi = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnSubir = new javax.swing.JButton();
+        btnTienda = new javax.swing.JButton();
+        btnCuenta = new javax.swing.JButton();
+        imagen = new javax.swing.JLabel();
+        lblIcono = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
+        lblVerificado = new javax.swing.JLabel();
+        btnLike = new javax.swing.JToggleButton();
+        btnEtiquetado = new javax.swing.JButton();
+        lblMegusta = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
+        lblHistoria = new javax.swing.JLabel();
 
-		lblDescripcion.setVisible(true);
-		lblVerificado.setVisible(false);
-		lblUsuario.setLocation(213, 110);
-		lblHistoria.setVisible(false);
-		btnEtiquetado.setVisible(false);
-		lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
-		imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
-		lblUsuario.setText(publi.getUsuario());
-		lblMegusta.setText(publi.getNumLikes() + "");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(49, 51, 53));
+        setModal(true);
+        setName("paraTi"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(648, 864));
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-		if (usuPubli.isVerificado()) {
-			lblVerificado.setVisible(true);
-			lblUsuario.setLocation(239, 110);
+        franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
+        franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
 
-		}
+        btnMensaje.setBackground(franjaArriba.getBackground());
+        btnMensaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/conversaciones.png"))); // NOI18N
+        btnMensaje.setToolTipText("");
+        btnMensaje.setAlignmentY(0.0F);
+        btnMensaje.setAutoscrolls(true);
+        btnMensaje.setBorder(null);
+        btnMensaje.setContentAreaFilled(false);
+        btnMensaje.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnMensaje.setFocusPainted(false);
+        btnMensaje.setFocusable(false);
+        btnMensaje.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnMensaje.setRolloverEnabled(false);
+        btnMensaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMensajeActionPerformed(evt);
+            }
+        });
 
-		if (publi instanceof Foto) {
-			lblDescripcion.setText(((Foto) publi).getDescripcion());
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/logoPequeño.png"))); // NOI18N
 
-			if (((Foto) publi).getEtiquetado() != null) {
-				btnEtiquetado.setVisible(true);
+        lblLogoLetras.setForeground(getBackground());
+        lblLogoLetras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/letrasInstagram.png"))); // NOI18N
+        lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
 
-			}
+        javax.swing.GroupLayout franjaArribaLayout = new javax.swing.GroupLayout(franjaArriba);
+        franjaArriba.setLayout(franjaArribaLayout);
+        franjaArribaLayout.setHorizontalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaArribaLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(lblLogo)
+                .addGap(18, 18, 18)
+                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 256, Short.MAX_VALUE)
+                .addComponent(btnMensaje)
+                .addGap(84, 84, 84))
+        );
+        franjaArribaLayout.setVerticalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaArribaLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLogo)
+                    .addComponent(btnMensaje)
+                    .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
-		} else if (publi instanceof Reel) {
-			lblDescripcion.setText(((Reel) publi).getDescripcion());
+        getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, -1));
 
-		} else {
-			lblHistoria.setVisible(true);
-			lblDescripcion.setVisible(false);
+        franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
-			if (((Historia) publi).isMejores_amigos()) {
-				lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esMejos.png")));
+        btnParaTi.setBackground(franjaArriba.getBackground());
+        btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
+        btnParaTi.setToolTipText("");
+        btnParaTi.setAlignmentY(0.0F);
+        btnParaTi.setAutoscrolls(true);
+        btnParaTi.setBorder(null);
+        btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusable(false);
+        btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnParaTi.setRolloverEnabled(false);
+        btnParaTi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnParaTiActionPerformed(evt);
+            }
+        });
 
-			} else {
-				lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
-			}
-		}
+        btnBuscar.setBackground(franjaArriba.getBackground());
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
+        btnBuscar.setToolTipText("");
+        btnBuscar.setAlignmentY(0.0F);
+        btnBuscar.setAutoscrolls(true);
+        btnBuscar.setBorder(null);
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusable(false);
+        btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBuscar.setRolloverEnabled(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
-	}
+        btnSubir.setBackground(franjaArriba.getBackground());
+        btnSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/subir.png"))); // NOI18N
+        btnSubir.setToolTipText("");
+        btnSubir.setAlignmentY(0.0F);
+        btnSubir.setAutoscrolls(true);
+        btnSubir.setBorder(null);
+        btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusable(false);
+        btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSubir.setRolloverEnabled(false);
+        btnSubir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubirActionPerformed(evt);
+            }
+        });
 
-	private String generarPublicacionAleatoria() {
-		List<Publicacion> id = dao.listarPublicaciones();
-		String publiActual = "";
-		int numRandom;
-		boolean salir;
+        btnTienda.setBackground(franjaArriba.getBackground());
+        btnTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/tienda.png"))); // NOI18N
+        btnTienda.setToolTipText("");
+        btnTienda.setAlignmentY(0.0F);
+        btnTienda.setAutoscrolls(true);
+        btnTienda.setBorder(null);
+        btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusable(false);
+        btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTienda.setRolloverEnabled(false);
+        btnTienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTiendaActionPerformed(evt);
+            }
+        });
 
-		if (hanSalido.size() == id.size()) {
-			hanSalido.clear();
-		}
+        btnCuenta.setBackground(franjaArriba.getBackground());
+        btnCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cuenta.png"))); // NOI18N
+        btnCuenta.setToolTipText("");
+        btnCuenta.setAlignmentY(0.0F);
+        btnCuenta.setAutoscrolls(true);
+        btnCuenta.setBorder(null);
+        btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusable(false);
+        btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCuenta.setRolloverEnabled(false);
+        btnCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentaActionPerformed(evt);
+            }
+        });
 
-		do {
-			salir = true;
-			numRandom = Utilidades.numeros_aleatorios(0, id.size() - 1);
+        javax.swing.GroupLayout franajAbajoLayout = new javax.swing.GroupLayout(franajAbajo);
+        franajAbajo.setLayout(franajAbajoLayout);
+        franajAbajoLayout.setHorizontalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(btnParaTi)
+                .addGap(66, 66, 66)
+                .addComponent(btnBuscar)
+                .addGap(64, 64, 64)
+                .addComponent(btnSubir)
+                .addGap(64, 64, 64)
+                .addComponent(btnTienda)
+                .addGap(66, 66, 66)
+                .addComponent(btnCuenta)
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+        franajAbajoLayout.setVerticalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
 
-			for (String i : hanSalido) {
-				if (i.equalsIgnoreCase(id.get(numRandom).getId_publicacion())) {
-					salir = false;
-				}
-			}
+        getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 725, 632, 100));
 
-		} while (!salir);
+        imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imagen.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        imagen.setPreferredSize(new java.awt.Dimension(475, 475));
+        imagen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imagenClickada(evt);
+            }
+        });
+        getContentPane().add(imagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 161, -1, -1));
 
-		publiActual = id.get(numRandom).getId_publicacion();
-		hanSalido.add(publiActual);
+        lblIcono.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblIcono.setPreferredSize(new java.awt.Dimension(64, 64));
+        lblIcono.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarPerfil(evt);
+            }
+        });
+        getContentPane().add(lblIcono, new org.netbeans.lib.awtextra.AbsoluteConstraints(119, 89, -1, -1));
 
-		return publiActual;
-	}
+        lblUsuario.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        lblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarPerfil(evt);
+            }
+        });
+        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
 
-	private void darLike() {
-		if (btnLike.isSelected()) {
-			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
-			dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
+        lblVerificado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))); // NOI18N
+        getContentPane().add(lblVerificado, new org.netbeans.lib.awtextra.AbsoluteConstraints(199, 106, -1, -1));
 
-		} else {
-			lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
-			dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
-		}
+        btnLike.setBackground(getBackground());
+        btnLike.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(false).png"))); // NOI18N
+        btnLike.setBorder(null);
+        btnLike.setBorderPainted(false);
+        btnLike.setContentAreaFilled(false);
+        btnLike.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLike.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(True).png"))); // NOI18N
+        btnLike.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLikeMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btnLike, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 640, -1, -1));
+        btnLike.setBounds(137, 640, 46, 40);
 
-	}
+        btnEtiquetado.setBackground(getBackground());
+        btnEtiquetado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/etiquedado.png"))); // NOI18N
+        btnEtiquetado.setBorder(null);
+        btnEtiquetado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEtiquetado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarEtiquetado(evt);
+            }
+        });
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(448, 645, -1, -1));
 
-	private void abrirPerfil() {
-		Usuario per = dao.buscarUsuario(publi.getEtiquetado());
-		Perfil perfil = new Perfil(this, true, dao, usu, per);
-		this.setVisible(false);
-		perfil.setVisible(true);
+        lblMegusta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblMegusta.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblMegusta, new org.netbeans.lib.awtextra.AbsoluteConstraints(199, 640, 209, 40));
 
-	}
+        lblDescripcion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblDescripcion.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 687, 463, 27));
 
-	private void abrirTienda() {
-		// TODO Auto-generated method stub
+        lblHistoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHistoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/eshistoria.png"))); // NOI18N
+        lblHistoria.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        getContentPane().add(lblHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(101, 71, 100, 100));
+        lblHistoria.setBounds(101, 71, 100, 100);
 
-	}
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
-	private void abrirSubir() {
-		Subir subir = new Subir(this, true, dao, usu);
-		this.setVisible(false);
-		subir.setVisible(true);
+    private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMensajeActionPerformed
 
-	}
+    private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnParaTiActionPerformed
 
-	private void abrirBuscar() {
-		Buscar buscar = new Buscar(this, true, dao, usu, false);
-		this.setVisible(false);
-		buscar.setVisible(true);
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        Buscar buscar = new Buscar(this, true, dao, usu, false);
+        this.setVisible(false);
+        buscar.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
-	}
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+        Subir subir = new Subir(this, true, dao, usu);
+        this.setVisible(false);
+        subir.setVisible(true);
+    }//GEN-LAST:event_btnSubirActionPerformed
 
-	private void abrirCuenta() {
-		Perfil perfil = new Perfil(this, true, dao, usu, usu);
-		this.setVisible(false);
-		perfil.setVisible(true);
-	}
+    private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
+        Tienda tienda = new Tienda(this, true, dao, usu);
+        this.setVisible(false);
+        tienda.setVisible(true);
+    }//GEN-LAST:event_btnTiendaActionPerformed
+
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        Perfil perfil = new Perfil(this, true, dao, usu, usu);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }//GEN-LAST:event_btnCuentaActionPerformed
+
+    private void imagenClickada(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenClickada
+        siguienteFoto();
+    }//GEN-LAST:event_imagenClickada
+
+    private void btnLikeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLikeMouseClicked
+        darLike();
+    }//GEN-LAST:event_btnLikeMouseClicked
+
+    private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
+        Perfil perfil = new Perfil(this, true, dao, usu, usuPubli);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }//GEN-LAST:event_buscarPerfil
+
+    private void buscarEtiquetado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarEtiquetado
+        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+        Perfil perfil = new Perfil(this, true, dao, usu, etiquetado);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }//GEN-LAST:event_buscarEtiquetado
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCuenta;
+    private javax.swing.JButton btnEtiquetado;
+    private javax.swing.JToggleButton btnLike;
+    private javax.swing.JButton btnMensaje;
+    private javax.swing.JButton btnParaTi;
+    private javax.swing.JButton btnSubir;
+    private javax.swing.JButton btnTienda;
+    private javax.swing.JPanel franajAbajo;
+    private javax.swing.JPanel franjaArriba;
+    private javax.swing.JLabel imagen;
+    private javax.swing.JLabel lblDescripcion;
+    private javax.swing.JLabel lblHistoria;
+    private javax.swing.JLabel lblIcono;
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblLogoLetras;
+    private javax.swing.JLabel lblMegusta;
+    private javax.swing.JLabel lblUsuario;
+    private javax.swing.JLabel lblVerificado;
+    // End of variables declaration//GEN-END:variables
 }
