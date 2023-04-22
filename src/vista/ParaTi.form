@@ -123,6 +123,9 @@
               <Dimension value="[50, 16]"/>
             </Property>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
+          </AccessibilityProperties>
         </Component>
       </SubComponents>
     </Container>
@@ -350,12 +353,9 @@
           <Color id="Hand Cursor"/>
         </Property>
       </Properties>
-<<<<<<< HEAD
-=======
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buscarPerfil"/>
       </Events>
->>>>>>> 34e4c6860475812d29741a775b7d53d56457873d
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="213" y="110" width="170" height="22"/>

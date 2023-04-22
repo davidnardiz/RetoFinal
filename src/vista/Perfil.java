@@ -97,7 +97,7 @@ public class Perfil extends javax.swing.JDialog {
             }
         }
 
-        PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, dao, publi, usu, usuarioPerfil);
+        PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, dao, publi, usu, usuarioPerfil, this);
         publiPop.setVisible(true);
 
     }
@@ -442,7 +442,6 @@ public class Perfil extends javax.swing.JDialog {
 
         scroll.setBackground(getBackground());
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scroll.setAutoscrolls(true);
         scroll.setPreferredSize(new java.awt.Dimension(594, 351));
 

@@ -222,6 +222,8 @@ public class ParaTi extends javax.swing.JDialog {
                     .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
+        lblLogoLetras.getAccessibleContext().setAccessibleName("");
+
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, -1));
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
