@@ -1,4 +1,4 @@
-package utilidades.textfield;
+package utilidades.Filtros_Buscador;
 
 public interface SearchOptinEvent {
 

@@ -130,11 +130,6 @@ public class Subir_Historia extends javax.swing.JPanel {
         rdbtnSi.setFocusable(false);
         rdbtnSi.setRequestFocusEnabled(false);
         rdbtnSi.setRolloverEnabled(false);
-        rdbtnSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdbtnSiActionPerformed(evt);
-            }
-        });
         add(rdbtnSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, -1, -1));
 
         lblHistoria.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -159,10 +154,6 @@ public class Subir_Historia extends javax.swing.JPanel {
         });
         add(btnSubir, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 480, 86, 40));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void rdbtnSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdbtnSiActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         subir.elegirFoto();

@@ -65,10 +65,10 @@ public class Utilidades {
                 }
             }
 
-            // En la bda unicamente guardamos el nombre del archivo
+            return imagen.getName();
         }
+        return null;
 
-        return imagen.getName();
     }
 
     /*

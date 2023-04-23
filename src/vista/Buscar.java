@@ -5,11 +5,12 @@ import java.awt.Color;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
-import utilidades.textfield.SearchOptinEvent;
-import utilidades.textfield.SearchOption;
+import utilidades.Filtros_Buscador.SearchOptinEvent;
+import utilidades.Filtros_Buscador.SearchOption;
 
 public class Buscar extends javax.swing.JDialog {
 
@@ -20,7 +21,7 @@ public class Buscar extends javax.swing.JDialog {
 
     private boolean conver;
 
-    public Buscar(ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) {
+    public Buscar(ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) throws NullPointerException {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
@@ -41,14 +42,15 @@ public class Buscar extends javax.swing.JDialog {
             }
 
         });
-        buscador.addOption(new SearchOption("usuario", new ImageIcon(getClass().getResource("/utilidades/textfield/user.png"))));
+
+        buscador.addOption(new SearchOption("usuario", new ImageIcon(getClass().getResource("/utilidades/Filtros_Buscador/user.png"))));
         buscador.addOption(new SearchOption("verificado", new ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))));
-        buscador.addOption(new SearchOption("seguidores", new ImageIcon(getClass().getResource("/utilidades/textfield/address.png"))));
+        buscador.addOption(new SearchOption("seguidores", new ImageIcon(getClass().getResource("/utilidades/Filtros_Buscador/address.png"))));
         buscador.setSelectedIndex(0);
         cargarTabla(usuariosList);
     }
 
-    private void cargarTabla(List<Usuario> usuariosList) {
+    private void cargarTabla(List<Usuario> usuariosList) throws NullPointerException {
         DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
         modelo.setRowCount(0);
 
@@ -63,6 +65,7 @@ public class Buscar extends javax.swing.JDialog {
             Object[] fila = new Object[4];
 
             fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + usuariosList.get(i).getIcono());
+
             if (usuariosList.get(i).isVerificado()) {
                 fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
             }
@@ -116,7 +119,7 @@ public class Buscar extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-        buscador = new vista.textfield.TextFieldSearchOption();
+        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
         scroll = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         lblBuscadorText = new javax.swing.JLabel();
@@ -390,7 +393,7 @@ public class Buscar extends javax.swing.JDialog {
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-    private vista.textfield.TextFieldSearchOption buscador;
+    private utilidades.Filtros_Buscador.TextFieldSearchOption buscador;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JLabel lblBuscadorText;

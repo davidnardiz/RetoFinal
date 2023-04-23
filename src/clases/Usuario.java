@@ -21,7 +21,7 @@ public class Usuario {
      */
     @Override
     public String toString() {
-        return "Usuario [usuario=" + usuario + ", contrasenia=" + contrasenia + ", codGmail" + codGmail + ", + dni=" + dni + ", correo=" + correo + ", telefono=" + telefono + ", icono="
+        return "Usuario [usuario=" + usuario + ", contrasenia=" + contrasenia + ", codGmail=" + codGmail + ", dni=" + dni + ", correo=" + correo + ", telefono=" + telefono + ", icono="
                 + icono + ", fecha_nac=" + fecha_nac + ", numSeguidores=" + numSeguidores + ", numSeguidos="
                 + numSeguidos + ", verificado=" + verificado + "]";
     }

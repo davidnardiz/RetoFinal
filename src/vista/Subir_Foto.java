@@ -157,7 +157,7 @@ public class Subir_Foto extends javax.swing.JPanel {
     }//GEN-LAST:event_btnFotoActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        // TODO add your handling code here:
+        subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -147,11 +147,11 @@ public class Subir_Reel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        // TODO add your handling code here:
+        subir.elegirFoto();
     }//GEN-LAST:event_btnFotoActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        // TODO add your handling code here:
+        subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void sliderDuracionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderDuracionStateChanged

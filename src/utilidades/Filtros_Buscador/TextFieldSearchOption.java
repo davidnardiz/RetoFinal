@@ -1,4 +1,4 @@
-package vista.textfield;
+package utilidades.Filtros_Buscador;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -29,8 +29,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-import utilidades.textfield.SearchOptinEvent;
-import utilidades.textfield.SearchOption;
+import utilidades.Filtros_Buscador.SearchOptinEvent;
+import utilidades.Filtros_Buscador.SearchOption;
 
 public class TextFieldSearchOption extends JTextField {
 

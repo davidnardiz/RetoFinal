@@ -7,6 +7,7 @@ import clases.Reel;
 import clases.Usuario;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import modelo.DAO;
 
 public class PublicacionPopUp extends javax.swing.JDialog {
@@ -32,8 +33,14 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         setLocationRelativeTo(null);
 
         lblUsuario.setText(usuarioPerfil.getUsuario());
-        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+
+        try {
+            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+            imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "La ruta de la imagen no se ha encontrado", "Fallo", 2);
+        }
+
         lblMegusta.setText(publi.getNumLikes() + "");
 
         if (usu.isVerificado()) {
@@ -163,8 +170,10 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private void btnEtiquetadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEtiquetadoMouseClicked
         this.dispose();
         cerrarPerfil.dispose();
+
         Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
         Perfil perfil = new Perfil(paraTi, true, dao, usu, etiquetado);
+        this.setVisible(false);
         perfil.setVisible(true);
 
     }//GEN-LAST:event_btnEtiquetadoMouseClicked

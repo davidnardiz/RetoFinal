@@ -22,6 +22,7 @@ import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
 import clases.Usuario;
+import javax.swing.JOptionPane;
 
 public class DAOImplementacionBD implements DAO {
 
@@ -86,11 +87,11 @@ public class DAOImplementacionBD implements DAO {
             con = DriverManager.getConnection(URL, USER, PASSWORD);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "No se ha encontrado el fichero de configuracion", "FALLO", 2);
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "ERROR AL CARGAR EL FICHERO DE CONFIGURACION", "FALLO", 2);
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al conectarse con la base de datos", "FALLO", 2);
         }
 
     }
@@ -104,7 +105,7 @@ public class DAOImplementacionBD implements DAO {
                 stmt.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error a la hora de cerrar la conexion con la base de datos", "FALLO", 2);
         }
     }
 
@@ -209,7 +210,7 @@ public class DAOImplementacionBD implements DAO {
      */
     //Devuelve una publicacion en base a su id
     @Override
-    public Publicacion buscarPublicacionXId(String id) {
+    public Publicacion buscarPublicacionXId(String id) throws NullPointerException {
         Publicacion publi = null;
 
         this.abrirConexion();
@@ -446,6 +447,34 @@ public class DAOImplementacionBD implements DAO {
     /**
      * ****************** SUBIR *******************
      */
+    //Busca el codigo de la ultima publicacion
+    @Override
+    public String calcularId(String tipo) {
+        String id;
+        String cod = "";
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ULTIMA_PUBLICACION);
+            stmt.setString(1, tipo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                id = rs.getString("id_publicacion");
+
+                cod = tipo + "-" + String.format("%03d", Integer.parseInt(id.substring(2, 5)) + 1);
+                System.out.println(id);
+                System.out.println(cod);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al generar la id de la publicacion", "Fallo", 2);
+            e.printStackTrace();
+
+        }
+        this.cerrarConexion();
+        return cod;
+    }
+
     //Inserta una publicacion en la BDA
     @Override
     public void publicar(Publicacion publi) {
@@ -481,6 +510,7 @@ public class DAOImplementacionBD implements DAO {
                 stmt.execute();
             }
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al publicar la imagen", "Fallo", 2);
             e.printStackTrace();
         }
 
@@ -607,27 +637,6 @@ public class DAOImplementacionBD implements DAO {
 
         this.cerrarConexion();
         return like;
-    }
-
-    //Busca el codigo de la ultima publicacion
-    @Override
-    public String calcularId(String tipo) {
-        String cod = "";
-        this.abrirConexion();
-
-        try {
-            stmt = con.prepareStatement(ULTIMA_PUBLICACION);
-            stmt.setString(1, tipo);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                cod = rs.getString("id_publicacion");
-            }
-        } catch (SQLException e) {
-            // TODO: handle exception
-        }
-        this.cerrarConexion();
-        return cod;
     }
 
     //Muestra todas las publicaciones que ha subido un usuario

@@ -122,6 +122,7 @@ public class Subir extends javax.swing.JDialog {
         dao.publicar(publi);
         JOptionPane.showMessageDialog(this, "La publicacion se ha subido correctamente");
         this.dispose();
+        paraTi.setVisible(true);
     }
 
     public void comprobarDatos() {
@@ -223,14 +224,13 @@ public class Subir extends javax.swing.JDialog {
                     ventanaHistoria.rdbtnNo.setBackground(new Color(204, 51, 51));
 
                 }
+            }
 
-                if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() == -1) {
-                    ventanaHistoria.cbTipoHistoria.setBackground(new Color(204, 51, 51));
-                    mensaje += "Escoje un tipo de historia\n";
-                } else {
-                    ventanaHistoria.cbTipoHistoria.setBackground(new Color(204, 51, 51));
-                }
-
+            if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() == -1) {
+                ventanaHistoria.cbTipoHistoria.setBackground(new Color(204, 51, 51));
+                mensaje += "Escoje un tipo de historia\n";
+            } else {
+                ventanaHistoria.cbTipoHistoria.setBackground(new Color(204, 51, 51));
             }
         }
         if (!mensaje.equalsIgnoreCase("")) {
@@ -242,6 +242,8 @@ public class Subir extends javax.swing.JDialog {
     }
 
     public void limpiar() {
+        imagen = null;
+
         JTextField[] texto = {ventanaFoto.txtUbicacion, ventanaReel.txtUbicacion, ventanaHistoria.txtUbicacion};
 
         for (int i = 0; i < texto.length; i++) {
