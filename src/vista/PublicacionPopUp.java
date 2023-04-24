@@ -7,6 +7,7 @@ import clases.Reel;
 import clases.Usuario;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import modelo.DAO;
 
 public class PublicacionPopUp extends javax.swing.JDialog {
@@ -15,14 +16,16 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private DAO dao;
     private Usuario usu;
     private Publicacion publi;
+    private Perfil cerrarPerfil;
 
-    public PublicacionPopUp(ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil) {
+    public PublicacionPopUp(ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
         super(parent, modal);
         this.setModal(modal);
         this.paraTi = parent;
         this.dao = dao;
         this.usu = usu;
         this.publi = publi;
+        this.cerrarPerfil = perfil;
 
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
@@ -30,8 +33,14 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         setLocationRelativeTo(null);
 
         lblUsuario.setText(usuarioPerfil.getUsuario());
-        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+
+        try {
+            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+            imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "La ruta de la imagen no se ha encontrado", "Fallo", 2);
+        }
+
         lblMegusta.setText(publi.getNumLikes() + "");
 
         if (usu.isVerificado()) {
@@ -100,10 +109,11 @@ public class PublicacionPopUp extends javax.swing.JDialog {
 
         lblHistoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblHistoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/eshistoria.png"))); // NOI18N
-        lblHistoria.setPreferredSize(new java.awt.Dimension(100, 100));
         getContentPane().add(lblHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, -3, 100, 100));
         lblHistoria.setVisible(false);
 
+        lblMegusta.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblMegusta.setForeground(new java.awt.Color(255, 255, 255));
         lblMegusta.setPreferredSize(new java.awt.Dimension(209, 40));
         getContentPane().add(lblMegusta, new org.netbeans.lib.awtextra.AbsoluteConstraints(136, 576, -1, -1));
 
@@ -111,6 +121,8 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnLike.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(false).png"))); // NOI18N
         btnLike.setBorder(null);
         btnLike.setBorderPainted(false);
+        btnLike.setContentAreaFilled(false);
+        btnLike.setFocusPainted(false);
         btnLike.setFocusable(false);
         btnLike.setPreferredSize(new java.awt.Dimension(46, 46));
         btnLike.setRolloverEnabled(false);
@@ -129,7 +141,12 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnEtiquetado.setFocusPainted(false);
         btnEtiquetado.setFocusable(false);
         btnEtiquetado.setRolloverEnabled(false);
-        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 590, -1, -1));
+        btnEtiquetado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEtiquetadoMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 580, -1, -1));
         btnEtiquetado.setVisible(false);
 
         lblDescripcion.setPreferredSize(new java.awt.Dimension(410, 27));
@@ -149,6 +166,17 @@ public class PublicacionPopUp extends javax.swing.JDialog {
             dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
         }
     }//GEN-LAST:event_darLike
+
+    private void btnEtiquetadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEtiquetadoMouseClicked
+        this.dispose();
+        cerrarPerfil.dispose();
+
+        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+        Perfil perfil = new Perfil(paraTi, true, dao, usu, etiquetado);
+        this.setVisible(false);
+        perfil.setVisible(true);
+
+    }//GEN-LAST:event_btnEtiquetadoMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEtiquetado;

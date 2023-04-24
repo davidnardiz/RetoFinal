@@ -103,9 +103,12 @@
               <Dimension value="[50, 16]"/>
             </Property>
           </Properties>
+<<<<<<< HEAD
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
           </AccessibilityProperties>
+=======
+>>>>>>> 97faa5ca3ce0112520bfe7b3a88b1547e52b5ab3
         </Component>
       </SubComponents>
     </Container>

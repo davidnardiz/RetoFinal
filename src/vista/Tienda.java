@@ -22,6 +22,8 @@ public class Tienda extends javax.swing.JDialog {
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
+
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -80,8 +82,6 @@ public class Tienda extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
