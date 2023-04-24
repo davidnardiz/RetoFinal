@@ -1,316 +1,428 @@
 package vista;
 
-import java.awt.BorderLayout;
+import clases.Usuario;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
-
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
-import clases.Usuario;
 import modelo.DAO;
+import utilidades.textfield.SearchOptinEvent;
+import utilidades.textfield.SearchOption;
 
-public class Buscar extends JDialog implements ActionListener {
+public class Buscar extends javax.swing.JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
+    private DAO dao;
+    private Usuario usu;
+    private ParaTi paraTi;
+    private List<Usuario> usuariosList;
 
-	private DAO dao;
-	private Usuario usu;
-	private boolean conver;
-	private ParaTi paraTi;
+    private boolean conver;
 
-	private JTextField buscador;
-	private JTable tablaUsuarios;
+    public Buscar(ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) {
+        super(parent, modal);
+        this.setModal(modal);
+        this.dao = dao;
+        this.usu = usu;
+        this.paraTi = parent;
+        this.usuariosList = dao.listarUsuario();
+        setTitle("Buscar");
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
+        getContentPane().setBackground(new Color(49, 51, 53));
+        initComponents();
 
-	private JButton btnParaTi;
-	private JButton btnBuscar;
-	private JButton btnSubir;
-	private JButton btnTienda;
-	private JButton btnCuenta;
+        buscador.addEventOptionSelected(new SearchOptinEvent() {
+            @Override
+            public void optionSelected(SearchOption option, int index) {
+                buscador.setHint("Buscar por " + option.getName() + "...");
+            }
 
-	private List<Usuario> usuariosList;
+        });
+        buscador.addOption(new SearchOption("usuario", new ImageIcon(getClass().getResource("/utilidades/textfield/user.png"))));
+        buscador.addOption(new SearchOption("verificado", new ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))));
+        buscador.addOption(new SearchOption("seguidores", new ImageIcon(getClass().getResource("/utilidades/textfield/address.png"))));
+        buscador.setSelectedIndex(0);
+        cargarTabla(usuariosList);
+    }
 
-	public Buscar(ParaTi paraTi, boolean b, DAO dao, Usuario usu, boolean conver) {
-		super(paraTi);
-		this.setModal(b);
-		this.paraTi = paraTi;
-		this.dao = dao;
-		this.usu = usu;
-		this.conver = conver;
+    private void cargarTabla(List<Usuario> usuariosList) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
+        modelo.setRowCount(0);
 
-		int alto = 864;
-		int ancho = (alto / 4) * 3;
-		setBounds(100, 100, ancho, alto);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBackground(new Color(49, 51, 53));
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		setLocationRelativeTo(null);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Buscar.class.getResource("/imagenes/pantalla/logo.png")));
-		setTitle("Buscar");
-		setResizable(false);
+        TableColumnModel columnModel = tablaUsuarios.getColumnModel();
+        columnModel.getColumn(0).setCellRenderer(new ImageRenderer());
+        columnModel.getColumn(1).setCellRenderer(new ImageRenderer());
+        columnModel.getColumn(1).setResizable(true);
+        columnModel.getColumn(1).setPreferredWidth(-1);
 
-		btnParaTi = new JButton("");
-		btnParaTi.setBackground(new Color(43, 45, 47));
-		btnParaTi.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/para ti.png")));
-		btnParaTi.setBounds(63, 750, 50, 50);
-		btnParaTi.setBorder(null);
-		contentPanel.add(btnParaTi);
-		btnParaTi.addActionListener(this);
+        String rutaProyecto = System.getProperty("user.dir");
+        for (int i = 0; i < usuariosList.size(); i++) {
+            Object[] fila = new Object[4];
 
-		btnTienda = new JButton("");
-		btnTienda.setBackground(new Color(43, 45, 47));
-		btnTienda.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/tienda.png")));
-		btnTienda.setBounds(402, 750, 50, 50);
-		btnTienda.setBorder(null);
-		contentPanel.add(btnTienda);
-		btnTienda.addActionListener(this);
+            fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + usuariosList.get(i).getIcono());
+            if (usuariosList.get(i).isVerificado()) {
+                fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
+            }
+            fila[2] = usuariosList.get(i).getUsuario();
+            fila[3] = usuariosList.get(i).getNumSeguidores() + " ";
 
-		btnCuenta = new JButton("");
-		btnCuenta.setBackground(new Color(43, 45, 47));
-		btnCuenta.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/cuenta.png")));
-		btnCuenta.setBounds(515, 750, 50, 50);
-		btnCuenta.setBorder(null);
-		contentPanel.add(btnCuenta);
-		btnCuenta.addActionListener(this);
+            modelo.addRow(fila);
 
-		btnBuscar = new JButton("");
-		btnBuscar.setBackground(new Color(43, 45, 47));
-		btnBuscar.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/buscar.png")));
-		btnBuscar.setBounds(176, 750, 50, 50);
-		btnBuscar.setBorder(null);
-		contentPanel.add(btnBuscar);
-		btnBuscar.addActionListener(this);
+        }
 
-		btnSubir = new JButton("");
-		btnSubir.setBackground(new Color(43, 45, 47));
-		btnSubir.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/subir.png")));
-		btnSubir.setBounds(289, 750, 50, 50);
-		btnSubir.setBorder(null);
-		contentPanel.add(btnSubir);
-		btnSubir.addActionListener(this);
+    }
 
-		JLabel lblLetrasInstagram = new JLabel("");
-		lblLetrasInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/letrasInstagram.png")));
-		lblLetrasInstagram.setBounds(98, 12, 282, 70);
-		contentPanel.add(lblLetrasInstagram);
+    private void buscarUsuario(String usuario) {
+        Usuario perf = dao.buscarUsuario(usuario);
+        Perfil perfil = new Perfil(paraTi, true, dao, usu, perf);
+        this.setVisible(false);
+        perfil.setVisible(true);
+    }
 
-		JLabel lblLogoInstagram = new JLabel("");
-		lblLogoInstagram.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/logoPequeño.png")));
-		lblLogoInstagram.setBounds(27, 21, 50, 50);
-		contentPanel.add(lblLogoInstagram);
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		JTextPane franjaArriba = new JTextPane();
-		franjaArriba.setEditable(false);
-		franjaArriba.setBackground(new Color(43, 45, 47));
-		franjaArriba.setBounds(0, 0, 632, 83);
-		contentPanel.add(franjaArriba);
+        franjaArriba = new javax.swing.JPanel();
+        lblLogo = new javax.swing.JLabel();
+        lblLogoLetras = new javax.swing.JLabel();
+        franajAbajo = new javax.swing.JPanel();
+        btnParaTi = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnSubir = new javax.swing.JButton();
+        btnTienda = new javax.swing.JButton();
+        btnCuenta = new javax.swing.JButton();
+        buscador = new vista.textfield.TextFieldSearchOption();
+        scroll = new javax.swing.JScrollPane();
+        tablaUsuarios = new javax.swing.JTable();
+        lblBuscadorText = new javax.swing.JLabel();
 
-		JTextPane franjaAbajo = new JTextPane();
-		franjaAbajo.setEditable(false);
-		franjaAbajo.setBackground(new Color(43, 45, 47));
-		franjaAbajo.setBounds(0, 725, 632, 100);
-		contentPanel.add(franjaAbajo);
-		setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(49, 51, 53));
+        setModal(true);
+        setName("paraTi"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(648, 864));
+        setResizable(false);
 
-		buscador = new JTextField();
-		buscador.setBounds(220, 127, 338, 35);
-		contentPanel.add(buscador);
-		buscador.setColumns(10);
+        franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
+        franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
 
-		buscador.getDocument().addDocumentListener(new DocumentListener() {
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/logoPequeño.png"))); // NOI18N
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				buscar();
+        lblLogoLetras.setForeground(getBackground());
+        lblLogoLetras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/letrasInstagram.png"))); // NOI18N
+        lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
 
-			}
+        javax.swing.GroupLayout franjaArribaLayout = new javax.swing.GroupLayout(franjaArriba);
+        franjaArriba.setLayout(franjaArribaLayout);
+        franjaArribaLayout.setHorizontalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaArribaLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(lblLogo)
+                .addGap(18, 18, 18)
+                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(358, Short.MAX_VALUE))
+        );
+        franjaArribaLayout.setVerticalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaArribaLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(lblLogo)
+                .addContainerGap(15, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaArribaLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				buscar();
+        lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
-			}
+        franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				buscar();
+        btnParaTi.setBackground(franjaArriba.getBackground());
+        btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
+        btnParaTi.setToolTipText("");
+        btnParaTi.setAlignmentY(0.0F);
+        btnParaTi.setAutoscrolls(true);
+        btnParaTi.setBorder(null);
+        btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusable(false);
+        btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnParaTi.setRolloverEnabled(false);
+        btnParaTi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnParaTiActionPerformed(evt);
+            }
+        });
 
-			}
-		});
+        btnBuscar.setBackground(franjaArriba.getBackground());
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
+        btnBuscar.setToolTipText("");
+        btnBuscar.setAlignmentY(0.0F);
+        btnBuscar.setAutoscrolls(true);
+        btnBuscar.setBorder(null);
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusable(false);
+        btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBuscar.setRolloverEnabled(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
-		JSeparator separator = new JSeparator();
-		separator.setBounds(27, 186, 595, 17);
-		contentPanel.add(separator);
+        btnSubir.setBackground(franjaArriba.getBackground());
+        btnSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/subir.png"))); // NOI18N
+        btnSubir.setToolTipText("");
+        btnSubir.setAlignmentY(0.0F);
+        btnSubir.setAutoscrolls(true);
+        btnSubir.setBorder(null);
+        btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusable(false);
+        btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSubir.setRolloverEnabled(false);
+        btnSubir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubirActionPerformed(evt);
+            }
+        });
 
-		JLabel lblNewLabel = new JLabel("Usuario:");
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNewLabel.setBounds(72, 133, 76, 22);
-		contentPanel.add(lblNewLabel);
+        btnTienda.setBackground(franjaArriba.getBackground());
+        btnTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/tienda.png"))); // NOI18N
+        btnTienda.setToolTipText("");
+        btnTienda.setAlignmentY(0.0F);
+        btnTienda.setAutoscrolls(true);
+        btnTienda.setBorder(null);
+        btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusable(false);
+        btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTienda.setRolloverEnabled(false);
+        btnTienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTiendaActionPerformed(evt);
+            }
+        });
 
-		usuariosList = dao.listarUsuario();
-		presentarTabla(usuariosList);
-	}
+        btnCuenta.setBackground(franjaArriba.getBackground());
+        btnCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cuenta.png"))); // NOI18N
+        btnCuenta.setToolTipText("");
+        btnCuenta.setAlignmentY(0.0F);
+        btnCuenta.setAutoscrolls(true);
+        btnCuenta.setBorder(null);
+        btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusable(false);
+        btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCuenta.setRolloverEnabled(false);
+        btnCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentaActionPerformed(evt);
+            }
+        });
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btnParaTi)) {
-			abrirParaTi();
-		} else if (e.getSource().equals(btnSubir)) {
-			abrirSubir();
-		} else if (e.getSource().equals(btnTienda)) {
-			abrirTienda();
-		} else if (e.getSource().equals(btnCuenta)) {
-			abrirCuenta();
-		}
+        javax.swing.GroupLayout franajAbajoLayout = new javax.swing.GroupLayout(franajAbajo);
+        franajAbajo.setLayout(franajAbajoLayout);
+        franajAbajoLayout.setHorizontalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(btnParaTi)
+                .addGap(66, 66, 66)
+                .addComponent(btnBuscar)
+                .addGap(64, 64, 64)
+                .addComponent(btnSubir)
+                .addGap(64, 64, 64)
+                .addComponent(btnTienda)
+                .addGap(66, 66, 66)
+                .addComponent(btnCuenta)
+                .addContainerGap(72, Short.MAX_VALUE))
+        );
+        franajAbajoLayout.setVerticalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
 
-	}
+        buscador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscadorActionPerformed(evt);
+            }
+        });
+        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscadorKeyReleased(evt);
+            }
+        });
 
-	
-	private void buscar() {
-		usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
-		presentarTabla(usuariosList);
-	}
+        scroll.setBackground(getBackground());
+        scroll.setForeground(new java.awt.Color(255, 255, 255));
+        scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-	private void buscarUsuario(String usuario) {
-		Usuario perf = dao.buscarUsuario(usuario);
-		Perfil perfil = new Perfil(paraTi, true, dao, usu, perf);
-		this.setVisible(false);
-		perfil.setVisible(true);
-	}
-	
-	public void presentarTabla(List<Usuario> usuariosList) {
-		JScrollPane scroll = new JScrollPane();
-		scroll.setViewportBorder(null);
-		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		tablaUsuarios = this.cargarTabla(usuariosList);
-		tablaUsuarios.setEnabled(false);
-		tablaUsuarios.setShowVerticalLines(false);
-		tablaUsuarios.setShowHorizontalLines(false);
-		tablaUsuarios.setShowGrid(false);
-		tablaUsuarios.setRowSelectionAllowed(false);
-		tablaUsuarios.setFillsViewportHeight(true);
-		tablaUsuarios.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		tablaUsuarios.setForeground(new Color(255, 255, 255));
-		tablaUsuarios.setBackground(new Color(49, 51, 53));
-		tablaUsuarios.setRowHeight(85);
-		tablaUsuarios.setTableHeader(null);
+        tablaUsuarios.setBackground(getBackground());
+        tablaUsuarios.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N
+        tablaUsuarios.setForeground(new java.awt.Color(255, 255, 255));
+        tablaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-		TableColumnModel columnModel = tablaUsuarios.getColumnModel();
-		columnModel.getColumn(0).setCellRenderer(new ImageRenderer());
-		columnModel.getColumn(1).setCellRenderer(new ImageRenderer());
-		columnModel.getColumn(1).setResizable(true);
-		columnModel.getColumn(1).setPreferredWidth(-1);
+            },
+            new String [] {
+                "Icono", "Verificado", "Usuario", "Seguidores"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-		scroll.setViewportView(tablaUsuarios);
-		contentPanel.add(scroll);
-		scroll.setBackground(new Color(49, 51, 53));
-		scroll.setBounds(27, 214, 581, 495);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaUsuarios.setFillsViewportHeight(true);
+        tablaUsuarios.setFocusable(false);
+        tablaUsuarios.setRowHeight(109);
+        tablaUsuarios.setRowSelectionAllowed(false);
+        tablaUsuarios.setShowGrid(false);
+        tablaUsuarios.setShowGrid(false);
+        tablaUsuarios.setTableHeader(null);
+        tablaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaUsuariosMouseClicked(evt);
+            }
+        });
+        scroll.setViewportView(tablaUsuarios);
 
-		tablaUsuarios.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int fila = tablaUsuarios.rowAtPoint(e.getPoint());
+        lblBuscadorText.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblBuscadorText.setText("Buscador:");
 
-				if (conver) {
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(franjaArriba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(franajAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblBuscadorText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(franjaArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBuscadorText))
+                .addGap(26, 26, 26)
+                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(franajAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
-				} else {
-					buscarUsuario(tablaUsuarios.getValueAt(fila, 2).toString());
-				}
-			}
-		});
-	}
+        scroll.setBorder(BorderFactory.createEmptyBorder());
 
-	public JTable cargarTabla(List<Usuario> usuariosList) {
-		String[] cabezeras = { "icono", "verificado", "usuario", "seguidores" };
-		Object[] fila = new Object[4];
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
-		DefaultTableModel model = new DefaultTableModel(null, cabezeras);
-		String rutaProyecto = System.getProperty("user.dir");
+    private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        this.dispose();
+        paraTi.setVisible(true);
+    }//GEN-LAST:event_btnParaTiActionPerformed
 
-		for (Usuario j : usuariosList) {
-			fila[0] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + j.getIcono());
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        this.dispose();
+        buscar.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
-			if (j.isVerificado()) {
-				fila[1] = new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png");
-			}
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+        // TODO add your handling code here:
+        Subir subir = new Subir(paraTi, true, dao, usu);
+        this.dispose();
+        subir.setVisible(true);
+    }//GEN-LAST:event_btnSubirActionPerformed
 
-			fila[2] = j.getUsuario();
-			fila[3] = j.getNumSeguidores() + " ";
+    private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
+        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        this.dispose();
+        tienda.setVisible(true);
+    }//GEN-LAST:event_btnTiendaActionPerformed
 
-			model.addRow(fila);
-		}
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        this.dispose();
+        perfil.setVisible(true);
+    }//GEN-LAST:event_btnCuentaActionPerformed
 
-		return new JTable(model);
-	}
+    private void buscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buscadorActionPerformed
 
-	class ImageRenderer extends DefaultTableCellRenderer {
+    private void buscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscadorKeyReleased
+        if (buscador.isSelected()) {
+            int opcion = buscador.getSelectedIndex();
 
-		private static final long serialVersionUID = 1L;
+            switch (opcion) {
+                case 0:
+                    usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
+                    break;
+                case 1:
+                    usuariosList = dao.listarUsuariosVerificados(buscador.getText());
+                    break;
+                case 2:
+                    usuariosList = dao.listarUsuariosXSeguidores(buscador.getText());
+                    break;
+                default:
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column) {
-			JLabel label = new JLabel();
-			if (value != null) {
+            }
+            cargarTabla(usuariosList);
+        }
+    }//GEN-LAST:event_buscadorKeyReleased
 
-				if (value.toString().contains("verificado")) {
-					label.setHorizontalAlignment(JLabel.RIGHT);
-				} else {
-					label.setHorizontalAlignment(JLabel.CENTER);
-				}
+    private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
+        int fila = tablaUsuarios.rowAtPoint(evt.getPoint());
 
-				label.setIcon((ImageIcon) value);
-			}
-			return label;
-		}
-	}
-	
-	private void abrirCuenta() {
-		Perfil perf = new Perfil(paraTi, false, dao, usu, usu);
-		this.dispose();
-		perf.setVisible(true);
-	}
+        if (conver) {
 
-	private void abrirTienda() {
-		// TODO Auto-generated method stub
+        } else {
+            buscarUsuario(tablaUsuarios.getValueAt(fila, 2).toString());
+        }
+    }//GEN-LAST:event_tablaUsuariosMouseClicked
 
-	}
-
-	private void abrirSubir() {
-		Subir subir = new Subir(paraTi, true, dao, usu);
-		this.dispose();
-		subir.setVisible(true);
-	}
-
-	private void abrirParaTi() {
-		this.dispose();
-		paraTi.setVisible(true);
-	}
-
-	
-
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCuenta;
+    private javax.swing.JButton btnParaTi;
+    private javax.swing.JButton btnSubir;
+    private javax.swing.JButton btnTienda;
+    private vista.textfield.TextFieldSearchOption buscador;
+    private javax.swing.JPanel franajAbajo;
+    private javax.swing.JPanel franjaArriba;
+    private javax.swing.JLabel lblBuscadorText;
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblLogoLetras;
+    private javax.swing.JScrollPane scroll;
+    private javax.swing.JTable tablaUsuarios;
+    // End of variables declaration//GEN-END:variables
 }

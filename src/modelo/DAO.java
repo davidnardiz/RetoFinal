@@ -9,55 +9,53 @@ import clases.Usuario;
 
 public interface DAO {
 
-	// Inserts
-	public void publicar(Publicacion publi);
-	
-	public void seguir(String nosotros, String usuarioPerfil);
+    // Inserts
+    public void publicar(Publicacion publi);
 
-	// Selects
-	public Publicacion buscarPublicacionXId(String id);
-	
-	public List<Publicacion> listarPublicaciones();
-	
-	public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
-	
-	public String calcularId(String tipo);
-	
-	
-	
-	public Usuario buscarUsuario(String usuario);
-	
-	public List<Usuario> listarUsuario();
-	
-	public List<Usuario> listarUsuarioXUsuario(String usuario);
-	
-	public int numPublicacionesUsuario(String usuario);
-	
-	
-	
-	public List<Cancion> listarCanciones();
+    public void insertarLike(String usuario, String publicacion);
+    
+    public void seguir(String nosotros, String usuarioPerfil);
+    
+    public boolean registrar(Usuario us);
 
-	public List<TipoHistoria> listarTipoHistorias();
+    // Selects
+    public Publicacion buscarPublicacionXId(String id);
 
-	public Cancion buscarCancionXTitulo(String titulo);
+    public List<Publicacion> listarPublicaciones();
 
-	public String tipoHistoria(String tipo);
-	
+    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
 
-	
-	public boolean comprobarLike(String usuario, String publicacion);
-	
-	public boolean verSeguimiento(String nosotros, String usuarioPerfil);
-	
-	// Alters
-	public void insertarLike(String usuario, String publicacion);
-	
-	// Deletes
-	public void quitarLike(String usuario, String publicacion);
-	
-	public void dejarSeguir(String nosotros, String usuarioPerfil);
+    public String calcularId(String tipo);
 
-	
+    public Usuario buscarUsuario(String usuario);
+    
+    public Usuario iniciarSesion(String usuario, String contrasenia);
 
-	
+    public List<Usuario> listarUsuario();
+
+    public List<Usuario> listarUsuarioXUsuario(String usuario);
+
+    public List<Usuario> listarUsuariosVerificados(String usuario);
+
+    public List<Usuario> listarUsuariosXSeguidores(String usuario);
+
+    public int numPublicacionesUsuario(String usuario);
+
+    public List<Cancion> listarCanciones();
+
+    public List<TipoHistoria> listarTipoHistorias();
+
+    public Cancion buscarCancionXTitulo(String titulo);
+
+    public String tipoHistoria(String tipo);
+
+    public boolean comprobarLike(String usuario, String publicacion);
+    
+    public boolean verSeguimiento(String nosotros, String usuarioPerfil);
+
+    // Alters
+    // Deletes
+    public void quirarLike(String usuario, String publicacion);
+    
+    public void dejarSeguir(String nosotros, String usuarioPerfil);
 }
