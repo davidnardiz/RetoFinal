@@ -10,6 +10,7 @@ import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import modelo.DAO;
 import utilidades.Utilidades;
@@ -223,8 +224,6 @@ public class ParaTi extends javax.swing.JDialog {
                     .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        lblLogoLetras.getAccessibleContext().setAccessibleName("");
-
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, -1));
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
@@ -239,7 +238,7 @@ public class ParaTi extends javax.swing.JDialog {
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnParaTi.setRolloverEnabled(false);
-
+       
         btnBuscar.setBackground(franjaArriba.getBackground());
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
         btnBuscar.setToolTipText("");
@@ -250,13 +249,6 @@ public class ParaTi extends javax.swing.JDialog {
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBuscar.setRolloverEnabled(false);
-        /*
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
-        */
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -466,7 +458,7 @@ public class ParaTi extends javax.swing.JDialog {
     }//GEN-LAST:event_btnLikeMouseClicked
 
     private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
-        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+        Usuario etiquetado = dao.buscarUsuario(publi.getUsuario());
         Perfil perfil = new Perfil(this, true, dao, usu, etiquetado);
         this.setVisible(false);
         perfil.setVisible(true);

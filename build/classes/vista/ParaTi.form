@@ -123,12 +123,6 @@
               <Dimension value="[50, 16]"/>
             </Property>
           </Properties>
-<<<<<<< HEAD
-=======
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
-          </AccessibilityProperties>
->>>>>>> 97faa5ca3ce0112520bfe7b3a88b1547e52b5ab3
         </Component>
       </SubComponents>
     </Container>
@@ -200,12 +194,9 @@
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="rolloverEnabled" type="boolean" value="false"/>
           </Properties>
-<<<<<<< HEAD
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnParaTiActionPerformed"/>
           </Events>
-=======
->>>>>>> 97faa5ca3ce0112520bfe7b3a88b1547e52b5ab3
         </Component>
         <Component class="javax.swing.JButton" name="btnBuscar">
           <Properties>
@@ -226,24 +217,11 @@
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
-<<<<<<< HEAD
             <Property name="rolloverEnabled" type="boolean" value="false"/>
-=======
-            <Property name="rolloverEnabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="false" type="code"/>
-            </Property>
->>>>>>> 97faa5ca3ce0112520bfe7b3a88b1547e52b5ab3
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarActionPerformed"/>
           </Events>
-<<<<<<< HEAD
-=======
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="/*"/>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="*/&#xa;btnBuscar.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        btnBuscarActionPerformed(evt);&#xa;    }&#xa;});"/>
-          </AuxValues>
->>>>>>> 97faa5ca3ce0112520bfe7b3a88b1547e52b5ab3
         </Component>
         <Component class="javax.swing.JButton" name="btnSubir">
           <Properties>

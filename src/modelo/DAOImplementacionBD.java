@@ -361,10 +361,7 @@ public class DAOImplementacionBD implements DAO {
 
             while (rs.next()) {
                 Usuario usu = new Usuario();
-                usu.setUsuario(rs.getString("usuario"));
-                usu.setVerificado(rs.getBoolean("verificado"));
-                usu.setIcono(rs.getString("icono"));
-                usu.setNumSeguidores(rs.getInt("numSeguidores"));
+                usu = this.getUsuario(usu, rs);
                 usuarios.add(usu);
             }
 
@@ -477,7 +474,6 @@ public class DAOImplementacionBD implements DAO {
                 System.out.println(cod);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al generar la id de la publicacion", "Fallo", 2);
             e.printStackTrace();
 
         }
@@ -723,7 +719,7 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.setString(1, us.getUsuario());
             stmt.setString(2, us.getContrasenia());
-             stmt.setString(3, us.getCodGmail());
+            stmt.setString(3, us.getCodGmail());
             stmt.setString(4, us.getDni());
             stmt.setString(5, us.getCorreo());
             stmt.setInt(6, us.getTelefono());
@@ -812,6 +808,7 @@ public class DAOImplementacionBD implements DAO {
             stmt.setString(1, nosotros);
             stmt.setString(2, usuarioPerfil);
 
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -840,13 +837,13 @@ public class DAOImplementacionBD implements DAO {
             stmt.setString(2, contrasenia);
 
             System.out.println(stmt);
-            
+
             rs = stmt.executeQuery();
-            
-            if(rs.next()){
-                us=this.getUsuario(us, rs);
+
+            if (rs.next()) {
+                us = this.getUsuario(us, rs);
             }
-            
+
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

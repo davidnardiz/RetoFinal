@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.ImageIcon;
 import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
@@ -24,22 +25,20 @@ public class Conector extends javax.swing.JFrame {
     private final double addSize = 30;
     private final double coverSize = 40;
     private final double loginSize = 60;
-    TimingTarget target; 
+    TimingTarget target;
 
     public Conector(DAO dao) {
         this.dao = dao;
-        
-         
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         initComponents();
         init();
 
-      
     }
 
     private void init() {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
-        loginAndRegister = new PanelLoginAndRegister(dao);
+        loginAndRegister = new PanelLoginAndRegister(this, dao);
         target = new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
