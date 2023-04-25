@@ -5,31 +5,57 @@ import java.util.List;
 import clases.Cancion;
 import clases.Publicacion;
 import clases.TipoHistoria;
+import clases.Usuario;
 
 public interface DAO {
 
-	// Inserts
-	public void publicar(Publicacion publi);
+    // Inserts
+    public void publicar(Publicacion publi);
 
-	// Selects
-	public Publicacion buscarPublicacionXId(String id);
+    public void insertarLike(String usuario, String publicacion);
+    
+    public void seguir(String nosotros, String usuarioPerfil);
+    
+    public boolean registrar(Usuario us);
 
-	public int numPublicaciones();
-	
-	public int numPublicacionesHerencia(String tipo);
+    // Selects
+    public Publicacion buscarPublicacionXId(String id);
 
-	public List<Cancion> listarCanciones();
+    public List<Publicacion> listarPublicaciones();
 
-	public List<TipoHistoria> listarTipoHistorias();
+    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
 
-	public String calcularId(String string);
+    public String calcularId(String tipo);
 
-	public Cancion buscarCancionXTitulo(String titulo);
+    public Usuario buscarUsuario(String usuario);
+    
+    public Usuario iniciarSesion(String usuario, String contrasenia);
 
-	public String tipoHistoria(String tipo);
+    public List<Usuario> listarUsuario();
 
-	// Alters
+    public List<Usuario> listarUsuarioXUsuario(String usuario);
 
-	// Deletes
+    public List<Usuario> listarUsuariosVerificados(String usuario);
 
+    public List<Usuario> listarUsuariosXSeguidores(String usuario);
+
+    public int numPublicacionesUsuario(String usuario);
+
+    public List<Cancion> listarCanciones();
+
+    public List<TipoHistoria> listarTipoHistorias();
+
+    public Cancion buscarCancionXTitulo(String titulo);
+
+    public String tipoHistoria(String tipo);
+
+    public boolean comprobarLike(String usuario, String publicacion);
+    
+    public boolean verSeguimiento(String nosotros, String usuarioPerfil);
+
+    // Alters
+    // Deletes
+    public void quirarLike(String usuario, String publicacion);
+    
+    public void dejarSeguir(String nosotros, String usuarioPerfil);
 }

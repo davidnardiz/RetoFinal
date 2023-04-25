@@ -4,125 +4,121 @@ import java.time.LocalDate;
 
 public class Usuario {
 
-	private String usuario;
-	private String contrasenia;
-	private String dni;
-	private String nombre_completo;
-	private String correo;
-	private int telefono;
-	private String genero;
-	private String icono;
-	private LocalDate fecha_nac;
-	private int numSeguidores;
-	private int numSeguidos;
-	private boolean verificado;
+    private String usuario;
+    private String contrasenia;
+    private String codGmail;
+    private String dni;
+    private String correo;
+    private int telefono;
+    private String icono;
+    private LocalDate fecha_nac;
+    private int numSeguidores;
+    private int numSeguidos;
+    private boolean verificado;
 
-	/********** METODOS **********/
-	@Override
-	public String toString() {
-		return "Usuario [usuario=" + usuario + ", contrasenia=" + contrasenia + ", dni=" + dni + ", nombre_completo="
-				+ nombre_completo + ", correo=" + correo + ", telefono=" + telefono + ", genero=" + genero + ", icono="
-				+ icono + ", fecha_nac=" + fecha_nac + ", numSeguidores=" + numSeguidores + ", numSeguidos="
-				+ numSeguidos + ", verificado=" + verificado + "]";
-	}
+    /**
+     * ******** METODOS *********
+     */
+    @Override
+    public String toString() {
+        return "Usuario [usuario=" + usuario + ", contrasenia=" + contrasenia + ", dni=" + dni + ", codGmail="
+                + codGmail + ", correo=" + correo + ", telefono=" + telefono + ", icono="
+                + icono + ", fecha_nac=" + fecha_nac + ", numSeguidores=" + numSeguidores + ", numSeguidos="
+                + numSeguidos + ", verificado=" + verificado + "]";
+    }
 
-	/********** CONSTRUCTOR **********/
-	/********** GETTER && SETTER **********/
+    /**
+     * ******** CONSTRUCTOR *********
+     */
+    /**
+     * ******** GETTER && SETTER *********
+     */
+    public String getUsuario() {
+        return usuario;
+    }
 
-	public String getUsuario() {
-		return usuario;
-	}
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
+    public String getContrasenia() {
+        return contrasenia;
+    }
 
-	public String getContrasenia() {
-		return contrasenia;
-	}
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
 
-	public void setContrasenia(String contrasenia) {
-		this.contrasenia = contrasenia;
-	}
+    public String getCodGmail() {
+        return codGmail;
+    }
 
-	public String getDni() {
-		return dni;
-	}
+    public void setCodGmail(String codGmail) {
+        this.codGmail = codGmail;
+    }
 
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
+    public String getDni() {
+        return dni;
+    }
 
-	public String getNombre_completo() {
-		return nombre_completo;
-	}
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
 
-	public void setNombre_completo(String nombre_completo) {
-		this.nombre_completo = nombre_completo;
-	}
+    public String getCorreo() {
+        return correo;
+    }
 
-	public String getCorreo() {
-		return correo;
-	}
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
 
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
+    public int getTelefono() {
+        return telefono;
+    }
 
-	public int getTelefono() {
-		return telefono;
-	}
+    public void setTelefono(int telefono) {
+        this.telefono = telefono;
+    }
 
-	public void setTelefono(int telefono) {
-		this.telefono = telefono;
-	}
+    public String getIcono() {
+        return icono;
+    }
 
-	public String getGenero() {
-		return genero;
-	}
+    public void setIcono(String icono) {
+        this.icono = icono;
+    }
 
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
+    public LocalDate getFecha_nac() {
+        return fecha_nac;
+    }
 
-	public String getIcono() {
-		return icono;
-	}
+    public void setFecha_nac(LocalDate fecha_nac) {
+        this.fecha_nac = fecha_nac;
+    }
 
-	public void setIcono(String icono) {
-		this.icono = icono;
-	}
+    public int getNumSeguidores() {
+        return numSeguidores;
+    }
 
-	public LocalDate getFecha_nac() {
-		return fecha_nac;
-	}
+    public void setNumSeguidores(int numSeguidores) {
+        this.numSeguidores = numSeguidores;
+    }
 
-	public void setFecha_nac(LocalDate fecha_nac) {
-		this.fecha_nac = fecha_nac;
-	}
+    public int getNumSeguidos() {
+        return numSeguidos;
+    }
 
-	public int getNumSeguidores() {
-		return numSeguidores;
-	}
+    public void setNumSeguidos(int numSeguidos) {
+        this.numSeguidos = numSeguidos;
+    }
 
-	public void setNumSeguidores(int numSeguidores) {
-		this.numSeguidores = numSeguidores;
-	}
+    public boolean isVerificado() {
+        return verificado;
+    }
 
-	public int getNumSeguidos() {
-		return numSeguidos;
-	}
-
-	public void setNumSeguidos(int numSeguidos) {
-		this.numSeguidos = numSeguidos;
-	}
-
-	public boolean isVerificado() {
-		return verificado;
-	}
-
-	public void setVerificado(boolean verificado) {
-		this.verificado = verificado;
-	}
+    public void setVerificado(boolean verificado) {
+        this.verificado = verificado;
+    }
 
 }

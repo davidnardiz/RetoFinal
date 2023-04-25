@@ -1,590 +1,595 @@
 package vista;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
-import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import clases.Cancion;
 import clases.Foto;
 import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
-import clases.TipoHistoria;
 import clases.Usuario;
+import java.awt.Color;
+import java.time.LocalDate;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import modelo.DAO;
 import utilidades.Utilidades;
 
-public class Subir extends JDialog implements ActionListener {
-
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private DAO dao;
-	private Usuario usu;
-	private String fotoSeleccionada;
-	private ParaTi paraTi;
-
-	private JRadioButton rdbtnImagen;
-	private JRadioButton rdbtnReel;
-	private JRadioButton rdbtnHistoria;
-	private JTextField etiquetado;
-	private JComboBox<String> cancion;
-	private JComboBox<String> resolucion;
-	private JComboBox<String> tipoHistoria;
-	private JSlider duracion;
-	private JButton btnSubir;
-	private ButtonGroup tipoPublicacion = new ButtonGroup();
-	private JLabel lblTipoHistoria;
-	private JLabel lblCancion;
-	private JLabel lblEtiquetado;
-	private JLabel lblDuracion;
-	private JLabel segundos;
-	private JLabel lblResolucion;
-	private JLabel lblMejoresAmigos;
-	private JLabel lblUbicacion;
-	private JLabel lblDescripcion;
-	private JTextArea descripcion;
-	private JButton btnElegir;
-	private JRadioButton rdbtnSi;
-	private JRadioButton rdbtnNo;
-	private ButtonGroup mejos = new ButtonGroup();
-	private JTextField ubicacion;
-
-	public Subir(ParaTi paraTi, boolean b, DAO dao, Usuario usu) {
-		super(paraTi);
-		setTitle("Subir Publicacion");
-		this.setModal(b);
-		this.paraTi = paraTi;
-		this.dao = dao;
-		this.usu = usu;
-
-		int alto = 864;
-		int ancho = (alto / 4) * 3;
-
-		setBounds(100, 100, ancho, alto);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBackground(new Color(49, 51, 53));
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		setLocationRelativeTo(null);
-
-		JLabel lblNewLabel = new JLabel("Que vas a subir?");
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Serif", Font.PLAIN, 31));
-		lblNewLabel.setBounds(215, 11, 202, 41);
-		contentPanel.add(lblNewLabel);
-
-		rdbtnImagen = new JRadioButton("Imagen");
-		rdbtnImagen.setFont(new Font("Serif", Font.PLAIN, 20));
-		rdbtnImagen.setForeground(Color.WHITE);
-		rdbtnImagen.setBackground(new Color(49, 51, 53));
-		rdbtnImagen.setBounds(76, 110, 109, 23);
-		contentPanel.add(rdbtnImagen);
-		rdbtnImagen.addActionListener(this);
-		rdbtnImagen.setSelected(true);
-
-		rdbtnReel = new JRadioButton("Reel");
-		rdbtnReel.setFont(new Font("Serif", Font.PLAIN, 20));
-		rdbtnReel.setForeground(Color.WHITE);
-		rdbtnReel.setBackground(new Color(49, 51, 53));
-		rdbtnReel.setBounds(261, 110, 109, 23);
-		contentPanel.add(rdbtnReel);
-		rdbtnReel.addActionListener(this);
-
-		rdbtnHistoria = new JRadioButton("Historia");
-		rdbtnHistoria.setFont(new Font("Serif", Font.PLAIN, 20));
-		rdbtnHistoria.setForeground(Color.WHITE);
-		rdbtnHistoria.setBackground(new Color(49, 51, 53));
-		rdbtnHistoria.setBounds(446, 110, 109, 23);
-		contentPanel.add(rdbtnHistoria);
-		rdbtnHistoria.addActionListener(this);
-
-		tipoPublicacion.add(rdbtnImagen);
-		tipoPublicacion.add(rdbtnReel);
-		tipoPublicacion.add(rdbtnHistoria);
-
-		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 158, 612, 13);
-		contentPanel.add(separator);
-
-		btnElegir = new JButton("Elegir foto");
-		btnElegir.setFont(new Font("Serif", Font.PLAIN, 20));
-		btnElegir.setBackground(SystemColor.controlHighlight);
-		btnElegir.setBounds(215, 193, 210, 55);
-		contentPanel.add(btnElegir);
-
-		lblCancion = new JLabel("Cancion:");
-		lblCancion.setForeground(Color.WHITE);
-		lblCancion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblCancion.setBounds(103, 289, 71, 27);
-		contentPanel.add(lblCancion);
-
-		List<Cancion> canciones = dao.listarCanciones();
-		cancion = new JComboBox<String>();
-		cancion.setBounds(301, 289, 228, 34);
-		contentPanel.add(cancion);
-
-		for (int i = 0; i < canciones.size(); i++) {
-			cancion.addItem(canciones.get(i).getTitulo());
-		}
-
-		lblUbicacion = new JLabel("Ubicacion:");
-		lblUbicacion.setForeground(Color.WHITE);
-		lblUbicacion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblUbicacion.setBounds(103, 358, 87, 27);
-		contentPanel.add(lblUbicacion);
-
-		ubicacion = new JTextField();
-		ubicacion.setBounds(301, 358, 228, 34);
-		contentPanel.add(ubicacion);
-		ubicacion.setColumns(10);
-
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(10, 428, 612, 13);
-		contentPanel.add(separator_1);
-
-		lblResolucion = new JLabel("Resolucion:");
-		lblResolucion.setForeground(Color.WHITE);
-		lblResolucion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblResolucion.setBounds(103, 456, 95, 27);
-		contentPanel.add(lblResolucion);
-
-		resolucion = new JComboBox<String>();
-		resolucion.setBounds(301, 452, 228, 34);
-		contentPanel.add(resolucion);
-		resolucion.addItem("144p");
-		resolucion.addItem("240p");
-		resolucion.addItem("360p");
-		resolucion.addItem("480p");
-		resolucion.addItem("720p");
-		resolucion.addItem("1080p");
-		resolucion.setSelectedIndex(-1);
-
-		lblEtiquetado = new JLabel("Etiquetado:");
-		lblEtiquetado.setForeground(Color.WHITE);
-		lblEtiquetado.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblEtiquetado.setBounds(103, 525, 95, 27);
-		contentPanel.add(lblEtiquetado);
-
-		etiquetado = new JTextField();
-		etiquetado.setBounds(301, 519, 228, 34);
-		contentPanel.add(etiquetado);
-		etiquetado.setColumns(10);
-
-		lblDescripcion = new JLabel("Descripcion");
-		lblDescripcion.setForeground(Color.WHITE);
-		lblDescripcion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblDescripcion.setBounds(103, 595, 97, 27);
-		contentPanel.add(lblDescripcion);
-
-		descripcion = new JTextArea();
-		descripcion.setBounds(301, 583, 228, 106);
-		contentPanel.add(descripcion);
-
-		segundos = new JLabel("");
-		segundos.setForeground(new Color(255, 255, 255));
-		segundos.setFont(new Font("Serif", Font.PLAIN, 20));
-		segundos.setBounds(508, 497, 61, 23);
-		contentPanel.add(segundos);
-		segundos.setVisible(false);
-
-		lblDuracion = new JLabel("Duracion:");
-		lblDuracion.setForeground(Color.WHITE);
-		lblDuracion.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblDuracion.setBounds(275, 461, 95, 27);
-		contentPanel.add(lblDuracion);
-		lblDuracion.setVisible(false);
-
-		duracion = new JSlider();
-		duracion.setValue(0);
-		duracion.setBackground(new Color(49, 51, 53));
-		duracion.setForeground(new Color(49, 51, 53));
-		duracion.setMaximum(120);
-		duracion.setBounds(76, 524, 494, 41);
-		contentPanel.add(duracion);
-		duracion.setVisible(false);
-		duracion.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				segundos.setText(duracion.getValue() + "s");
-			}
-		});
-
-		lblTipoHistoria = new JLabel("Tipo de Historia:");
-		lblTipoHistoria.setForeground(Color.WHITE);
-		lblTipoHistoria.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblTipoHistoria.setBounds(88, 599, 138, 27);
-		contentPanel.add(lblTipoHistoria);
-		lblTipoHistoria.setVisible(false);
-
-		List<TipoHistoria> tipoHistorias = dao.listarTipoHistorias();
-
-		tipoHistoria = new JComboBox<String>();
-		tipoHistoria.setBounds(301, 595, 228, 34);
-		contentPanel.add(tipoHistoria);
-		tipoHistoria.setVisible(false);
-
-		for (int i = 0; i < tipoHistorias.size(); i++) {
-			tipoHistoria.addItem(tipoHistorias.get(i).getTipo());
-		}
-
-		lblMejoresAmigos = new JLabel("Subir a mejores amigos?");
-		lblMejoresAmigos.setForeground(Color.WHITE);
-		lblMejoresAmigos.setFont(new Font("Serif", Font.PLAIN, 20));
-		lblMejoresAmigos.setBounds(69, 504, 195, 27);
-		contentPanel.add(lblMejoresAmigos);
-		lblMejoresAmigos.setVisible(false);
-
-		rdbtnSi = new JRadioButton("Si");
-		rdbtnSi.setForeground(new Color(255, 255, 255));
-		rdbtnSi.setFont(new Font("Serif", Font.PLAIN, 20));
-		rdbtnSi.setBackground(new Color(49, 51, 53));
-		rdbtnSi.setBounds(301, 508, 109, 23);
-		contentPanel.add(rdbtnSi);
-		rdbtnSi.setVisible(false);
-
-		rdbtnNo = new JRadioButton("No");
-		rdbtnNo.setForeground(new Color(255, 255, 255));
-		rdbtnNo.setFont(new Font("Serif", Font.PLAIN, 20));
-		rdbtnNo.setBackground(new Color(49, 51, 53));
-		rdbtnNo.setBounds(412, 508, 109, 23);
-		contentPanel.add(rdbtnNo);
-		btnElegir.addActionListener(this);
-		rdbtnNo.setVisible(false);
-
-		mejos.add(rdbtnSi);
-		mejos.add(rdbtnNo);
-
-		btnSubir = new JButton("Subir");
-		btnSubir.setBackground(SystemColor.controlHighlight);
-		btnSubir.setForeground(new Color(0, 0, 0));
-		btnSubir.setFont(new Font("Serif", Font.PLAIN, 20));
-		btnSubir.setBounds(211, 719, 210, 53);
-		contentPanel.add(btnSubir);
-		btnSubir.addActionListener(this);
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(rdbtnImagen)) {
-			imagen();
-		} else if (e.getSource().equals(rdbtnReel)) {
-			reel();
-		} else if (e.getSource().equals(rdbtnHistoria)) {
-			historia();
-		} else if (e.getSource().equals(btnElegir)) {
-			elegirFoto();
-		} else if (e.getSource().equals(btnSubir)) {
-			subirFoto();
-		}
-
-	}
-
-	private void subirFoto() {
-		Publicacion publi;
-		String codigo;
-		String ultimoCodigo;
-		int numCod;
-
-		int minLikes = (int) (usu.getNumSeguidores() * 0.12);
-		int maxLikes = (int) (usu.getNumSeguidores() * 0.9);
-		int minCom = (int) (usu.getNumSeguidores() * 0.012);
-		int maxCom = (int) (usu.getNumSeguidores() * 0.04);
-
-		// Compruebo si los campos son validos
-		if (comprobarCampos()) {
-
-			if (rdbtnImagen.isSelected()) {
-
-				// Genero el codigo de las fotos
-				ultimoCodigo = dao.calcularId("f");
-				numCod = Integer.parseInt(ultimoCodigo.substring(2));
-				numCod++;
-				codigo = "F-" + String.format("%03d", numCod);
-
-				// Creo una nueva foto y le doy los valores
-				publi = new Foto();
-
-				// Si los valores opcionales estan vacion no escribir "" porque da fallo en la
-				// BDA, mejor que ponga null
-				if (!descripcion.getText().equalsIgnoreCase("")) {
-					((Foto) publi).setDescripcion(descripcion.getText());
-				}
-
-				if (!etiquetado.getText().equalsIgnoreCase("")) {
-					((Foto) publi).setEtiquetado(etiquetado.getText());
-				}
-
-				((Foto) publi).setResolucion(resolucion.getSelectedItem().toString());
-
-			} else if (rdbtnReel.isSelected()) {
-
-				// Genero el codigo de los reels
-				ultimoCodigo = dao.calcularId("r");
-				numCod = Integer.parseInt(ultimoCodigo.substring(2));
-				numCod++;
-				codigo = "R-" + String.format("%03d", numCod);
-
-				// Creo un nuevo reel y le doy los datos
-				publi = new Reel();
-
-				// Si el valor opcional esta vacio mejor null que ""
-				if (!descripcion.getText().equalsIgnoreCase("")) {
-					((Foto) publi).setDescripcion(descripcion.getText());
-				}
-				((Reel) publi).setDuracion(duracion.getValue());
-
-				int minRrep = (int) (usu.getNumSeguidores() * 0.5);
-				int maxRrep = usu.getNumSeguidores() * 15;
-
-				((Reel) publi).setReproducciones(Utilidades.numeros_aleatorios(minRrep, maxRrep));
-
-			} else {
-
-				// Genero el codigo de las historias
-				ultimoCodigo = dao.calcularId("h");
-				numCod = Integer.parseInt(ultimoCodigo.substring(2));
-				numCod++;
-				codigo = "H-" + String.format("%03d", numCod);
-
-				// Creo una nueva historia y le doy los datos
-				publi = new Historia();
-
-				if (rdbtnSi.isSelected()) {
-					((Historia) publi).setMejores_amigos(true);
-				} else {
-					((Historia) publi).setMejores_amigos(false);
-				}
-				((Historia) publi).setCod_tipo(dao.tipoHistoria(tipoHistoria.getSelectedItem().toString()));
-
-				// Digo la hora en la que supuestamente se deberia de borrar la historia
-				DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
-				JOptionPane.showMessageDialog(this, "Esta historia se eliminara el dia " + LocalDate.now().plusDays(1)
-						+ " a las " + LocalDateTime.now().format(formato));
-			}
-
-			// Le doy los datos de la publicacion
-			publi.setId_publicacion(codigo);
-			publi.setImagen(fotoSeleccionada);
-			publi.setNumLikes(Utilidades.numeros_aleatorios(minLikes, maxLikes));
-			publi.setNumComentarios(Utilidades.numeros_aleatorios(minCom, maxCom));
-			publi.setFecha_subida(LocalDate.now());
-			publi.setUsuario(usu.getUsuario());
-			if (!ubicacion.getText().equalsIgnoreCase("")) {
-				publi.setUbicacion(ubicacion.getText());
-			}
-			if (cancion.getSelectedIndex() != -1) {
-				publi.setId_cancion(dao.buscarCancionXTitulo(cancion.getSelectedItem().toString()).getId_cancion());
-			}
-
-			// Inserto todos los datos en la BDA
-			dao.publicar(publi);
-			JOptionPane.showMessageDialog(this, "Publicacion subida con exito", "", 3);
-			this.dispose();
-			paraTi.setVisible(true);
-		}
-
-	}
-
-	private boolean comprobarCampos() {
-		String mensaje = "";
-		boolean correcto = true;
-
-		// Miro si se ha elegido una foto
-		if (fotoSeleccionada == null) {
-			mensaje += "No has elegido ninguna imagen\n";
-			btnElegir.setBackground(new Color(204, 51, 51));
-			correcto = false;
-
-		} else {
-			btnElegir.setBackground(new Color(0, 153, 51));
-		}
-
-		// Comporbar que la ubicacion no se mas larga de lo que permite la BDA
-		if (ubicacion.getText().length() > 50) {
-			mensaje += "La ubicacion no puede tener mas de 50 caracteres\n";
-			ubicacion.setBackground(new Color(204, 51, 51));
-			correcto = false;
-
-		} else {
-			ubicacion.setBackground(new Color(0, 153, 51));
-		}
-
-		// Compruebo que la descripcion no es mas larga de lo que permite la BDA
-		if (descripcion.getText().length() > 500) {
-			mensaje += "La descripcion no puede tener mas de 500 caracteres\n";
-			descripcion.setBackground(new Color(204, 51, 51));
-			descripcion.setForeground(new Color(0, 0, 0));
-
-		} else {
-			descripcion.setBackground(new Color(0, 153, 51));
-		}
-
-		// Doy por validos los campos opcionales
-		cancion.setBackground(new Color(0, 153, 51));
-		etiquetado.setBackground(new Color(0, 153, 51));
-
-		if (rdbtnImagen.isSelected()) {
-
-			// Compruebo que se ha elegido una resolucion
-			if (resolucion.getSelectedIndex() == -1) {
-				mensaje += "No has elegido ninguna resolucion\n";
-				resolucion.setBackground(new Color(204, 51, 51));
-				correcto = false;
-
-			} else {
-				resolucion.setBackground(new Color(0, 153, 51));
-			}
-
-		} else if (rdbtnReel.isSelected()) {
-
-			// Compruebo que la duracion no sea 0
-			if (duracion.getValue() == 0) {
-				mensaje += "No has elegido ninguna duracion\n";
-				duracion.setBackground(new Color(204, 51, 51));
-				correcto = false;
-
-			} else {
-				duracion.setBackground(new Color(0, 153, 51));
-			}
-
-		} else {
-
-			// Compruebo que se ha elegido si es de mejores amigos o no
-			if (!rdbtnSi.isSelected() && !rdbtnNo.isSelected()) {
-				mensaje += "Por favor elige si quieres subirla a mejores amigos o si no\n";
-				correcto = false;
-
-			}
-
-			// Compruebo que se ha elegido un tipo de historia
-			if (tipoHistoria.getSelectedIndex() == -1) {
-				mensaje += "Por favor elige el tipo de la historia\n";
-				tipoHistoria.setBackground(new Color(204, 51, 51));
-				correcto = false;
-
-			} else {
-				tipoHistoria.setBackground(new Color(0, 153, 51));
-			}
-
-		}
-
-		if (correcto) {
-			return true;
-		} else {
-			JOptionPane.showMessageDialog(this, mensaje, "ERROR", 0);
-			return false;
-		}
-	}
-
-	private void elegirFoto() {
-		fotoSeleccionada = Utilidades.exploradorArchivos(this);
-
-		if (fotoSeleccionada != "") {
-			btnElegir.setBackground(new Color(0, 153, 51));
-			btnElegir.setForeground(new Color(0, 0, 0));
-
-		}
-	}
-
-	// Vacio los campos y cambio los colores a los predeterminados
-	@SuppressWarnings("rawtypes")
-	private void limpiar() {
-		JComboBox[] comboBox = { cancion, resolucion, tipoHistoria };
-		JTextField[] texto = { ubicacion, etiquetado };
-
-		for (int i = 0; i < comboBox.length; i++) {
-			comboBox[i].setSelectedIndex(-1);
-			comboBox[i].setBackground(new Color(240, 240, 240));
-		}
-
-		for (int i = 0; i < texto.length; i++) {
-			texto[i].setText("");
-			texto[i].setBackground(new Color(255, 255, 255));
-		}
-
-		fotoSeleccionada = null;
-		btnElegir.setBackground(SystemColor.controlHighlight);
-		descripcion.setText("");
-		descripcion.setBackground(new Color(255, 255, 255));
-		duracion.setValue(0);
-		rdbtnSi.setSelected(false);
-		rdbtnNo.setSelected(false);
-
-	}
-
-	// Vacio los campos y muestro u oculto los campos necesarios para las historias
-	private void historia() {
-		this.limpiar();
-		JComponent[] mostrar = { rdbtnSi, rdbtnNo, lblMejoresAmigos, tipoHistoria, lblTipoHistoria };
-		JComponent[] ocultar = { resolucion, lblResolucion, etiquetado, lblEtiquetado, duracion, lblDuracion, segundos,
-				lblDescripcion, descripcion };
-
-		for (int i = 0; i < mostrar.length; i++) {
-			mostrar[i].setVisible(true);
-		}
-
-		for (int i = 0; i < ocultar.length; i++) {
-			ocultar[i].setVisible(false);
-		}
-
-	}
-
-	// Vacio los campos y muestro u oculto los campos necesarios para los reels
-	private void reel() {
-		this.limpiar();
-		JComponent[] mostrar = { duracion, lblDuracion, segundos, lblDescripcion, descripcion };
-		JComponent[] ocultar = { resolucion, lblResolucion, etiquetado, lblEtiquetado, rdbtnSi, rdbtnNo,
-				lblMejoresAmigos, tipoHistoria, lblTipoHistoria };
-
-		for (int i = 0; i < mostrar.length; i++) {
-			mostrar[i].setVisible(true);
-		}
-
-		for (int i = 0; i < ocultar.length; i++) {
-			ocultar[i].setVisible(false);
-		}
-
-	}
-
-	// Vacio los campos y muestro u oculto los campos necesarios para las imagenes
-	private void imagen() {
-		this.limpiar();
-		JComponent[] mostrar = { resolucion, lblResolucion, etiquetado, lblEtiquetado, lblDescripcion, descripcion };
-		JComponent[] ocultar = { duracion, lblDuracion, rdbtnSi, rdbtnNo, lblMejoresAmigos, tipoHistoria,
-				lblTipoHistoria, segundos };
-
-		for (int i = 0; i < mostrar.length; i++) {
-			mostrar[i].setVisible(true);
-		}
-
-		for (int i = 0; i < ocultar.length; i++) {
-			ocultar[i].setVisible(false);
-		}
-
-	}
+public class Subir extends javax.swing.JDialog {
+
+    private DAO dao;
+    private Usuario usu;
+
+    private String imagen = null;
+
+    private Subir_Foto ventanaFoto;
+    private Subir_Reel ventanaReel;
+    private Subir_Historia ventanaHistoria;
+    private ParaTi paraTi;
+
+    public Subir(ParaTi paraTi, boolean modal, DAO dao, Usuario usu) {
+        //super(parent, modal);
+
+        this.paraTi = paraTi;
+        this.dao = dao;
+        this.usu = usu;
+
+        initComponents();
+
+        getContentPane().setBackground(new Color(49, 51, 53));
+        setLocationRelativeTo(null);
+
+        ventanaFoto = new Subir_Foto(this, true, dao, usu);
+        ventanaReel = new Subir_Reel(this, true, dao, usu);
+        ventanaHistoria = new Subir_Historia(this, true, dao, usu);
+
+        panelSlide.init(ventanaFoto, ventanaReel, ventanaHistoria);
+        panelSlide.setAnimate(4);
+    }
+
+    public void elegirFoto() {
+        imagen = Utilidades.seleccionarImagen(this);
+        if (imagen != null) {
+            ventanaFoto.btnFoto.setBackground(new Color(0, 153, 51));
+        }
+    }
+
+    public void subirPublicacion() {
+        Publicacion publi;
+        String id;
+
+        if (rdbtnFoto.isSelected()) {
+            publi = new Foto();
+
+            id = dao.calcularId("F");
+
+            if (ventanaFoto.cbCancion.getSelectedIndex() != -1) {
+                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaFoto.cbCancion.getSelectedItem().toString()).getId_cancion());
+            }
+
+            if (ventanaFoto.cbEtiquetado.getSelectedIndex() != -1) {
+                publi.setEtiquetado(ventanaFoto.cbEtiquetado.getSelectedItem().toString());
+            }
+
+            publi.setUbicacion(ventanaFoto.txtUbicacion.getText());
+            ((Foto) publi).setResolucion(ventanaFoto.cbResolucion.getSelectedItem().toString());
+            ((Foto) publi).setDescripcion(ventanaFoto.txtDescripcion.getText());
+
+        } else if (rdbtnReel.isSelected()) {
+            publi = new Reel();
+
+            id = dao.calcularId("R");
+
+            if (ventanaReel.cbCancion.getSelectedIndex() != -1) {
+                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaReel.cbCancion.getSelectedItem().toString()).getId_cancion());
+            }
+
+            publi.setUbicacion(ventanaReel.txtUbicacion.getText());
+            ((Reel) publi).setDuracion(ventanaReel.sliderDuracion.getValue());
+            ((Reel) publi).setDescripcion(ventanaReel.txtDescripcion.getText());
+
+        } else {
+            publi = new Historia();
+
+            id = dao.calcularId("H");
+
+            if (ventanaHistoria.cbCancion.getSelectedIndex() != -1) {
+                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaHistoria.cbCancion.getSelectedItem().toString()).getId_cancion());
+            }
+
+            if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() != -1) {
+                ((Historia) publi).setCod_tipo(dao.tipoHistoria(ventanaHistoria.cbTipoHistoria.getSelectedItem().toString()));
+            }
+
+            if (ventanaHistoria.rdbtnSi.isSelected()) {
+                ((Historia) publi).setMejores_amigos(true);
+            } else {
+                ((Historia) publi).setMejores_amigos(false);
+            }
+
+            publi.setUbicacion(ventanaHistoria.txtUbicacion.getText());
+
+        }
+
+        publi.setId_publicacion(id);
+        publi.setImagen(imagen);
+        publi.setUsuario(usu.getUsuario());
+        publi.setFecha_subida(LocalDate.now());
+        publi.setNumLikes(Utilidades.numeros_aleatorios((int) (usu.getNumSeguidores() * 0.12), (int) (usu.getNumSeguidores() * 0.9)));
+        publi.setNumComentarios(Utilidades.numeros_aleatorios((int) (usu.getNumSeguidores() * 0.012), (int) (usu.getNumSeguidores() * 0.04)));
+
+        dao.publicar(publi);
+        JOptionPane.showMessageDialog(this, "La publicacion se ha subido correctamente");
+        this.dispose();
+        paraTi.setVisible(true);
+    }
+
+    public void comprobarDatos() {
+        String mensaje = "";
+        boolean correcto = true;
+
+        if (rdbtnFoto.isSelected()) {
+            ventanaFoto.cbCancion.setBackground(new Color(0, 153, 51));
+            ventanaFoto.txtUbicacion.setBackground(new Color(0, 153, 51));
+            ventanaFoto.cbEtiquetado.setBackground(new Color(0, 153, 51));
+            ventanaFoto.txtDescripcion.setBackground(new Color(0, 153, 51));
+
+            if (imagen == null) {
+                ventanaFoto.btnFoto.setBackground(new Color(204, 51, 51));
+                mensaje += "Selecciona una imagen\n";
+
+            } else {
+                ventanaFoto.btnFoto.setBackground(new Color(0, 153, 51));
+
+            }
+
+            if (ventanaFoto.cbResolucion.getSelectedIndex() == -1) {
+                ventanaFoto.cbResolucion.setBackground(new Color(204, 51, 51));
+                mensaje += "Escoje una resolucion\n";
+
+            } else {
+                ventanaFoto.cbResolucion.setBackground(new Color(0, 153, 51));
+            }
+
+            if (ventanaFoto.txtUbicacion.getText().isBlank()) {
+                ventanaFoto.txtUbicacion.setText(null);
+            }
+
+            if (ventanaFoto.txtDescripcion.getText().isBlank()) {
+                ventanaFoto.txtDescripcion.setText(null);
+            }
+
+        }
+
+        if (rdbtnReel.isSelected()) {
+            ventanaReel.cbCancion.setBackground(new Color(0, 153, 51));
+            ventanaReel.txtUbicacion.setBackground(new Color(0, 153, 51));
+            ventanaReel.txtDescripcion.setBackground(new Color(0, 153, 51));
+
+            if (imagen == null) {
+                ventanaReel.btnFoto.setBackground(new Color(204, 51, 51));
+                mensaje += "Selecciona una imagen\n";
+
+            } else {
+                ventanaReel.btnFoto.setBackground(new Color(0, 153, 51));
+            }
+
+            if (ventanaReel.cbCancion.getSelectedIndex() == -1) {
+                ventanaReel.cbCancion.setSelectedItem("");
+            }
+
+            if (ventanaReel.sliderDuracion.getValue() == 1) {
+                ventanaReel.sliderDuracion.setBackground(new Color(204, 51, 51));
+                mensaje += "Escoje una duracion\n";
+            }
+
+            if (ventanaReel.txtUbicacion.getText().isBlank()) {
+                ventanaReel.txtUbicacion.setText(null);
+            }
+
+            if (ventanaReel.txtDescripcion.getText().isBlank()) {
+                ventanaReel.txtDescripcion.setText(null);
+            }
+        }
+
+        if (rdbtnHistoria.isSelected()) {
+            ventanaHistoria.cbCancion.setBackground(new Color(0, 153, 51));
+            ventanaHistoria.txtUbicacion.setBackground(new Color(0, 153, 51));
+
+            if (imagen == null) {
+                ventanaHistoria.btnFoto.setBackground(new Color(204, 51, 51));
+                mensaje += "Selecciona una imagen\n";
+
+            } else {
+                ventanaHistoria.btnFoto.setBackground(new Color(0, 153, 51));
+            }
+
+            if (ventanaHistoria.cbCancion.getSelectedIndex() == -1) {
+                ventanaHistoria.cbCancion.setSelectedItem("");
+            }
+
+            if (ventanaHistoria.txtUbicacion.getText().isBlank()) {
+                ventanaHistoria.txtUbicacion.setText(null);
+            }
+
+            if (!ventanaHistoria.rdbtnSi.isSelected() && !ventanaHistoria.rdbtnNo.isSelected()) {
+                ventanaHistoria.rdbtnSi.setBackground(new Color(204, 51, 51));
+                ventanaHistoria.rdbtnNo.setBackground(new Color(204, 51, 51));
+                mensaje += "Escoje si quieres subir la foto a mejores amigos\n";
+            } else {
+                if (ventanaHistoria.rdbtnSi.isSelected()) {
+                    ventanaHistoria.rdbtnSi.setBackground(new Color(204, 51, 51));
+                } else {
+                    ventanaHistoria.rdbtnNo.setBackground(new Color(204, 51, 51));
+
+                }
+            }
+
+            if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() == -1) {
+                ventanaHistoria.cbTipoHistoria.setBackground(new Color(204, 51, 51));
+                mensaje += "Escoje un tipo de historia\n";
+            } else {
+                ventanaHistoria.cbTipoHistoria.setBackground(new Color(204, 51, 51));
+            }
+        }
+        if (!mensaje.equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(this, mensaje, "ERROR", 0);
+
+        } else {
+            subirPublicacion();
+        }
+    }
+
+    public void limpiar() {
+        imagen = null;
+
+        JTextField[] texto = {ventanaFoto.txtUbicacion, ventanaReel.txtUbicacion, ventanaHistoria.txtUbicacion};
+
+        for (int i = 0; i < texto.length; i++) {
+            texto[i].setText("");
+            texto[i].setBackground(new Color(255, 255, 255));
+        }
+
+        JButton[] botones = {ventanaFoto.btnFoto, ventanaFoto.btnSubir, ventanaReel.btnFoto, ventanaReel.btnSubir, ventanaHistoria.btnFoto, ventanaHistoria.btnSubir};
+
+        for (int i = 0; i < botones.length; i++) {
+            botones[i].setBackground(new Color(227, 227, 227));
+
+        }
+
+        JComboBox[] comboBox = {ventanaFoto.cbCancion, ventanaFoto.cbResolucion, ventanaFoto.cbEtiquetado, ventanaReel.cbCancion, ventanaHistoria.cbCancion, ventanaHistoria.cbTipoHistoria};
+
+        for (int i = 0; i < comboBox.length; i++) {
+            comboBox[i].setSelectedIndex(-1);
+            comboBox[i].setBackground(new Color(255, 255, 255));
+        }
+
+        JTextArea[] textArea = {ventanaFoto.txtDescripcion, ventanaReel.txtDescripcion,};
+
+        for (int i = 0; i < textArea.length; i++) {
+            textArea[i].setText("");
+            textArea[i].setBackground(new Color(255, 255, 255));
+
+        }
+
+        JRadioButton[] rdbtn = {ventanaHistoria.rdbtnSi, ventanaHistoria.rdbtnNo};
+
+        for (int i = 0; i < textArea.length; i++) {
+            rdbtn[i].setSelected(false);
+            rdbtn[i].setBackground(new Color(255, 255, 255));
+
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        tipoPublicacion = new javax.swing.ButtonGroup();
+        franjaArriba = new javax.swing.JPanel();
+        lblLogo = new javax.swing.JLabel();
+        lblLogoLetras = new javax.swing.JLabel();
+        franajAbajo = new javax.swing.JPanel();
+        btnParaTi = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnSubir = new javax.swing.JButton();
+        btnTienda = new javax.swing.JButton();
+        btnCuenta = new javax.swing.JButton();
+        panelSlide = new vista.PanelSlide();
+        lblText = new javax.swing.JLabel();
+        rdbtnFoto = new javax.swing.JRadioButton();
+        rdbtnReel = new javax.swing.JRadioButton();
+        rdbtnHistoria = new javax.swing.JRadioButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(49, 51, 53));
+        setPreferredSize(new java.awt.Dimension(648, 864));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
+        franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
+
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/logoPequeño.png"))); // NOI18N
+
+        lblLogoLetras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/letrasInstagram.png"))); // NOI18N
+        lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
+
+        javax.swing.GroupLayout franjaArribaLayout = new javax.swing.GroupLayout(franjaArriba);
+        franjaArriba.setLayout(franjaArribaLayout);
+        franjaArribaLayout.setHorizontalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaArribaLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(lblLogo)
+                .addGap(18, 18, 18)
+                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(346, Short.MAX_VALUE))
+        );
+        franjaArribaLayout.setVerticalGroup(
+            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaArribaLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(lblLogo)
+                .addContainerGap(15, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaArribaLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 636, -1));
+
+        franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
+
+        btnParaTi.setBackground(franajAbajo.getBackground());
+        btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
+        btnParaTi.setToolTipText("");
+        btnParaTi.setAlignmentY(0.0F);
+        btnParaTi.setBorder(null);
+        btnParaTi.setBorderPainted(false);
+        btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusable(false);
+        btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnParaTi.setRequestFocusEnabled(false);
+        btnParaTi.setRolloverEnabled(false);
+        btnParaTi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnParaTiActionPerformed(evt);
+            }
+        });
+
+        btnBuscar.setBackground(franajAbajo.getBackground());
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
+        btnBuscar.setToolTipText("");
+        btnBuscar.setAlignmentY(0.0F);
+        btnBuscar.setBorder(null);
+        btnBuscar.setBorderPainted(false);
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusable(false);
+        btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBuscar.setRequestFocusEnabled(false);
+        btnBuscar.setRolloverEnabled(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        btnSubir.setBackground(franajAbajo.getBackground());
+        btnSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/subir.png"))); // NOI18N
+        btnSubir.setToolTipText("");
+        btnSubir.setAlignmentY(0.0F);
+        btnSubir.setBorder(null);
+        btnSubir.setBorderPainted(false);
+        btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusable(false);
+        btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSubir.setRequestFocusEnabled(false);
+        btnSubir.setRolloverEnabled(false);
+        btnSubir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubirActionPerformed(evt);
+            }
+        });
+
+        btnTienda.setBackground(franajAbajo.getBackground());
+        btnTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/tienda.png"))); // NOI18N
+        btnTienda.setToolTipText("");
+        btnTienda.setAlignmentY(0.0F);
+        btnTienda.setBorder(null);
+        btnTienda.setBorderPainted(false);
+        btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusable(false);
+        btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTienda.setRequestFocusEnabled(false);
+        btnTienda.setRolloverEnabled(false);
+        btnTienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTiendaActionPerformed(evt);
+            }
+        });
+
+        btnCuenta.setBackground(franajAbajo.getBackground());
+        btnCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cuenta.png"))); // NOI18N
+        btnCuenta.setToolTipText("");
+        btnCuenta.setAlignmentY(0.0F);
+        btnCuenta.setBorder(null);
+        btnCuenta.setBorderPainted(false);
+        btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusable(false);
+        btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCuenta.setRequestFocusEnabled(false);
+        btnCuenta.setRolloverEnabled(false);
+        btnCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout franajAbajoLayout = new javax.swing.GroupLayout(franajAbajo);
+        franajAbajo.setLayout(franajAbajoLayout);
+        franajAbajoLayout.setHorizontalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(btnParaTi)
+                .addGap(66, 66, 66)
+                .addComponent(btnBuscar)
+                .addGap(64, 64, 64)
+                .addComponent(btnSubir)
+                .addGap(64, 64, 64)
+                .addComponent(btnTienda)
+                .addGap(66, 66, 66)
+                .addComponent(btnCuenta)
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+        franajAbajoLayout.setVerticalGroup(
+            franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franajAbajoLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 725, -1, -1));
+
+        panelSlide.setPreferredSize(new java.awt.Dimension(660, 527));
+
+        javax.swing.GroupLayout panelSlideLayout = new javax.swing.GroupLayout(panelSlide);
+        panelSlide.setLayout(panelSlideLayout);
+        panelSlideLayout.setHorizontalGroup(
+            panelSlideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 640, Short.MAX_VALUE)
+        );
+        panelSlideLayout.setVerticalGroup(
+            panelSlideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 527, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(panelSlide, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 640, -1));
+
+        lblText.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblText.setForeground(new java.awt.Color(255, 255, 255));
+        lblText.setText("Que vas a subir?");
+        lblText.setToolTipText("");
+        getContentPane().add(lblText, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, -1, -1));
+
+        rdbtnFoto.setBackground(getBackground());
+        tipoPublicacion.add(rdbtnFoto);
+        rdbtnFoto.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        rdbtnFoto.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnFoto.setSelected(true);
+        rdbtnFoto.setText("Foto");
+        rdbtnFoto.setBorder(null);
+        rdbtnFoto.setFocusPainted(false);
+        rdbtnFoto.setFocusable(false);
+        rdbtnFoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cambiarFoto(evt);
+            }
+        });
+        getContentPane().add(rdbtnFoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, -1, -1));
+
+        rdbtnReel.setBackground(getBackground());
+        tipoPublicacion.add(rdbtnReel);
+        rdbtnReel.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        rdbtnReel.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnReel.setText("Reel");
+        rdbtnReel.setBorder(null);
+        rdbtnReel.setFocusPainted(false);
+        rdbtnReel.setFocusable(false);
+        rdbtnReel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cambiarReel(evt);
+            }
+        });
+        getContentPane().add(rdbtnReel, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 140, -1, -1));
+
+        rdbtnHistoria.setBackground(getBackground());
+        tipoPublicacion.add(rdbtnHistoria);
+        rdbtnHistoria.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        rdbtnHistoria.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnHistoria.setText("Historia");
+        rdbtnHistoria.setBorder(null);
+        rdbtnHistoria.setFocusPainted(false);
+        rdbtnHistoria.setFocusable(false);
+        rdbtnHistoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cambiarHistoria(evt);
+            }
+        });
+        getContentPane().add(rdbtnHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, -1, -1));
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        this.dispose();
+        paraTi.setVisible(true);
+    }//GEN-LAST:event_btnParaTiActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        this.dispose();
+        buscar.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+        // TODO add your handling code here:
+        Subir subir = new Subir(paraTi, true, dao, usu);
+        this.dispose();
+        subir.setVisible(true);
+    }//GEN-LAST:event_btnSubirActionPerformed
+
+    private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
+        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        this.dispose();
+        tienda.setVisible(true);
+    }//GEN-LAST:event_btnTiendaActionPerformed
+
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        this.dispose();
+        perfil.setVisible(true);
+    }//GEN-LAST:event_btnCuentaActionPerformed
+
+    private void cambiarFoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarFoto
+        panelSlide.show(0);
+        limpiar();
+    }//GEN-LAST:event_cambiarFoto
+
+    private void cambiarReel(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarReel
+        panelSlide.show(1);
+        limpiar();
+    }//GEN-LAST:event_cambiarReel
+
+    private void cambiarHistoria(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarHistoria
+        panelSlide.show(2);
+        limpiar();
+    }//GEN-LAST:event_cambiarHistoria
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCuenta;
+    private javax.swing.JButton btnParaTi;
+    private javax.swing.JButton btnSubir;
+    private javax.swing.JButton btnTienda;
+    private javax.swing.JPanel franajAbajo;
+    private javax.swing.JPanel franjaArriba;
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblLogoLetras;
+    private javax.swing.JLabel lblText;
+    private vista.PanelSlide panelSlide;
+    private javax.swing.JRadioButton rdbtnFoto;
+    private javax.swing.JRadioButton rdbtnHistoria;
+    private javax.swing.JRadioButton rdbtnReel;
+    private javax.swing.ButtonGroup tipoPublicacion;
+    // End of variables declaration//GEN-END:variables
 }
