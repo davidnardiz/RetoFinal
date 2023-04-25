@@ -76,65 +76,48 @@ public class Utilidades {
         String fotoSeleccionada = "";
         Path rutaAntigua;
         Path rutaNueva = null;
-
         // Crear el Explorador
         JFileChooser fileChooser = new JFileChooser();
-
         // Decir donde abrir
         String rutaProyecto = System.getProperty("user.dir");
         File rutaExplorador = new File(rutaProyecto + "/src/imagenes/publicaciones/");
         fileChooser.setCurrentDirectory(rutaExplorador);
-
         // Decir que solo puede abrir fotos
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "jpg", "jpeg", "png", "gif");
         fileChooser.setFileFilter(filter);
-
         // Mostrar el cuadro de diálogo del selector de archivos
         int result = fileChooser.showOpenDialog(ventana);
-
         // Si se a elegido una foto
         if (result == JFileChooser.APPROVE_OPTION) {
-
             // Coger la ruta absoluta
             fotoSeleccionada = fileChooser.getSelectedFile().getPath();
-
             // Si no esta dentro de la carpeta imagenes la copiamos a esa carpeta
             if (!fotoSeleccionada.contains("\\RetoFinal\\src\\imagenes\\publicaciones")) {
-
                 try {
                     File nuevaFoto = new File(fotoSeleccionada);
                     BufferedImage image = ImageIO.read(nuevaFoto);
-
                     // Si la foto esta en vertical redimensionarla con unos valores
                     if (image.getHeight() > image.getWidth()) {
                         nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 356, 475);
-
                         // Si no redimensionarla con otrs
                     } else {
                         nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 475, 356);
                     }
-
                     // Ruta origina del archivo
                     rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
-
                     // Ruta donde vamos a pegar
                     rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
-
                     // Copia la imagen al nuevo destino
                     Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
                             StandardCopyOption.REPLACE_EXISTING);
-
                     nuevaFoto.delete();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
             // En la bda unicamente guardamos el nombre del archivo
             fotoSeleccionada = fileChooser.getSelectedFile().getName();
         }
-
         return fotoSeleccionada;
     }
      */
@@ -161,7 +144,4 @@ public class Utilidades {
         return outputFile;
     }
 
-    public static void recargarProyecto() {
-
-    }
 }

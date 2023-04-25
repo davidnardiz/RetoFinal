@@ -22,7 +22,8 @@ import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
 import clases.Usuario;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DAOImplementacionBD implements DAO {
 
@@ -31,12 +32,16 @@ public class DAOImplementacionBD implements DAO {
 
     // Sentencias SQL
     // Inserts
+    final private String REGISTRAR = "INSERT INTO usuario VALUES (?, ?, ?, ?, ?, ?, 'iconoPredeterminado.png', ?, ?, ?, ?)";
     final private String PUBLICAR = "INSERT INTO publicacion VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     final private String INSERTAR_FOTO = "INSERT INTO foto VALUES (?, ?, ?, ?)";
     final private String INSERTAR_REEL = "INSERT INTO reel VALUES (?, ?, ?, ?)";
     final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
-
+    final private String SEGUIR = "INSERT INTO sigue VALUES (?, ?)";
     final private String INSERTAR_LIKE = "INSERT INTO likes VALUES (?, ?)";
+
+    // Deletes
+    final private String DEJAR_SEGUIR = "DELETE FROM sigue WHERE seguidor = ? and seguido = ?";
 
 // Selects
     // PARA TI
@@ -48,11 +53,12 @@ public class DAOImplementacionBD implements DAO {
     final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
 
     // BUSCAR
-    final private String LISTAR_USUARIOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario";
+    final private String LISTAR_USUARIOS = "SELECT * FROM usuario";
     final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
     final private String LISTAR_USUARIOS_VERIFICADOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ? and verificado = true";
     final private String LISTAR_USUARIOS_X_SEGUIDORES = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE numSeguidores >= ?";
     final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
+    final private String INICIAR_SESION = "SELECT * FROM usuario WHERE usuario = ? and contrasenia=?";
 
     // SUBIR
     final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
@@ -64,10 +70,15 @@ public class DAOImplementacionBD implements DAO {
     // PERFIL
     final private String NUM_PUBLICACIONES_USUARIO = "SELECT count(*) FROM publicacion WHERE usuario = ?";
     final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
+    final private String VER_SEGUIMIENTO = "SELECT * FROM sigue WHERE seguidor = ? and seguido = ?";
 
 // Alter
     final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
     final private String RESTAR_LIKE = "UPDATE publicacion set numLikes = numLikes - 1 WHERE id_publicacion = ?";
+    final private String SUMAR_SEGUIDOR = "UPDATE usuario set numSeguidores = numSeguidores + 1 WHERE usuario = ?";
+    final private String RESTAR_SEGUIDOR = "UPDATE usuario set numSeguidores = numSeguidores - 1 WHERE usuario = ?";
+    final private String SUMAR_SEGUIDO = "UPDATE usuario set numSeguidos = numSeguidos - 1 WHERE usuario = ?";
+    final private String RESTAR_SEGUIDO = "UPDATE usuario set numSeguidos = numSeguidos - 1 WHERE usuario = ?";
 
     // Deletes
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
@@ -87,11 +98,11 @@ public class DAOImplementacionBD implements DAO {
             con = DriverManager.getConnection(URL, USER, PASSWORD);
 
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "No se ha encontrado el fichero de configuracion", "FALLO", 2);
+            e.printStackTrace();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "ERROR AL CARGAR EL FICHERO DE CONFIGURACION", "FALLO", 2);
+            e.printStackTrace();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al conectarse con la base de datos", "FALLO", 2);
+            e.printStackTrace();
         }
 
     }
@@ -105,7 +116,7 @@ public class DAOImplementacionBD implements DAO {
                 stmt.close();
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error a la hora de cerrar la conexion con la base de datos", "FALLO", 2);
+            e.printStackTrace();
         }
     }
 
@@ -197,7 +208,6 @@ public class DAOImplementacionBD implements DAO {
             usu.setNumSeguidores(rs.getInt("numSeguidores"));
             usu.setNumSeguidos(rs.getInt("numSeguidos"));
             usu.setVerificado(rs.getBoolean("verificado"));
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -210,7 +220,7 @@ public class DAOImplementacionBD implements DAO {
      */
     //Devuelve una publicacion en base a su id
     @Override
-    public Publicacion buscarPublicacionXId(String id) throws NullPointerException {
+    public Publicacion buscarPublicacionXId(String id) {
         Publicacion publi = null;
 
         this.abrirConexion();
@@ -351,10 +361,7 @@ public class DAOImplementacionBD implements DAO {
 
             while (rs.next()) {
                 Usuario usu = new Usuario();
-                usu.setUsuario(rs.getString("usuario"));
-                usu.setVerificado(rs.getBoolean("verificado"));
-                usu.setIcono(rs.getString("icono"));
-                usu.setNumSeguidores(rs.getInt("numSeguidores"));
+                usu = this.getUsuario(usu, rs);
                 usuarios.add(usu);
             }
 
@@ -467,7 +474,6 @@ public class DAOImplementacionBD implements DAO {
                 System.out.println(cod);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al generar la id de la publicacion", "Fallo", 2);
             e.printStackTrace();
 
         }
@@ -510,7 +516,6 @@ public class DAOImplementacionBD implements DAO {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al publicar la imagen", "Fallo", 2);
             e.printStackTrace();
         }
 
@@ -700,6 +705,151 @@ public class DAOImplementacionBD implements DAO {
         }
         this.cerrarConexion();
         return numPubli;
+    }
+
+    @Override
+    public boolean registrar(Usuario us) {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+        ResultSet rs;
+        boolean registrar = false;
+        String f = us.getFecha_nac() + "";
+        try {
+            stmt = con.prepareStatement(REGISTRAR);
+
+            stmt.setString(1, us.getUsuario());
+            stmt.setString(2, us.getContrasenia());
+            stmt.setString(3, us.getCodGmail());
+            stmt.setString(4, us.getDni());
+            stmt.setString(5, us.getCorreo());
+            stmt.setInt(6, us.getTelefono());
+            stmt.setString(7, f);
+            stmt.setInt(8, us.getNumSeguidores());
+            stmt.setInt(9, us.getNumSeguidos());
+            stmt.setBoolean(10, us.isVerificado());
+
+            if (stmt.executeUpdate() == 1) {
+                registrar = true;
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return registrar;
+    }
+
+    @Override
+    public void seguir(String nosotros, String usuarioPerfil) {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(SEGUIR);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, usuarioPerfil);
+
+            stmt.execute();
+
+            stmt = con.prepareStatement(SUMAR_SEGUIDOR);
+            stmt.setString(1, usuarioPerfil);
+
+            stmt.execute();
+
+            stmt = con.prepareStatement(SUMAR_SEGUIDO);
+            stmt.setString(1, nosotros);
+
+            stmt.execute();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void dejarSeguir(String nosotros, String usuarioPerfil) {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(DEJAR_SEGUIR);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, usuarioPerfil);
+
+            stmt.execute();
+
+            stmt = con.prepareStatement(RESTAR_SEGUIDOR);
+            stmt.setString(1, usuarioPerfil);
+
+            stmt.execute();
+
+            stmt = con.prepareStatement(RESTAR_SEGUIDO);
+            stmt.setString(1, nosotros);
+
+            stmt.execute();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public boolean verSeguimiento(String nosotros, String usuarioPerfil) {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+
+        boolean sigue = false;
+        try {
+            stmt = con.prepareStatement(VER_SEGUIMIENTO);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, usuarioPerfil);
+
+            System.out.println(stmt);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                sigue = true;
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        this.cerrarConexion();
+
+        return sigue;
+    }
+
+    @Override
+    public Usuario iniciarSesion(String usuario, String contrasenia) {
+        this.abrirConexion();
+        ResultSet rs;
+        Usuario us = new Usuario();
+        try {
+            stmt = con.prepareStatement(INICIAR_SESION);
+
+            stmt.setString(1, usuario);
+            stmt.setString(2, contrasenia);
+
+            System.out.println(stmt);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                us = this.getUsuario(us, rs);
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return us;
     }
 
 }

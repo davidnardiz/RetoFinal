@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
@@ -19,12 +21,12 @@ public class Perfil extends javax.swing.JDialog {
     private Usuario usu;
     private List<Publicacion> publicacionesList;
 
-    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usu) {
+    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = nosotros;
-        this.usuarioPerfil = usu;
+        this.usuarioPerfil = usuarioPerfil;
         this.paraTi = parent;
 
         setTitle("Perfil");
@@ -37,7 +39,13 @@ public class Perfil extends javax.swing.JDialog {
         if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
             btn.setVisible(false);
             btnEditarPerfil.setVisible(false);
+
+            if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
+                btnSeguir.setSelected(true);
+                btnSeguir.setText("Siguiendo");
+            }
         }
+
         if (!usuarioPerfil.isVerificado()) {
             lblVerificado.setVisible(false);
         }
@@ -78,12 +86,10 @@ public class Perfil extends javax.swing.JDialog {
             Object[] fila = new Object[3];
             fila[0] = new ImageIcon(
                     rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i).getImagen());
-            System.out.println(fila[0].toString());
 
             if (publicacionesList.size() > i + 1) {
                 fila[1] = new ImageIcon(
                         rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i + 1).getImagen());
-                System.out.println(fila[1].toString());
             } else {
                 fila[1] = null;
             }
@@ -91,7 +97,6 @@ public class Perfil extends javax.swing.JDialog {
             if (publicacionesList.size() > i + 2) {
                 fila[2] = new ImageIcon(
                         rutaProyecto + "\\src\\imagenes\\publicaciones\\" + publicacionesList.get(i + 2).getImagen());
-                System.out.println(fila[2].toString());
             } else {
                 fila[2] = null;
             }
@@ -99,8 +104,6 @@ public class Perfil extends javax.swing.JDialog {
             modelo.addRow(fila);
 
         }
-
-        System.out.println(modelo.getRowCount());
 
     }
 
@@ -195,6 +198,8 @@ public class Perfil extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 682, -1));
 
@@ -360,7 +365,7 @@ public class Perfil extends javax.swing.JDialog {
         lblIcono.setPreferredSize(new java.awt.Dimension(64, 64));
         getContentPane().add(lblIcono, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 120, -1, -1));
 
-        lblUsuario.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblUsuario.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
         lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
         lblUsuario.setPreferredSize(new java.awt.Dimension(120, 20));
         getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 196, -1, -1));
@@ -370,6 +375,7 @@ public class Perfil extends javax.swing.JDialog {
 
         btnEditarPerfil.setBackground(new java.awt.Color(227, 227, 227));
         btnEditarPerfil.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnEditarPerfil.setForeground(new java.awt.Color(0, 0, 0));
         btnEditarPerfil.setText("Editar Cuenta");
         btnEditarPerfil.setBorder(null);
         btnEditarPerfil.setBorderPainted(false);
@@ -378,6 +384,7 @@ public class Perfil extends javax.swing.JDialog {
 
         btn.setBackground(new java.awt.Color(227, 227, 227));
         btn.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btn.setForeground(new java.awt.Color(0, 0, 0));
         btn.setText("???");
         btn.setBorder(null);
         btn.setBorderPainted(false);
@@ -386,6 +393,7 @@ public class Perfil extends javax.swing.JDialog {
 
         btnMensaje.setBackground(new java.awt.Color(227, 227, 227));
         btnMensaje.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnMensaje.setForeground(new java.awt.Color(0, 0, 0));
         btnMensaje.setText("Enviar Mensaje");
         btnMensaje.setBorder(null);
         btnMensaje.setBorderPainted(false);
@@ -400,6 +408,11 @@ public class Perfil extends javax.swing.JDialog {
         btnSeguir.setBorderPainted(false);
         btnSeguir.setFocusPainted(false);
         btnSeguir.setRolloverEnabled(false);
+        btnSeguir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                seguir(evt);
+            }
+        });
         getContentPane().add(btnSeguir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
 
         rdbtnFoto.setBackground(getBackground());
@@ -431,11 +444,6 @@ public class Perfil extends javax.swing.JDialog {
                 rdbtnReelMouseClicked(evt);
             }
         });
-        rdbtnReel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdbtnReelActionPerformed(evt);
-            }
-        });
         getContentPane().add(rdbtnReel, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 314, -1, -1));
 
         rdbtnHistoria.setBackground(getBackground());
@@ -454,35 +462,43 @@ public class Perfil extends javax.swing.JDialog {
         getContentPane().add(rdbtnHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 314, -1, -1));
 
         scroll.setBackground(getBackground());
+        scroll.setBorder(null);
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll.setAutoscrolls(true);
-        scroll.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setFocusable(false);
         scroll.setPreferredSize(new java.awt.Dimension(594, 351));
+        scroll.setRequestFocusEnabled(false);
 
         tablaPublicaciones.setBackground(getBackground());
         tablaPublicaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+
             },
             new String [] {
                 "Title 1", "Title 2", "Title 3"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tablaPublicaciones.setFillsViewportHeight(true);
-        tablaPublicaciones.setPreferredSize(new java.awt.Dimension(594, 351));
-        tablaPublicaciones.setRowHeight(300);
+        tablaPublicaciones.setFocusable(false);
+        tablaPublicaciones.setRequestFocusEnabled(false);
+        tablaPublicaciones.setRowHeight(349);
         tablaPublicaciones.setRowSelectionAllowed(false);
-        tablaPublicaciones.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tablaPublicaciones.setShowGrid(false);
+        tablaPublicaciones.setTableHeader(null);
         tablaPublicaciones.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaPublicacionesMouseClicked(evt);
             }
         });
         scroll.setViewportView(tablaPublicaciones);
-
-        scroll.setBorder(BorderFactory.createEmptyBorder());
 
         getContentPane().add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 355, -1, -1));
 
@@ -520,10 +536,6 @@ public class Perfil extends javax.swing.JDialog {
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void rdbtnReelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnReelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdbtnReelActionPerformed
-
     private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
         publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
         cargarTabla(publicacionesList);
@@ -539,6 +551,21 @@ public class Perfil extends javax.swing.JDialog {
         cargarTabla(publicacionesList);
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
+    private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
+
+        if (btnSeguir.isSelected()) {
+            dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+            btnSeguir.setText("Siguiendo");
+            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
+
+        } else {
+            dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+            btnSeguir.setText("Seguir");
+            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+
+        }
+    }//GEN-LAST:event_seguir
+
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
         int columna = tablaPublicaciones.columnAtPoint(evt.getPoint());
@@ -550,7 +577,6 @@ public class Perfil extends javax.swing.JDialog {
             //El fallo no repercute al codigo por lo que no quiero gestionarlo ni avisar
         } catch (NullPointerException e) {
         }
-
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

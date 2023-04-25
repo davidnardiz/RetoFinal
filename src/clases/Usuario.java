@@ -21,7 +21,8 @@ public class Usuario {
      */
     @Override
     public String toString() {
-        return "Usuario [usuario=" + usuario + ", contrasenia=" + contrasenia + ", codGmail=" + codGmail + ", dni=" + dni + ", correo=" + correo + ", telefono=" + telefono + ", icono="
+        return "Usuario [usuario=" + usuario + ", contrasenia=" + contrasenia + ", dni=" + dni + ", codGmail="
+                + codGmail + ", correo=" + correo + ", telefono=" + telefono + ", icono="
                 + icono + ", fecha_nac=" + fecha_nac + ", numSeguidores=" + numSeguidores + ", numSeguidos="
                 + numSeguidos + ", verificado=" + verificado + "]";
     }
@@ -48,16 +49,16 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public String getDni() {
-        return dni;
+    public String getCodGmail() {
+        return codGmail;
     }
 
     public void setCodGmail(String codGmail) {
         this.codGmail = codGmail;
     }
 
-    public String getCodGmail() {
-        return codGmail;
+    public String getDni() {
+        return dni;
     }
 
     public void setDni(String dni) {

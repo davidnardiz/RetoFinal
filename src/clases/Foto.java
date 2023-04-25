@@ -2,9 +2,6 @@ package clases;
 
 public class Foto extends Publicacion {
 
-    public Foto() {
-    }
-
     private String id_publicacion;
     private String descripcion;
     private String resolucion;
