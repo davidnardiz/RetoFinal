@@ -5,13 +5,12 @@ import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
+import excepciones.ErrImagenes;
 import java.awt.Color;
-import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import modelo.DAO;
 import utilidades.Utilidades;
 
@@ -24,7 +23,7 @@ public class ParaTi extends javax.swing.JDialog {
     private Usuario usuPubli;
     private List<String> hanSalido = new ArrayList<>();
 
-    public ParaTi(JLayeredPane parent, boolean modal, DAO dao, Usuario usu) {
+    public ParaTi(JLayeredPane parent, boolean modal, DAO dao, Usuario usu) throws ErrImagenes {
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
@@ -39,23 +38,20 @@ public class ParaTi extends javax.swing.JDialog {
         siguienteFoto();
     }
 
-    private void siguienteFoto() throws NullPointerException {
+    public void siguienteFoto() throws ErrImagenes {
         // Buscamos una publicacion con una id aleatoria
         publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
         usuPubli = dao.buscarUsuario(publi.getUsuario());
 
-        // try {
-        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
-        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+        try {
+            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+            imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
 
-        /*
         } catch (NullPointerException e) {
-        JOptionPane.showMessageDialog(this, "La ruta de la imagen no encontrada", "FALLO", 2);
-        System.out.println(publi.toString());
-        System.out.println(usuPubli.toString());
-        siguienteFoto();
-          }
-         */
+            throw new ErrImagenes();
+
+        }
+
         if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
             btnLike.setSelected(true);
         } else {
@@ -238,7 +234,7 @@ public class ParaTi extends javax.swing.JDialog {
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnParaTi.setRolloverEnabled(false);
-       
+
         btnBuscar.setBackground(franjaArriba.getBackground());
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
         btnBuscar.setToolTipText("");
@@ -339,7 +335,7 @@ public class ParaTi extends javax.swing.JDialog {
         imagen.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         imagen.setPreferredSize(new java.awt.Dimension(475, 475));
         imagen.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {  
                 imagenClickada(evt);
             }
         });
@@ -439,17 +435,8 @@ public class ParaTi extends javax.swing.JDialog {
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void imagenClickada(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenClickada
-        try {
-            siguienteFoto();
-        } catch (NullPointerException e) {
-            siguienteFoto();
-
-            JOptionPane.showMessageDialog(this, "No se encuentra la ruta de la imagen", "Fallo", 2);
-            System.out.println(publi.toString());
-            System.out.println(usuPubli.toString());
-
-        }
+    private void imagenClickada(java.awt.event.MouseEvent evt) throws ErrImagenes{//GEN-FIRST:event_imagenClickada
+        siguienteFoto();
 
     }//GEN-LAST:event_imagenClickada
 

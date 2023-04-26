@@ -51,7 +51,6 @@ public class VentanaError extends javax.swing.JPanel {
 
         txt.setBackground(getBackground());
         txt.setForeground(new java.awt.Color(133, 133, 133));
-        txt.setText("Lo sentimos, ha ocurrido un error inesperado a la hora de insertar los datos en la base de datos");
         txt.setAutoscrolls(false);
 
         btnOk.setBackground(new java.awt.Color(48, 170, 63));

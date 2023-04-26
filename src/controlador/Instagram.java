@@ -6,11 +6,12 @@ import vista.Conector;
 
 public class Instagram {
 
-	public static void main(String[] args) {
-		DAO dao = new DAOImplementacionBD();
-		Conector main = new Conector(dao);
-                main.setVisible(true);
+    public static void main(String[] args) {
+        DAO dao = new DAOImplementacionBD();
 
-	}
+        Conector main = new Conector(dao);
+        main.setVisible(true);
+
+    }
 
 }

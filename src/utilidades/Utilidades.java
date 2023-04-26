@@ -22,7 +22,7 @@ public class Utilidades {
         return new Random().nextInt((max - min) + 1) + min;
     }
 
-    public static String seleccionarImagen(JDialog ventana) {
+    public static String seleccionarImagen(JDialog ventana, int width, int height) {
         File imagen = null;
 
         String rutaProyecto = System.getProperty("user.dir");
@@ -42,11 +42,11 @@ public class Utilidades {
 
                     // Si la foto esta en vertical redimensionarla con unos valores
                     if (image.getHeight() > image.getWidth()) {
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 356, 475);
+                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, height, width);
 
                         // Si no redimensionarla con otrs
                     } else {
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 475, 356);
+                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, width, height);
                     }
 
                     // Ruta origina del archivo

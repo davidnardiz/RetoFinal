@@ -49,7 +49,7 @@ public class Subir extends javax.swing.JDialog {
     }
 
     public void elegirFoto() {
-        imagen = Utilidades.seleccionarImagen(this);
+        imagen = Utilidades.seleccionarImagen(this, 475, 357);
         if (imagen != null) {
             ventanaFoto.btnFoto.setBackground(new Color(0, 153, 51));
         }

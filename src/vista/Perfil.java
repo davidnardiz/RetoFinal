@@ -199,8 +199,6 @@ public class Perfil extends javax.swing.JDialog {
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        lblLogoLetras.getAccessibleContext().setAccessibleName("");
-
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 682, -1));
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
@@ -375,7 +373,6 @@ public class Perfil extends javax.swing.JDialog {
 
         btnEditarPerfil.setBackground(new java.awt.Color(227, 227, 227));
         btnEditarPerfil.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btnEditarPerfil.setForeground(new java.awt.Color(0, 0, 0));
         btnEditarPerfil.setText("Editar Cuenta");
         btnEditarPerfil.setBorder(null);
         btnEditarPerfil.setBorderPainted(false);
@@ -384,7 +381,6 @@ public class Perfil extends javax.swing.JDialog {
 
         btn.setBackground(new java.awt.Color(227, 227, 227));
         btn.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btn.setForeground(new java.awt.Color(0, 0, 0));
         btn.setText("???");
         btn.setBorder(null);
         btn.setBorderPainted(false);
@@ -393,7 +389,6 @@ public class Perfil extends javax.swing.JDialog {
 
         btnMensaje.setBackground(new java.awt.Color(227, 227, 227));
         btnMensaje.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btnMensaje.setForeground(new java.awt.Color(0, 0, 0));
         btnMensaje.setText("Enviar Mensaje");
         btnMensaje.setBorder(null);
         btnMensaje.setBorderPainted(false);
@@ -462,7 +457,6 @@ public class Perfil extends javax.swing.JDialog {
         getContentPane().add(rdbtnHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 314, -1, -1));
 
         scroll.setBackground(getBackground());
-        scroll.setBorder(null);
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scroll.setFocusable(false);
