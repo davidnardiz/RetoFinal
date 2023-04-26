@@ -2,13 +2,15 @@ package vista;
 
 import clases.Publicacion;
 import clases.Usuario;
+import excepciones.ErrDelete;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
 import java.awt.Color;
 import java.util.List;
-import javax.swing.BorderFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
@@ -21,7 +23,7 @@ public class Perfil extends javax.swing.JDialog {
     private Usuario usu;
     private List<Publicacion> publicacionesList;
 
-    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
+    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) throws ErrSelect {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
@@ -504,7 +506,7 @@ public class Perfil extends javax.swing.JDialog {
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect{//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
         this.dispose();
@@ -524,28 +526,29 @@ public class Perfil extends javax.swing.JDialog {
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect{//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
+    private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect{//GEN-FIRST:event_rdbtnFotoMouseClicked
         publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
         cargarTabla(publicacionesList);
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
-    private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
+    private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect {//GEN-FIRST:event_rdbtnReelMouseClicked
         publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
         cargarTabla(publicacionesList);
+
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
-    private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
+    private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
         publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
         cargarTabla(publicacionesList);
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
-    private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
+    private void seguir(java.awt.event.ActionEvent evt) throws ErrInsert, ErrDelete {//GEN-FIRST:event_seguir
 
         if (btnSeguir.isSelected()) {
             dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
@@ -556,7 +559,6 @@ public class Perfil extends javax.swing.JDialog {
             dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
             btnSeguir.setText("Seguir");
             lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
-
         }
     }//GEN-LAST:event_seguir
 

@@ -5,10 +5,10 @@ import javax.swing.JOptionPane;
 
 public class ErrInsert extends Exception {
 
-    public void mostrarError(JDialog ubicacion) {
+    public ErrInsert(String ubicacion) {
         String mensaje;
 
-        switch (ubicacion.getName()) {
+        switch (ubicacion) {
             case "ParaTi":
             case "PublicacionPopUp":
                 mensaje = "Lo sentimos, error a la hora de insertar tu like en la base de datos";
@@ -17,14 +17,16 @@ public class ErrInsert extends Exception {
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de publicar la imagen";
                 break;
             case "Tienda":
-                mensaje = "Lo sentimos, ha ocurrido un error al insertar el articulo en la base de datos";
+                mensaje = "Lo sentimos, ha ocurrido un error al guardar el articulo";
                 break;
             case "BloquearDesbloquear":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de bloquear al usuario";
                 break;
             default:
-                throw new AssertionError();
+                mensaje = "Ha ocurrido un error inesperado a la hora de insertar algo la base de datos";
         }
+
+        VentanaError vent = new VentanaError(mensaje);
     }
 
 }

@@ -1,6 +1,8 @@
 package vista;
 
 import clases.Usuario;
+import excepciones.ErrSelect;
+
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import modelo.DAO;
@@ -117,7 +119,11 @@ public class Tienda extends javax.swing.JDialog {
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
+                try {
+					btnBuscarActionPerformed(evt);
+				} catch (ErrSelect e) {
+					//throw new ErrSelect("Buscar");
+				}
             }
         });
 
@@ -171,7 +177,11 @@ public class Tienda extends javax.swing.JDialog {
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCuentaActionPerformed(evt);
+                try {
+					btnCuentaActionPerformed(evt);
+				} catch (ErrSelect e) {
+					//throw new ErrSelect("Perfil");
+				}
             }
         });
 
@@ -228,7 +238,7 @@ public class Tienda extends javax.swing.JDialog {
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
         this.dispose();
@@ -248,7 +258,7 @@ public class Tienda extends javax.swing.JDialog {
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);

@@ -5,7 +5,10 @@ import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
+import excepciones.ErrDelete;
 import excepciones.ErrImagenes;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ public class ParaTi extends javax.swing.JDialog {
     private Usuario usuPubli;
     private List<String> hanSalido = new ArrayList<>();
 
-    public ParaTi(JLayeredPane parent, boolean modal, DAO dao, Usuario usu) throws ErrImagenes {
+    public ParaTi(JLayeredPane parent, boolean modal, DAO dao, Usuario usu) throws ErrImagenes, ErrSelect {
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
@@ -38,19 +41,13 @@ public class ParaTi extends javax.swing.JDialog {
         siguienteFoto();
     }
 
-    public void siguienteFoto() throws ErrImagenes {
+    public void siguienteFoto() throws ErrImagenes, ErrSelect {
         // Buscamos una publicacion con una id aleatoria
         publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
         usuPubli = dao.buscarUsuario(publi.getUsuario());
 
-        try {
-            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
-            imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
-
-        } catch (NullPointerException e) {
-            throw new ErrImagenes();
-
-        }
+        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
 
         if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
             btnLike.setSelected(true);
@@ -98,7 +95,7 @@ public class ParaTi extends javax.swing.JDialog {
 
     }
 
-    private String generarPublicacionAleatoria() {
+    private String generarPublicacionAleatoria() throws ErrSelect {
         List<Publicacion> id = dao.listarPublicaciones();
         String publiActual = "";
         int numRandom;
@@ -126,7 +123,7 @@ public class ParaTi extends javax.swing.JDialog {
         return publiActual;
     }
 
-    private void darLike() {
+    private void darLike() throws ErrInsert, ErrDelete {
         if (btnLike.isSelected()) {
             lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
             dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
@@ -335,7 +332,7 @@ public class ParaTi extends javax.swing.JDialog {
         imagen.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         imagen.setPreferredSize(new java.awt.Dimension(475, 475));
         imagen.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {  
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 imagenClickada(evt);
             }
         });
@@ -411,7 +408,7 @@ public class ParaTi extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnMensajeActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnBuscarActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect{//GEN-FIRST:event_btnBuscarActionPerformed
         Buscar buscar = new Buscar(this, true, dao, usu, false);
         this.setVisible(false);
         buscar.setVisible(true);
@@ -429,33 +426,40 @@ public class ParaTi extends javax.swing.JDialog {
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnCuentaActionPerformed
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect{//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(this, true, dao, usu, usu);
         this.setVisible(false);
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void imagenClickada(java.awt.event.MouseEvent evt) throws ErrImagenes{//GEN-FIRST:event_imagenClickada
+    private void imagenClickada(java.awt.event.MouseEvent evt) throws ErrSelect, ErrImagenes{//GEN-FIRST:event_imagenClickada
+
         siguienteFoto();
 
     }//GEN-LAST:event_imagenClickada
 
-    private void btnLikeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLikeMouseClicked
+    private void btnLikeMouseClicked(java.awt.event.MouseEvent evt) throws ErrInsert, ErrDelete {//GEN-FIRST:event_btnLikeMouseClicked
         darLike();
+
     }//GEN-LAST:event_btnLikeMouseClicked
 
-    private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
-        Usuario etiquetado = dao.buscarUsuario(publi.getUsuario());
+    private void buscarPerfil(java.awt.event.MouseEvent evt) throws ErrSelect{//GEN-FIRST:event_buscarPerfil
+        Usuario etiquetado;
+        etiquetado = dao.buscarUsuario(publi.getUsuario());
         Perfil perfil = new Perfil(this, true, dao, usu, etiquetado);
         this.setVisible(false);
         perfil.setVisible(true);
+
     }//GEN-LAST:event_buscarPerfil
 
-    private void buscarEtiquetado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarEtiquetado
-        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+    private void buscarEtiquetado(java.awt.event.MouseEvent evt) throws ErrSelect{//GEN-FIRST:event_buscarEtiquetado
+        Usuario etiquetado;
+
+        etiquetado = dao.buscarUsuario(publi.getEtiquetado());
         Perfil perfil = new Perfil(this, true, dao, usu, etiquetado);
         this.setVisible(false);
         perfil.setVisible(true);
+
     }//GEN-LAST:event_buscarEtiquetado
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

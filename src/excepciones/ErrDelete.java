@@ -1,20 +1,17 @@
 package excepciones;
 
-import javax.swing.JDialog;
-import utilidades.VentanasError.GlassPanePopup;
-
 public class ErrDelete extends Exception {
 
-    public void mostrarError(JDialog ubicacion) {
+    public ErrDelete(String ubicacion) {
         String mensaje = "";
 
-        switch (ubicacion.getName()) {
+        switch (ubicacion) {
             case "ParaTi":
             case "PublicacionPopUp":
-                mensaje = "Lo sentimos, ha ocurrido un error a la hora de eliminar tu like de la base de datos";
+                mensaje = "Lo sentimos, ha ocurrido un error a la hora de eliminar tu like";
                 break;
             case "Tienda":
-                mensaje = "Lo sentimos, ha ocurrido un error a la hora de eliminar este articulo de la base de datos";
+                mensaje = "Lo sentimos, ha ocurrido un error a la hora de eliminar este articulo";
                 break;
             case "Perfil":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de eliminar tu perfil";
@@ -23,11 +20,10 @@ public class ErrDelete extends Exception {
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de desbloquear un usuario";
                 break;
             default:
-                mensaje = "Lo sentimos, ha ocurrido un error inseperado a la hora de eliminar algo de la base de datos";
+                mensaje = "Ha ocurrido un error inseperado a la hora de eliminar algo de la base de datos";
 
         }
 
-        GlassPanePopup.showPopup(new VentanaError(mensaje));
-
+        VentanaError vent = new VentanaError(mensaje);
     }
 }

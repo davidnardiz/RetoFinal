@@ -2,6 +2,8 @@ package vista;
 
 import clases.Cancion;
 import clases.Usuario;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
 import java.io.File;
 import java.util.List;
 import modelo.DAO;
@@ -12,7 +14,7 @@ public class Subir_Foto extends javax.swing.JPanel {
     private Usuario usu;
     private Subir subir;
 
-    public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
+    public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) throws ErrSelect {
         initComponents();
 
         this.subir = subir;
@@ -156,7 +158,7 @@ public class Subir_Foto extends javax.swing.JPanel {
         subir.elegirFoto();
     }//GEN-LAST:event_btnFotoActionPerformed
 
-    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect, ErrInsert{//GEN-FIRST:event_btnSubirActionPerformed
         subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed
 

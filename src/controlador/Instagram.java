@@ -1,5 +1,6 @@
 package controlador;
 
+import excepciones.VentanaError;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
 import vista.Conector;

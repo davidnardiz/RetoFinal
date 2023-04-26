@@ -1,107 +1,107 @@
 package excepciones;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.event.ActionListener;
-import java.awt.geom.RoundRectangle2D;
-import utilidades.VentanasError.GlassPanePopup;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
-/**
- *
- * @author RAVEN
- */
-public class VentanaError extends javax.swing.JPanel {
+public class VentanaError extends javax.swing.JDialog {
 
     public VentanaError(String mensaje) {
-        initComponents();
-        setOpaque(false);
-        txt.setBackground(new Color(0, 0, 0, 0));
-        txt.setSelectionColor(new Color(48, 170, 63, 200));
-        txt.setOpaque(false);
-        txt.setText(mensaje);
-    }
 
-    @Override
-    protected void paintComponent(Graphics grphcs) {
-        Graphics2D g2 = (Graphics2D) grphcs.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(getBackground());
-        g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
-        g2.dispose();
-        super.paintComponent(grphcs);
+        // super(parent, modal);
+        this.setModal(true);
+
+        setUndecorated(true);
+        initComponents();
+        setLocationRelativeTo(null);
+        txt.setText(mensaje);
+        this.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        txt = new javax.swing.JTextPane();
         btnOk = new excepciones.Button();
         btnCancel = new excepciones.Button();
+        lbl = new javax.swing.JLabel();
+        txt = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(25, 25, 25, 25));
-
-        jLabel1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(80, 80, 80));
-        jLabel1.setText("Error en la base de datos");
-
-        txt.setBackground(getBackground());
-        txt.setForeground(new java.awt.Color(133, 133, 133));
-        txt.setAutoscrolls(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(187, 187, 187));
+        setModal(true);
+        setResizable(false);
 
         btnOk.setBackground(new java.awt.Color(48, 170, 63));
+        btnOk.setForeground(new java.awt.Color(255, 255, 255));
         btnOk.setText("OK");
+        btnOk.setFocusable(false);
+        btnOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cerrar(evt);
+            }
+        });
 
         btnCancel.setBackground(new java.awt.Color(232, 232, 232));
         btnCancel.setText("Cancelar");
+        btnCancel.setFocusable(false);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cerrar(evt);
+            }
+        });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        lbl.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        lbl.setForeground(new java.awt.Color(80, 80, 80));
+        lbl.setText("Error en la base de datos");
+
+        txt.setBackground(getBackground());
+        txt.setForeground(new java.awt.Color(133, 133, 133));
+        txt.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        txt.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 237, Short.MAX_VALUE))
-                    .addComponent(txt, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 240, Short.MAX_VALUE)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(lbl)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
+                .addComponent(lbl)
+                .addGap(18, 18, 18)
+                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelActionPerformed
-        GlassPanePopup.closePopupLast();
-    }//GEN-LAST:event_cmdCancelActionPerformed
-
-    public void eventOK(ActionListener event) {
-        btnOk.addActionListener(event);
-    }
+    private void cerrar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrar
+        this.dispose();
+    }//GEN-LAST:event_cerrar
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private excepciones.Button btnCancel;
     private excepciones.Button btnOk;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextPane txt;
+    private javax.swing.JLabel lbl;
+    private javax.swing.JLabel txt;
     // End of variables declaration//GEN-END:variables
 }

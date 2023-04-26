@@ -4,6 +4,10 @@ import clases.Button;
 import clases.MyPasswordField;
 import clases.MyTextField;
 import clases.Usuario;
+import excepciones.ErrImagenes;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.VentanaError;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -16,7 +20,6 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import utilidades.Utilidades;
@@ -46,6 +49,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         login.setVisible(false);
         register.setVisible(true);
         this.dao = dao;
+
+        txtUsuarioReg.setText("xDoble_Jx");
+        txtContraseniaReg.setText("abcd");
     }
 
     private void initRegister() {
@@ -93,7 +99,21 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                registrarse();
+                try {
+                    registrarse();
+                } catch (ErrInsert ex) {
+                    try {
+                        throw new ErrInsert("Registrar");
+                    } catch (ErrInsert ex1) {
+                        ex1.printStackTrace();
+                    }
+                } catch (ErrSelect ex) {
+                    try {
+                        throw new ErrSelect("Registrar");
+                    } catch (ErrSelect ex1) {
+                        ex1.printStackTrace();
+                    }
+                }
             }
         });
         register.add(cmd, "w 40%, h 40");
@@ -133,14 +153,29 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                iniciarSesion();
+                try {
+                    iniciarSesion();
+                } catch (ErrImagenes ex) {
+                    try {
+                        throw new ErrImagenes("Registrar");
+                    } catch (ErrImagenes ex1) {
+                        ex1.printStackTrace();
+                    }
+
+                } catch (ErrSelect ex) {
+                    try {
+                        throw new ErrSelect("Registrar");
+                    } catch (ErrSelect ex1) {
+                        ex1.printStackTrace();
+                    }
+                }
             }
 
         });
         login.add(cmd, "w 40%, h 40");
     }
 
-    private void iniciarSesion() {
+    private void iniciarSesion() throws ErrImagenes, ErrSelect {
         error = "";
         boolean bien = false;
 
@@ -173,15 +208,17 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 parati.setVisible(true);
 
             } else {
-                JOptionPane.showMessageDialog(this, "El usuario y la contraseña no coinciden", "ERROR", 0);
+                VentanaError ve = new VentanaError("El usuario y la contraseña no coinciden");
+
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, error, "Error", 0);
+            VentanaError ve = new VentanaError(error);
+
         }
     }
 
-    private void registrarse() {
+    private void registrarse() throws ErrInsert, ErrSelect {
         error = comprobarDatosUsuario();
         if (error == "") {
             Usuario us = new Usuario();
@@ -203,15 +240,18 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             }
 
             if (dao.registrar(us)) {
-                JOptionPane.showMessageDialog(this, "Registro correctamente hecha!!!");
+                VentanaError ve = new VentanaError("Registro correctamente hecha!!!");
+
                 limpiar();
 
             } else {
-                JOptionPane.showMessageDialog(this, "Registro no completado!!!");
+                VentanaError ve = new VentanaError("Registro no completado!!!");
+
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, error);
+            VentanaError ve = new VentanaError(error);
+
         }
     }
 
@@ -270,7 +310,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private javax.swing.JPanel register;
     // End of variables declaration//GEN-END:variables
 
-    private String comprobarDatosUsuario() {
+    private String comprobarDatosUsuario() throws ErrSelect {
         String error = "";
 
         if (txtUsuario.getText().length() > 20 || txtUsuario.getText().length() == 0) {
@@ -326,7 +366,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtDni.setText("");
     }
 
-    private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) {
+    private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) throws ErrSelect {
         List<Usuario> usuarios = dao.listarUsuario();
 
         boolean salir = false;

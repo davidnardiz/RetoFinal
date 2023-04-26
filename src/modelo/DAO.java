@@ -6,56 +6,59 @@ import clases.Cancion;
 import clases.Publicacion;
 import clases.TipoHistoria;
 import clases.Usuario;
+import excepciones.ErrDelete;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
 
 public interface DAO {
 
     // Inserts
-    public void publicar(Publicacion publi);
+    public void publicar(Publicacion publi) throws ErrInsert;
 
-    public void insertarLike(String usuario, String publicacion);
-    
-    public void seguir(String nosotros, String usuarioPerfil);
-    
-    public boolean registrar(Usuario us);
+    public void insertarLike(String usuario, String publicacion) throws ErrInsert;
+
+    public void seguir(String nosotros, String usuarioPerfil) throws ErrInsert;
+
+    public boolean registrar(Usuario us) throws ErrInsert;
 
     // Selects
-    public Publicacion buscarPublicacionXId(String id);
+    public Publicacion buscarPublicacionXId(String id) throws ErrSelect;
 
-    public List<Publicacion> listarPublicaciones();
+    public List<Publicacion> listarPublicaciones() throws ErrSelect;
 
-    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
+    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrSelect;
 
-    public String calcularId(String tipo);
+    public String calcularId(String tipo) throws ErrSelect;
 
-    public Usuario buscarUsuario(String usuario);
-    
-    public Usuario iniciarSesion(String usuario, String contrasenia);
+    public Usuario buscarUsuario(String usuario) throws ErrSelect;
 
-    public List<Usuario> listarUsuario();
+    public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrSelect;
 
-    public List<Usuario> listarUsuarioXUsuario(String usuario);
+    public List<Usuario> listarUsuario() throws ErrSelect;
 
-    public List<Usuario> listarUsuariosVerificados(String usuario);
+    public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrSelect;
 
-    public List<Usuario> listarUsuariosXSeguidores(String usuario);
+    public List<Usuario> listarUsuariosVerificados(String usuario) throws ErrSelect;
 
-    public int numPublicacionesUsuario(String usuario);
+    public List<Usuario> listarUsuariosXSeguidores(String usuario) throws ErrSelect;
 
-    public List<Cancion> listarCanciones();
+    public int numPublicacionesUsuario(String usuario) throws ErrSelect;
 
-    public List<TipoHistoria> listarTipoHistorias();
+    public List<Cancion> listarCanciones() throws ErrSelect;
 
-    public Cancion buscarCancionXTitulo(String titulo);
+    public List<TipoHistoria> listarTipoHistorias() throws ErrSelect;
 
-    public String tipoHistoria(String tipo);
+    public Cancion buscarCancionXTitulo(String titulo) throws ErrSelect;
 
-    public boolean comprobarLike(String usuario, String publicacion);
-    
-    public boolean verSeguimiento(String nosotros, String usuarioPerfil);
+    public String tipoHistoria(String tipo) throws ErrSelect;
+
+    public boolean comprobarLike(String usuario, String publicacion) throws ErrSelect;
+
+    public boolean verSeguimiento(String nosotros, String usuarioPerfil) throws ErrSelect;
 
     // Alters
     // Deletes
-    public void quirarLike(String usuario, String publicacion);
-    
-    public void dejarSeguir(String nosotros, String usuarioPerfil);
+    public void quirarLike(String usuario, String publicacion) throws ErrDelete;
+
+    public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrDelete;
 }
