@@ -18,19 +18,23 @@ public class Buscar extends javax.swing.JDialog {
     private Usuario usu;
     private ParaTi paraTi;
     private List<Usuario> usuariosList;
-
+    private Conector conector;
+    
     private boolean conver;
 
-    public Buscar(ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) {
+    public Buscar(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
         this.paraTi = parent;
         this.usuariosList = dao.listarUsuario();
+        this.conector=conector;
+        
         setTitle("Buscar");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
+        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
         initComponents();
 
         setLocationRelativeTo(null);
@@ -79,7 +83,7 @@ public class Buscar extends javax.swing.JDialog {
 
     private void buscarUsuario(String usuario) {
         Usuario perf = dao.buscarUsuario(usuario);
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, perf);
+        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, perf);
         this.setVisible(false);
         perfil.setVisible(true);
     }
@@ -118,7 +122,7 @@ public class Buscar extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
+        buscador = new vista.textfield.TextFieldSearchOption();
         scroll = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         lblBuscadorText = new javax.swing.JLabel();
@@ -160,8 +164,6 @@ public class Buscar extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
@@ -277,7 +279,7 @@ public class Buscar extends javax.swing.JDialog {
 
         buscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cambiarFiltro();
+                buscadorActionPerformed(evt);
             }
         });
         buscador.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -371,26 +373,26 @@ public class Buscar extends javax.swing.JDialog {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
+        Subir subir = new Subir(conector, paraTi, true, dao, usu);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
@@ -419,7 +421,7 @@ public class Buscar extends javax.swing.JDialog {
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-    private utilidades.Filtros_Buscador.TextFieldSearchOption buscador;
+    private vista.textfield.TextFieldSearchOption buscador;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JLabel lblBuscadorText;

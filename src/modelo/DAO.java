@@ -17,6 +17,10 @@ public interface DAO {
     public void seguir(String nosotros, String usuarioPerfil);
     
     public boolean registrar(Usuario us);
+    
+    public void bloquearUsuario(Usuario nosotros, String usu);
+    
+    public void guardarPublicación(String usuario, String id_publicacion);
 
     // Selects
     public Publicacion buscarPublicacionXId(String id);
@@ -52,10 +56,18 @@ public interface DAO {
     public boolean comprobarLike(String usuario, String publicacion);
     
     public boolean verSeguimiento(String nosotros, String usuarioPerfil);
+    
+    public List<Usuario> listarBloqueados(Usuario usuario);
+    
+    public List<Usuario> listarDesbloqueados(Usuario usuario);
 
     // Alters
     // Deletes
     public void quirarLike(String usuario, String publicacion);
     
     public void dejarSeguir(String nosotros, String usuarioPerfil);
+
+    public void eliminarPublicacion(String usuario, String id_publicacion);
+
+    public void desbloquearUsuario(Usuario nosotros, String usu);
 }

@@ -17,8 +17,9 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private Usuario usu;
     private Publicacion publi;
     private Perfil cerrarPerfil;
+    private Conector conector;
 
-    public PublicacionPopUp(ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
+    public PublicacionPopUp(Conector conector1, ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
         super(parent, modal);
         this.setModal(modal);
         this.paraTi = parent;
@@ -172,7 +173,7 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         cerrarPerfil.dispose();
 
         Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, etiquetado);
+        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, etiquetado);
         this.setVisible(false);
         perfil.setVisible(true);
 

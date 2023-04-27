@@ -39,6 +39,7 @@ public class DAOImplementacionBD implements DAO {
     final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
     final private String SEGUIR = "INSERT INTO sigue VALUES (?, ?)";
     final private String INSERTAR_LIKE = "INSERT INTO likes VALUES (?, ?)";
+    final private String INSERTAR_BLOQUEADO = "INSERT INTO bloqueados VALUES(?, ?)";
 
     // Deletes
     final private String DEJAR_SEGUIR = "DELETE FROM sigue WHERE seguidor = ? and seguido = ?";
@@ -59,6 +60,8 @@ public class DAOImplementacionBD implements DAO {
     final private String LISTAR_USUARIOS_X_SEGUIDORES = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE numSeguidores >= ?";
     final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
     final private String INICIAR_SESION = "SELECT * FROM usuario WHERE usuario = ? and contrasenia=?";
+    final private String LISTAR_BLOQUEADOS = "SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?";
+    final private String LISTAR_DESBLOQUEADOS = "SELECT usuario FROM usuario WHERE usuario NOT IN(SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?)";
 
     // SUBIR
     final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
@@ -72,7 +75,7 @@ public class DAOImplementacionBD implements DAO {
     final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
     final private String VER_SEGUIMIENTO = "SELECT * FROM sigue WHERE seguidor = ? and seguido = ?";
 
-// Alter
+    // ALTER
     final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
     final private String RESTAR_LIKE = "UPDATE publicacion set numLikes = numLikes - 1 WHERE id_publicacion = ?";
     final private String SUMAR_SEGUIDOR = "UPDATE usuario set numSeguidores = numSeguidores + 1 WHERE usuario = ?";
@@ -82,6 +85,7 @@ public class DAOImplementacionBD implements DAO {
 
     // Deletes
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
+    final private String DESBLOQUEAR_USUARIO = "DELETE FROM bloqueados were usuario = ? and usuario_bloqueado=?";
 
     public void abrirConexion() {
 
@@ -850,6 +854,127 @@ public class DAOImplementacionBD implements DAO {
         }
         this.cerrarConexion();
         return us;
+    }
+
+    @Override
+    public List<Usuario> listarBloqueados(Usuario usuario) {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_BLOQUEADOS);
+
+            stmt.setString(1, usuario.getUsuario());
+
+            System.out.println(stmt);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+
+                stmt.setString(1, rs.getString("usuario_bloqueado"));
+
+                System.out.println(stmt);
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplementacionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public List<Usuario> listarDesbloqueados(Usuario usuario) {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_DESBLOQUEADOS);
+
+            stmt.setString(1, usuario.getUsuario());
+
+            System.out.println(stmt);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+
+                stmt.setString(1, rs.getString("usuario"));
+
+                System.out.println(stmt);
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplementacionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public void eliminarPublicacion(String usuario, String id_publicacion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void guardarPublicación(String usuario, String id_publicacion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void bloquearUsuario(Usuario nosotros, String usu) {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(INSERTAR_BLOQUEADO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplementacionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void desbloquearUsuario(Usuario nosotros, String usu) {
+        this.abrirConexion();
+
+        try {
+
+            stmt = con.prepareStatement(DESBLOQUEAR_USUARIO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplementacionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.cerrarConexion();
     }
 
 }

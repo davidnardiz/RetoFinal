@@ -77,7 +77,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         register.add(txtTelefono, "w 60%");
 
         txtDni = new MyTextField();
-        txtDni.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/mail.png")));
+        txtDni.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/dni2.png")));
         txtDni.setHint("Dni");
         register.add(txtDni, "w 60%");
 
@@ -111,11 +111,13 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtUsuarioReg = new MyTextField();
         txtUsuarioReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/user.png")));
         txtUsuarioReg.setHint("Usuario");
+        txtUsuarioReg.setText("nárdiz");
         login.add(txtUsuarioReg, "w 60%");
 
         txtContraseniaReg = new MyPasswordField();
         txtContraseniaReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/pass.png")));
         txtContraseniaReg.setHint("Contraseña");
+        txtContraseniaReg.setText("1234");
         login.add(txtContraseniaReg, "w 60%");
 
         JButton cmdForget = new JButton("Recuperar contraseña");
@@ -158,7 +160,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             txtContraseniaReg.setBackground(new Color(208, 56, 24));
 
         } else {
-            txtContraseniaReg.setBackground(new Color(179, 231, 77));
             bien = true;
         }
 
@@ -168,12 +169,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             System.out.println(us.toString());
 
             if (us.getUsuario() != null) {
+                txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
+                 txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
                 conector.setOpacity(0);
-                ParaTi parati = new ParaTi(this, true, dao, us);
+                ParaTi parati = new ParaTi(conector, this, true, dao, us);
                 parati.setVisible(true);
 
             } else {
                 JOptionPane.showMessageDialog(this, "El usuario y la contraseña no coinciden", "ERROR", 0);
+                txtContraseniaReg.setBackground(new Color(208, 56, 24));
             }
 
         } else {
@@ -211,7 +215,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, error);
+            JOptionPane.showMessageDialog(this, error, "Error", 0);
         }
     }
 
@@ -306,7 +310,10 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             txtEmail.setBackground(new Color(142, 246, 86));
         }
 
-        if (txtTelefono.getText().matches("[0-9]{0,8}")) {
+        //Pattern patternTelefono = Pattern.compile("^(\+34|0034|34)?[6|7|9][0-9]{8}$");
+        //Matcher matcher2 = pattern.matcher(txtTelefono.getText());
+        
+        if (txtTelefono.getText().matches("[0-9]{0,9}")) {
             error += "El teléfono no es válido.\n";
             txtTelefono.setBackground(new Color(233, 0, 0));
         } else {
