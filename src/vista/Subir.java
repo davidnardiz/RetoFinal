@@ -7,11 +7,11 @@ import clases.Reel;
 import clases.Usuario;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
-
+import excepciones.ErrVariados;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -21,10 +21,11 @@ import javax.swing.JTextField;
 import modelo.DAO;
 import utilidades.Utilidades;
 
-public class Subir extends javax.swing.JDialog{
+public class Subir extends javax.swing.JDialog {
 
     private DAO dao;
     private Usuario usu;
+    private Conector conector;
 
     private String imagen = null;
 
@@ -33,7 +34,7 @@ public class Subir extends javax.swing.JDialog{
     private Subir_Historia ventanaHistoria;
     private ParaTi paraTi;
 
-    public Subir(ParaTi paraTi, boolean modal, DAO dao, Usuario usu) throws ErrSelect {
+    public Subir(Conector conector1, ParaTi paraTi, boolean modal, DAO dao, Usuario usu) throws ErrVariados, ErrSelect {
         //super(parent, modal);
 
         this.paraTi = paraTi;
@@ -54,13 +55,13 @@ public class Subir extends javax.swing.JDialog{
     }
 
     public void elegirFoto() {
-        imagen = Utilidades.seleccionarImagen(this, 475, 357);
+        imagen = Utilidades.seleccionarImagen(this);
         if (imagen != null) {
             ventanaFoto.btnFoto.setBackground(new Color(0, 153, 51));
         }
     }
 
-    public void subirPublicacion() throws ErrSelect, ErrInsert {
+    public void subirPublicacion() throws ErrVariados, ErrSelect, ErrSelect, ErrInsert {
         Publicacion publi;
         String id;
 
@@ -130,7 +131,7 @@ public class Subir extends javax.swing.JDialog{
         paraTi.setVisible(true);
     }
 
-    public void comprobarDatos() throws ErrSelect, ErrInsert {
+    public void comprobarDatos() throws ErrVariados, ErrSelect, ErrInsert {
         String mensaje = "";
         boolean correcto = true;
 
@@ -539,30 +540,48 @@ public class Subir extends javax.swing.JDialog{
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
-        this.dispose();
-        buscar.setVisible(true);
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            // TODO add your handling code here:
+            Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+            this.dispose();
+            buscar.setVisible(true);
+        } catch (ErrVariados ex) {
+            Logger.getLogger(Subir.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ErrSelect ex) {
+            Logger.getLogger(Subir.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnSubirActionPerformed
-        // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
-        this.dispose();
-        subir.setVisible(true);
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+        try {
+            // TODO add your handling code here:
+            Subir subir = new Subir(conector, paraTi, true, dao, usu);
+            this.dispose();
+            subir.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("");
+        }
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
-        this.dispose();
-        perfil.setVisible(true);
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        try {
+            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+            this.dispose();
+            perfil.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_btnCuentaActionPerformed
 
     private void cambiarFoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarFoto
@@ -597,6 +616,4 @@ public class Subir extends javax.swing.JDialog{
     private javax.swing.JRadioButton rdbtnReel;
     private javax.swing.ButtonGroup tipoPublicacion;
     // End of variables declaration//GEN-END:variables
-
-    
 }

@@ -43,6 +43,7 @@ public class DAOImplementacionBD implements DAO {
     final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
     final private String SEGUIR = "INSERT INTO sigue VALUES (?, ?)";
     final private String INSERTAR_LIKE = "INSERT INTO likes VALUES (?, ?)";
+    final private String INSERTAR_BLOQUEADO = "INSERT INTO bloqueados VALUES(?, ?)";
 
     // Deletes
     final private String DEJAR_SEGUIR = "DELETE FROM sigue WHERE seguidor = ? and seguido = ?";
@@ -63,6 +64,8 @@ public class DAOImplementacionBD implements DAO {
     final private String LISTAR_USUARIOS_X_SEGUIDORES = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE numSeguidores >= ?";
     final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
     final private String INICIAR_SESION = "SELECT * FROM usuario WHERE usuario = ? and contrasenia=?";
+    final private String LISTAR_BLOQUEADOS = "SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?";
+    final private String LISTAR_DESBLOQUEADOS = "SELECT usuario FROM usuario WHERE usuario NOT IN(SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?)";
 
     // SUBIR
     final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
@@ -76,7 +79,7 @@ public class DAOImplementacionBD implements DAO {
     final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
     final private String VER_SEGUIMIENTO = "SELECT * FROM sigue WHERE seguidor = ? and seguido = ?";
 
-// Alter
+    // ALTER
     final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
     final private String RESTAR_LIKE = "UPDATE publicacion set numLikes = numLikes - 1 WHERE id_publicacion = ?";
     final private String SUMAR_SEGUIDOR = "UPDATE usuario set numSeguidores = numSeguidores + 1 WHERE usuario = ?";
@@ -86,6 +89,7 @@ public class DAOImplementacionBD implements DAO {
 
     // Deletes
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
+    final private String DESBLOQUEAR_USUARIO = "DELETE FROM bloqueados were usuario = ? and usuario_bloqueado=?";
 
     public void abrirConexion() throws ErrVariados {
 
@@ -106,8 +110,7 @@ public class DAOImplementacionBD implements DAO {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
-            throw new ErrVariados("Logeo");
-
+            throw new ErrVariados("ConexionBDA");
         }
 
     }
@@ -225,12 +228,12 @@ public class DAOImplementacionBD implements DAO {
      */
     //Devuelve una publicacion en base a su id
     @Override
-    public Publicacion buscarPublicacionXId(String id) throws ErrSelect {
+    public Publicacion buscarPublicacionXId(String id) throws ErrVariados, ErrSelect {
         Publicacion publi = null;
 
-        try {
-            this.abrirConexion();
+        this.abrirConexion();
 
+        try {
             stmt = con.prepareStatement(BUSCAR_PUBLICACIO_X_ID);
             stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -254,23 +257,19 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados ex) {
-
+            throw new ErrSelect("Publicacion");
         }
 
         this.cerrarConexion();
-
         return publi;
-
     }
 
     //Inserta un usuario y publicacion en la tabla Likes y suma 1 like a la publicacion
     @Override
-    public void insertarLike(String usuario, String publicacion) throws ErrInsert {
-        try {
-            this.abrirConexion();
+    public void insertarLike(String usuario, String publicacion) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
 
+        try {
             stmt = con.prepareStatement(INSERTAR_LIKE);
             stmt.setString(1, usuario);
             stmt.setString(2, publicacion);
@@ -282,9 +281,7 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException e) {
-            throw new ErrInsert("ParaTi");
-        } catch (ErrVariados e) {
-
+            throw new ErrInsert("Like");
         }
         this.cerrarConexion();
 
@@ -292,10 +289,10 @@ public class DAOImplementacionBD implements DAO {
 
     //Quita un usuario y publicacion de la tabla Likes y resta 1 like a la publicacion
     @Override
-    public void quirarLike(String usuario, String publicacion) throws ErrDelete {
-        try {
-            this.abrirConexion();
+    public void quirarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
 
+        try {
             stmt = con.prepareStatement(QUITAR_LIKES);
             stmt.setString(1, usuario);
             stmt.setString(2, publicacion);
@@ -306,9 +303,7 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException e) {
-            throw new ErrDelete("ParaTi");
-        } catch (ErrVariados e) {
-
+            throw new ErrDelete("Like");
         }
         this.cerrarConexion();
 
@@ -319,11 +314,11 @@ public class DAOImplementacionBD implements DAO {
      */
     //Devuelve un usario en base a su usuario
     @Override
-    public Usuario buscarUsuario(String usuario) throws ErrSelect {
+    public Usuario buscarUsuario(String usuario) throws ErrVariados, ErrSelect {
         Usuario usu = new Usuario();
-        try {
-            this.abrirConexion();
+        this.abrirConexion();
 
+        try {
             stmt = con.prepareStatement(BUSCAR_USUARIO);
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();
@@ -332,9 +327,7 @@ public class DAOImplementacionBD implements DAO {
                 usu = this.getUsuario(usu, rs);
             }
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usu;
@@ -342,12 +335,11 @@ public class DAOImplementacionBD implements DAO {
 
     //Devuelve todas las id_publicacion que existen
     @Override
-    public List<Publicacion> listarPublicaciones() throws ErrSelect {
+    public List<Publicacion> listarPublicaciones() throws ErrVariados, ErrSelect {
         List<Publicacion> id = new ArrayList<>();
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(LISTAR_ID);
             ResultSet rs = stmt.executeQuery();
 
@@ -358,9 +350,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Publicacion");
         }
         this.cerrarConexion();
         return id;
@@ -368,12 +358,11 @@ public class DAOImplementacionBD implements DAO {
 
     //Devuelve todos los usarios que existen
     @Override
-    public List<Usuario> listarUsuario() throws ErrSelect {
+    public List<Usuario> listarUsuario() throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(LISTAR_USUARIOS);
             ResultSet rs = stmt.executeQuery();
 
@@ -384,9 +373,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
@@ -394,12 +381,11 @@ public class DAOImplementacionBD implements DAO {
 
     //Devuelven todos los usuario que contengan un string en su usuario
     @Override
-    public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrSelect {
+    public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(LISTAR_USUARIOS_X_USUARIO);
             stmt.setString(1, "%" + usuario + "%");
             ResultSet rs = stmt.executeQuery();
@@ -414,21 +400,18 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
     }
 
     @Override
-    public List<Usuario> listarUsuariosVerificados(String usuario) throws ErrSelect {
+    public List<Usuario> listarUsuariosVerificados(String usuario) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(LISTAR_USUARIOS_VERIFICADOS);
             stmt.setString(1, "%" + usuario + "%");
             ResultSet rs = stmt.executeQuery();
@@ -443,21 +426,18 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
     }
 
     @Override
-    public List<Usuario> listarUsuariosXSeguidores(String seguidores) throws ErrSelect {
+    public List<Usuario> listarUsuariosXSeguidores(String seguidores) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(LISTAR_USUARIOS_X_SEGUIDORES);
             stmt.setString(1, seguidores);
             ResultSet rs = stmt.executeQuery();
@@ -472,9 +452,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
@@ -485,13 +463,12 @@ public class DAOImplementacionBD implements DAO {
      */
     //Busca el codigo de la ultima publicacion
     @Override
-    public String calcularId(String tipo) throws ErrSelect {
+    public String calcularId(String tipo) throws ErrVariados, ErrSelect {
         String id;
         String cod = "";
+        this.abrirConexion();
 
         try {
-
-            this.abrirConexion();
             stmt = con.prepareStatement(ULTIMA_PUBLICACION);
             stmt.setString(1, tipo);
             ResultSet rs = stmt.executeQuery();
@@ -504,8 +481,7 @@ public class DAOImplementacionBD implements DAO {
                 System.out.println(cod);
             }
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
+            throw new ErrSelect("Publicacion");
 
         }
         this.cerrarConexion();
@@ -514,11 +490,10 @@ public class DAOImplementacionBD implements DAO {
 
     //Inserta una publicacion en la BDA
     @Override
-    public void publicar(Publicacion publi) throws ErrInsert {
+    public void publicar(Publicacion publi) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(PUBLICAR);
             stmt = setPublicacion(publi, stmt);
 
@@ -548,9 +523,7 @@ public class DAOImplementacionBD implements DAO {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            throw new ErrInsert("Subir");
-        } catch (ErrVariados e) {
-
+            throw new ErrInsert("Publicacion");
         }
 
         this.cerrarConexion();
@@ -558,12 +531,12 @@ public class DAOImplementacionBD implements DAO {
 
     //Muestra todos los titulos de las canciones que existen
     @Override
-    public List<Cancion> listarCanciones() throws ErrSelect {
+    public List<Cancion> listarCanciones() throws ErrVariados, ErrSelect {
         List<Cancion> canciones = new ArrayList<>();
 
-        try {
-            this.abrirConexion();
+        this.abrirConexion();
 
+        try {
             stmt = con.prepareStatement(LISTAR_MUSICA);
             ResultSet rs = stmt.executeQuery();
 
@@ -573,9 +546,7 @@ public class DAOImplementacionBD implements DAO {
                 canciones.add(can);
             }
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Cancion");
         }
         this.cerrarConexion();
 
@@ -584,12 +555,11 @@ public class DAOImplementacionBD implements DAO {
 
     //Muestran la cancion a la que corresponde el titulo
     @Override
-    public Cancion buscarCancionXTitulo(String titulo) throws ErrSelect {
+    public Cancion buscarCancionXTitulo(String titulo) throws ErrVariados, ErrSelect {
         Cancion can = null;
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(BUSCAR_CANCION_X_TITULO);
             stmt.setString(1, titulo);
             ResultSet rs = stmt.executeQuery();
@@ -604,9 +574,7 @@ public class DAOImplementacionBD implements DAO {
                 can.setCod_genero(rs.getString("cod_genero"));
             }
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Cancion");
         }
         this.cerrarConexion();
         return can;
@@ -614,12 +582,12 @@ public class DAOImplementacionBD implements DAO {
 
     //Lista todos los tipos de historia que existen
     @Override
-    public List<TipoHistoria> listarTipoHistorias() throws ErrSelect {
+    public List<TipoHistoria> listarTipoHistorias() throws ErrVariados, ErrSelect {
         List<TipoHistoria> tipoHistoria = new ArrayList<>();
 
-        try {
-            this.abrirConexion();
+        this.abrirConexion();
 
+        try {
             stmt = con.prepareStatement(LISTAR_TIPO_HISTORIA);
             ResultSet rs = stmt.executeQuery();
 
@@ -630,9 +598,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Historia");
         }
         this.cerrarConexion();
         return tipoHistoria;
@@ -640,12 +606,11 @@ public class DAOImplementacionBD implements DAO {
 
     //Devuvle el codigo de un tipoHistoria dependiendo de su tipo
     @Override
-    public String tipoHistoria(String tipo) throws ErrSelect {
+    public String tipoHistoria(String tipo) throws ErrVariados, ErrSelect {
         String cod = null;
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(TIPO_HISTORIA);
             stmt.setString(1, tipo);
             ResultSet rs = stmt.executeQuery();
@@ -654,9 +619,7 @@ public class DAOImplementacionBD implements DAO {
                 cod = rs.getString("cod_tipo");
             }
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Historia");
         }
         this.cerrarConexion();
         return cod;
@@ -667,12 +630,11 @@ public class DAOImplementacionBD implements DAO {
      */
     //Mira a ver si le has dado like a una publicacion
     @Override
-    public boolean comprobarLike(String usuario, String publicacion) throws ErrSelect {
+    public boolean comprobarLike(String usuario, String publicacion) throws ErrVariados, ErrSelect {
         boolean like = false;
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(COMPROBAR_LIKE);
             stmt.setString(1, usuario);
             stmt.setString(2, publicacion);
@@ -682,9 +644,7 @@ public class DAOImplementacionBD implements DAO {
                 like = true;
             }
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Like");
         }
 
         this.cerrarConexion();
@@ -693,13 +653,12 @@ public class DAOImplementacionBD implements DAO {
 
     //Muestra todas las publicaciones que ha subido un usuario
     @Override
-    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrSelect {
+    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect {
         List<Publicacion> publicaciones = new ArrayList<>();
         Publicacion publi = null;
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(LISTAR_PUBLICACIONES_USUARIO);
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();
@@ -726,9 +685,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
 
         this.cerrarConexion();
@@ -737,12 +694,11 @@ public class DAOImplementacionBD implements DAO {
 
     //Mustra el numero de publicaciones de un usuario
     @Override
-    public int numPublicacionesUsuario(String usuario) throws ErrSelect {
+    public int numPublicacionesUsuario(String usuario) throws ErrVariados, ErrSelect {
         int numPubli = 0;
+        this.abrirConexion();
 
         try {
-
-            this.abrirConexion();
             stmt = con.prepareStatement(NUM_PUBLICACIONES_USUARIO);
             stmt.setString(1, usuario);
             ResultSet rs = stmt.executeQuery();
@@ -752,24 +708,20 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Ubicacion");
         }
         this.cerrarConexion();
         return numPubli;
     }
 
     @Override
-    public boolean registrar(Usuario us) throws ErrInsert {
+    public boolean registrar(Usuario us) throws ErrVariados, ErrInsert {
         // TODO Auto-generated method stub
-
+        this.abrirConexion();
         ResultSet rs;
         boolean registrar = false;
         String f = us.getFecha_nac() + "";
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(REGISTRAR);
 
             stmt.setString(1, us.getUsuario());
@@ -787,21 +739,19 @@ public class DAOImplementacionBD implements DAO {
                 registrar = true;
             }
         } catch (SQLException e) {
-            throw new ErrInsert("Registrar");
-        } catch (ErrVariados e) {
-
+            // TODO Auto-generated catch block
+            throw new ErrInsert("Usuario");
         }
         this.cerrarConexion();
         return registrar;
     }
 
     @Override
-    public void seguir(String nosotros, String usuarioPerfil) throws ErrInsert {
+    public void seguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrInsert {
         // TODO Auto-generated method stub
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(SEGUIR);
             stmt.setString(1, nosotros);
             stmt.setString(2, usuarioPerfil);
@@ -818,21 +768,18 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.execute();
         } catch (SQLException e) {
-            throw new ErrInsert("Perfil");
-        } catch (ErrVariados e) {
-
+            throw new ErrInsert("Sigue");
         }
 
         this.cerrarConexion();
     }
 
     @Override
-    public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrDelete {
+    public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrDelete {
         // TODO Auto-generated method stub
+        this.abrirConexion();
 
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(DEJAR_SEGUIR);
             stmt.setString(1, nosotros);
             stmt.setString(2, usuarioPerfil);
@@ -849,22 +796,19 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.execute();
         } catch (SQLException e) {
-            throw new ErrDelete("Perfil");
-        } catch (ErrVariados e) {
-
+            throw new ErrDelete("Sigue");
         }
 
         this.cerrarConexion();
     }
 
     @Override
-    public boolean verSeguimiento(String nosotros, String usuarioPerfil) throws ErrSelect {
+    public boolean verSeguimiento(String nosotros, String usuarioPerfil) throws ErrVariados, ErrSelect {
         // TODO Auto-generated method stub
+        this.abrirConexion();
 
         boolean sigue = false;
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(VER_SEGUIMIENTO);
             stmt.setString(1, nosotros);
             stmt.setString(2, usuarioPerfil);
@@ -877,9 +821,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Sigue");
         }
 
         this.cerrarConexion();
@@ -888,13 +830,11 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrSelect {
-
+    public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
         ResultSet rs;
         Usuario us = new Usuario();
         try {
-            this.abrirConexion();
-
             stmt = con.prepareStatement(INICIAR_SESION);
 
             stmt.setString(1, usuario);
@@ -909,12 +849,131 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("");
-        } catch (ErrVariados e) {
-
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return us;
+    }
+
+    @Override
+    public List<Usuario> listarBloqueados(Usuario usuario) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_BLOQUEADOS);
+
+            stmt.setString(1, usuario.getUsuario());
+
+            System.out.println(stmt);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+
+                stmt.setString(1, rs.getString("usuario_bloqueado"));
+
+                System.out.println(stmt);
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Bloqueado");
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public List<Usuario> listarDesbloqueados(Usuario usuario) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_DESBLOQUEADOS);
+
+            stmt.setString(1, usuario.getUsuario());
+
+            System.out.println(stmt);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+
+                stmt.setString(1, rs.getString("usuario"));
+
+                System.out.println(stmt);
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Bloqueado");
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public void eliminarPublicacion(String usuario, String id_publicacion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void guardarPublicación(String usuario, String id_publicacion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void bloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(INSERTAR_BLOQUEADO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            throw new ErrInsert("Bloqueado");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+
+            stmt = con.prepareStatement(DESBLOQUEAR_USUARIO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            throw new ErrDelete("Bloqueado");
+        }
+
+        this.cerrarConexion();
     }
 
 }

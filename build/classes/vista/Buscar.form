@@ -40,9 +40,12 @@
                   <Group type="102" attributes="0">
                       <Component id="lblBuscadorText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="buscador" min="-2" pref="301" max="-2" attributes="0"/>
+                      <Component id="buscador" min="-2" pref="323" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="scroll" min="-2" pref="560" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="scroll" min="-2" pref="560" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -54,8 +57,8 @@
               <Component id="franjaArriba" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblBuscadorText" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buscador" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblBuscadorText" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Component id="scroll" min="-2" pref="522" max="-2" attributes="0"/>
@@ -122,9 +125,6 @@
               <Dimension value="[50, 16]"/>
             </Property>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
-          </AccessibilityProperties>
         </Component>
       </SubComponents>
     </Container>
@@ -297,6 +297,11 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="utilidades.Filtros_Buscador.TextFieldSearchOption" name="buscador">
+      <Events>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="buscadorKeyReleased"/>
+      </Events>
+    </Component>
     <Container class="javax.swing.JScrollPane" name="scroll">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -382,12 +387,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Buscador:"/>
       </Properties>
-    </Component>
-    <Component class="utilidades.Filtros_Buscador.TextFieldSearchOption" name="buscador">
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buscadorMouseClicked"/>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buscadorActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

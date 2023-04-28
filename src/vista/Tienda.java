@@ -2,8 +2,10 @@ package vista;
 
 import clases.Usuario;
 import excepciones.ErrSelect;
-
+import excepciones.ErrVariados;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import modelo.DAO;
 
@@ -12,13 +14,15 @@ public class Tienda extends javax.swing.JDialog {
     private DAO dao;
     private Usuario usu;
     private ParaTi paraTi;
+    private Conector conector;
 
-    public Tienda(ParaTi parent, boolean modal, DAO dao, Usuario usu) {
+    public Tienda(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario usu) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
         this.paraTi = parent;
+        this.conector = conector;
 
         setTitle("Tienda");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
@@ -119,11 +123,7 @@ public class Tienda extends javax.swing.JDialog {
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-					btnBuscarActionPerformed(evt);
-				} catch (ErrSelect e) {
-					//throw new ErrSelect("Buscar");
-				}
+                btnBuscarActionPerformed(evt);
             }
         });
 
@@ -177,11 +177,7 @@ public class Tienda extends javax.swing.JDialog {
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-					btnCuentaActionPerformed(evt);
-				} catch (ErrSelect e) {
-					//throw new ErrSelect("Perfil");
-				}
+                btnCuentaActionPerformed(evt);
             }
         });
 
@@ -238,30 +234,47 @@ public class Tienda extends javax.swing.JDialog {
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
-        this.dispose();
-        buscar.setVisible(true);
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+            this.dispose();
+            buscar.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
-        this.dispose();
-        subir.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            Subir subir = new Subir(conector, paraTi, true, dao, usu);
+            this.dispose();
+            subir.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Subir");
+        }
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
-        this.dispose();
-        perfil.setVisible(true);
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        try {
+            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+            this.dispose();
+            perfil.setVisible(true);
+        } catch (ErrVariados ex) {
+            Logger.getLogger(Tienda.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ErrSelect ex) {
+            Logger.getLogger(Tienda.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCuentaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

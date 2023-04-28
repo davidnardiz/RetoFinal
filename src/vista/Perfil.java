@@ -5,15 +5,17 @@ import clases.Usuario;
 import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
+import java.awt.Point;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class Perfil extends javax.swing.JDialog {
 
@@ -21,15 +23,17 @@ public class Perfil extends javax.swing.JDialog {
     private ParaTi paraTi;
     private Usuario usuarioPerfil;
     private Usuario usu;
+    private Conector conector;
     private List<Publicacion> publicacionesList;
 
-    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) throws ErrSelect {
+    public Perfil(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) throws ErrVariados, ErrSelect {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = nosotros;
         this.usuarioPerfil = usuarioPerfil;
         this.paraTi = parent;
+        this.conector = conector;
 
         setTitle("Perfil");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
@@ -39,7 +43,7 @@ public class Perfil extends javax.swing.JDialog {
         setLocationRelativeTo(null);
 
         if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
-            btn.setVisible(false);
+            btnMenu.setVisible(false);
             btnEditarPerfil.setVisible(false);
 
             if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
@@ -56,22 +60,12 @@ public class Perfil extends javax.swing.JDialog {
         lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
         lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
         lblUsuario.setText(usuarioPerfil.getUsuario());
-
-        try {
-            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "No se encuentra la ruta del icono", "Fallo", 2);
-            System.out.println(usuarioPerfil.toString());
-        }
+        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
 
         publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        try {
-            cargarTabla(publicacionesList);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "No se encuentra la ruta de una imagen");
-            e.printStackTrace();
-        }
+        cargarTabla(publicacionesList);
 
+        franjaMenu.setVisible(false);
     }
 
     private void cargarTabla(List<Publicacion> publicacionesList) {
@@ -109,7 +103,7 @@ public class Perfil extends javax.swing.JDialog {
 
     }
 
-    private void abrirFoto(String foto) {
+    private void abrirFoto(String foto) throws ErrVariados, ErrSelect {
         String rutaProyecto = System.getProperty("user.dir");
         Publicacion publi = null;
 
@@ -120,16 +114,24 @@ public class Perfil extends javax.swing.JDialog {
             }
         }
 
-        PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, dao, publi, usu, usuarioPerfil, this);
+        PublicacionPopUp publiPop = new PublicacionPopUp(conector, paraTi, true, dao, publi, usu, usuarioPerfil, this);
         publiPop.setVisible(true);
 
     }
 
     @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         tipoPublicacion = new javax.swing.ButtonGroup();
+        franjaMenu = new javax.swing.JPanel();
+        equis = new javax.swing.JButton();
+        btnBloquear = new javax.swing.JButton();
+        btnPublisGuardadas = new javax.swing.JButton();
+        btnEtiquetas = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
+        btnMejoresAmigos = new javax.swing.JButton();
         franjaArriba = new javax.swing.JPanel();
         lblLogo = new javax.swing.JLabel();
         lblLogoLetras = new javax.swing.JLabel();
@@ -149,7 +151,7 @@ public class Perfil extends javax.swing.JDialog {
         lblUsuario = new javax.swing.JLabel();
         lblVerificado = new javax.swing.JLabel();
         btnEditarPerfil = new javax.swing.JButton();
-        btn = new javax.swing.JButton();
+        btnMenu = new javax.swing.JButton();
         btnMensaje = new javax.swing.JButton();
         btnSeguir = new javax.swing.JToggleButton();
         rdbtnFoto = new javax.swing.JRadioButton();
@@ -169,6 +171,97 @@ public class Perfil extends javax.swing.JDialog {
         setPreferredSize(new java.awt.Dimension(648, 864));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        franjaMenu.setBackground(new java.awt.Color(35, 36, 37));
+        franjaMenu.setPreferredSize(new java.awt.Dimension(648, 80));
+
+        equis.setBackground(new java.awt.Color(35, 36, 37));
+        equis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/equis.png"))); // NOI18N
+        equis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                equisMouseClicked(evt);
+            }
+        });
+
+        btnBloquear.setBackground(new java.awt.Color(49, 51, 53));
+        btnBloquear.setForeground(new java.awt.Color(255, 255, 255));
+        btnBloquear.setText("Bloquear usuario");
+        btnBloquear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBloquearActionPerformed(evt);
+            }
+        });
+
+        btnPublisGuardadas.setBackground(new java.awt.Color(49, 51, 53));
+        btnPublisGuardadas.setForeground(new java.awt.Color(255, 255, 255));
+        btnPublisGuardadas.setText("Publicaciones guardadas");
+        btnPublisGuardadas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPublisGuardadasActionPerformed(evt);
+            }
+        });
+
+        btnEtiquetas.setBackground(new java.awt.Color(49, 51, 53));
+        btnEtiquetas.setForeground(new java.awt.Color(255, 255, 255));
+        btnEtiquetas.setText("Etiquetas");
+        btnEtiquetas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEtiquetasActionPerformed(evt);
+            }
+        });
+
+        btnCerrarSesion.setBackground(new java.awt.Color(133, 0, 0));
+        btnCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
+        btnMejoresAmigos.setBackground(new java.awt.Color(14, 105, 0));
+        btnMejoresAmigos.setForeground(new java.awt.Color(255, 255, 255));
+        btnMejoresAmigos.setText("Mejores Amigos");
+        btnMejoresAmigos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMejoresAmigosActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout franjaMenuLayout = new javax.swing.GroupLayout(franjaMenu);
+        franjaMenu.setLayout(franjaMenuLayout);
+        franjaMenuLayout.setHorizontalGroup(
+            franjaMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaMenuLayout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addGroup(franjaMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnMejoresAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEtiquetas, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPublisGuardadas, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(equis, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35))
+        );
+        franjaMenuLayout.setVerticalGroup(
+            franjaMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaMenuLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(equis, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(152, 152, 152)
+                .addComponent(btnBloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnPublisGuardadas, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnEtiquetas, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnMejoresAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
+        );
+
+        getContentPane().add(franjaMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 330, 830));
 
         franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
         franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -381,13 +474,18 @@ public class Perfil extends javax.swing.JDialog {
         btnEditarPerfil.setFocusPainted(false);
         getContentPane().add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
 
-        btn.setBackground(new java.awt.Color(227, 227, 227));
-        btn.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btn.setText("???");
-        btn.setBorder(null);
-        btn.setBorderPainted(false);
-        btn.setFocusPainted(false);
-        getContentPane().add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
+        btnMenu.setBackground(new java.awt.Color(227, 227, 227));
+        btnMenu.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnMenu.setText("Menú");
+        btnMenu.setBorder(null);
+        btnMenu.setBorderPainted(false);
+        btnMenu.setFocusPainted(false);
+        btnMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMenuMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btnMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
 
         btnMensaje.setBackground(new java.awt.Color(227, 227, 227));
         btnMensaje.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -407,7 +505,7 @@ public class Perfil extends javax.swing.JDialog {
         btnSeguir.setRolloverEnabled(false);
         btnSeguir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                seguir(evt);
+                btnSeguirActionPerformed(evt);
             }
         });
         getContentPane().add(btnSeguir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
@@ -506,61 +604,80 @@ public class Perfil extends javax.swing.JDialog {
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect{//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
-        this.dispose();
-        buscar.setVisible(true);
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+            this.dispose();
+            buscar.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
-        this.dispose();
-        subir.setVisible(true);
+        try {
+            Subir subir = new Subir(conector, paraTi, true, dao, usu);
+            this.dispose();
+            subir.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Subir");
+        }
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect{//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
-        this.dispose();
-        perfil.setVisible(true);
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        try {
+            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+            this.dispose();
+            perfil.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect{//GEN-FIRST:event_rdbtnFotoMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        cargarTabla(publicacionesList);
+    private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+            cargarTabla(publicacionesList);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
+        }
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
-    private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect {//GEN-FIRST:event_rdbtnReelMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
-        cargarTabla(publicacionesList);
-
+    private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
+            cargarTabla(publicacionesList);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
+        }
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
-    private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
-        cargarTabla(publicacionesList);
-    }//GEN-LAST:event_rdbtnHistoriaMouseClicked
-
-    private void seguir(java.awt.event.ActionEvent evt) throws ErrInsert, ErrDelete {//GEN-FIRST:event_seguir
-
-        if (btnSeguir.isSelected()) {
-            dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
-            btnSeguir.setText("Siguiendo");
-            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
-
-        } else {
-            dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
-            btnSeguir.setText("Seguir");
-            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+    private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
+            cargarTabla(publicacionesList);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
         }
-    }//GEN-LAST:event_seguir
+    }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
@@ -572,21 +689,156 @@ public class Perfil extends javax.swing.JDialog {
             //Clickas en la tercera celda de la tabla y al haber menos imagenes da fallo;
             //El fallo no repercute al codigo por lo que no quiero gestionarlo ni avisar
         } catch (NullPointerException e) {
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");;
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
         }
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
+    private void equisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_equisMouseClicked
+        // TODO add your handling code here:
+        btnMenu.setBorder(null);
+        franjaMenu.setVisible(false);
+        btnMenu.setVisible(true);
+        btnEditarPerfil.setEnabled(true);
+        btnMensaje.setVisible(true);
+        equis.setVisible(false);
+        equis.setBorder(null);
+        //btnBloquear.setVisible(true);
+        btnSubir.setEnabled(true);
+        rdbtnReel.setEnabled(true);
+        rdbtnFoto.setEnabled(true);
+        rdbtnHistoria.setVisible(true);
+        btnBuscar.setEnabled(true);
+        btnParaTi.setEnabled(true);
+        btnTienda.setEnabled(true);
+        btnCuenta.setEnabled(true);
+        tablaPublicaciones.setEnabled(true);
+    }//GEN-LAST:event_equisMouseClicked
+
+    private void btnMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuMouseClicked
+        // TODO add your handling code here:
+        btnMenu.setBorder(null);
+        franjaMenu.setVisible(true);
+        btnMenu.setVisible(false);
+        btnEditarPerfil.setEnabled(false);
+        btnMensaje.setVisible(false);
+        equis.setVisible(true);
+        equis.setBorder(null);
+        //btnBloquear.setVisible(true);
+        btnSubir.setEnabled(false);
+        rdbtnReel.setEnabled(false);
+        rdbtnFoto.setEnabled(false);
+        rdbtnHistoria.setVisible(false);
+        btnBuscar.setEnabled(false);
+        btnParaTi.setEnabled(false);
+        btnTienda.setEnabled(false);
+        btnCuenta.setEnabled(false);
+        tablaPublicaciones.setEnabled(false);
+        btnBloquear.setBorder(null);
+        btnPublisGuardadas.setBorder(null);
+        btnEtiquetas.setBorder(null);
+        btnCerrarSesion.setBorder(null);
+        btnMejoresAmigos.setBorder(null);
+
+        Point img1L = franjaMenu.getLocationOnScreen();
+        int targetX = img1L.x;
+        int targetY = img1L.y;
+
+        int startX = franjaMenu.getX();
+        int startY = franjaMenu.getY();
+        int endX = targetX;
+        int endY = targetY;
+        Animator animator = new Animator(750, new TimingTargetAdapter() {
+            @Override
+            public void timingEvent(float fraction) {
+                int x = (int) (startX + (endX - startX) * fraction);
+                int y = (int) (startY + (endY - startY) * fraction);
+                franjaMenu.setLocation(x, y);
+
+            }
+        });
+    }//GEN-LAST:event_btnMenuMouseClicked
+
+    private void btnPublisGuardadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublisGuardadasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPublisGuardadasActionPerformed
+
+    private void btnEtiquetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEtiquetasActionPerformed
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        // TODO add your handling code here:
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        JOptionPane.showConfirmDialog(null, "¿Éstas seguro de que quieres cerrar sesión?", "ATENCIÓN!!", dialogButton);
+        if (dialogButton == JOptionPane.YES_OPTION) {
+            this.dispose();
+            conector.setOpacity(1);
+            if (dialogButton == JOptionPane.NO_OPTION) {
+                remove(dialogButton);
+            }
+        }
+
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
+
+    }//GEN-LAST:event_btnMejoresAmigosActionPerformed
+
+    private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
+        try {
+            BloquearDesbloquear bd = new BloquearDesbloquear(this, true, dao, usu);
+            bd.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Bloqueo");
+        }
+    }//GEN-LAST:event_btnBloquearActionPerformed
+
+    private void btnSeguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeguirActionPerformed
+        try {
+            if (btnSeguir.isSelected()) {
+                dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+                btnSeguir.setText("Siguiendo");
+                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
+
+            } else {
+                dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+                btnSeguir.setText("Seguir");
+                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+            }
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrDelete ex) {
+            ErrDelete er = new ErrDelete("Sigue");
+        } catch (ErrInsert ex) {
+            ErrInsert er = new ErrInsert("Sigue");
+        }
+    }//GEN-LAST:event_btnSeguirActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn;
+    private javax.swing.JButton btnBloquear;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnEditarPerfil;
+    private javax.swing.JButton btnEtiquetas;
+    private javax.swing.JButton btnMejoresAmigos;
     private javax.swing.JButton btnMensaje;
+    private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnParaTi;
+    private javax.swing.JButton btnPublisGuardadas;
     private javax.swing.JToggleButton btnSeguir;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
+    private javax.swing.JButton equis;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
+    private javax.swing.JPanel franjaMenu;
     private javax.swing.JLabel lblIcono;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblLogoLetras;

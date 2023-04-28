@@ -2,9 +2,9 @@ package excepciones;
 
 public class ErrAlter extends Exception {
 
-    public ErrAlter(String ubicacion) {
+    public ErrAlter(String tabla) {
         String mensaje = "";
-        switch (ubicacion) {
+        switch (tabla) {
             case "ParaTi":
             case "PublicacionPopUp":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de modificar el numero de likes";

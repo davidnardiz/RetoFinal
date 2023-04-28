@@ -2,10 +2,10 @@ package excepciones;
 
 public class ErrImagenes extends Exception {
 
-    public ErrImagenes(String ubicacion) {
+    public ErrImagenes(String tabla) {
         String mensaje = "";
 
-        switch (ubicacion) {
+        switch (tabla) {
             case "ParaTi":
                 mensaje = "Lo sentimos, no se ha podido encontrar la imagen de esta publicacion";
                 break;

@@ -10,8 +10,9 @@ public class ErrVariados extends Exception {
             case "Fichero":
                 mensaje = "Lo sentimos, no se ha encontrado el fichero de configuracion";
                 break;
-            case "Logeo":
+            case "ConexionBDA":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de conectarse con la base de datos";
+                break;
             default:
                 mensaje = "Lo sentimos, no se ha encontrado el fichero";
         }

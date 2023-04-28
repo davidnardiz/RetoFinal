@@ -4,9 +4,9 @@ import clases.Button;
 import clases.MyPasswordField;
 import clases.MyTextField;
 import clases.Usuario;
-import excepciones.ErrImagenes;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import excepciones.VentanaError;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import utilidades.Utilidades;
@@ -49,9 +50,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         login.setVisible(false);
         register.setVisible(true);
         this.dao = dao;
-
-        txtUsuarioReg.setText("xDoble_Jx");
-        txtContraseniaReg.setText("abcd");
     }
 
     private void initRegister() {
@@ -83,7 +81,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         register.add(txtTelefono, "w 60%");
 
         txtDni = new MyTextField();
-        txtDni.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/mail.png")));
+        txtDni.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/dni2.png")));
         txtDni.setHint("Dni");
         register.add(txtDni, "w 60%");
 
@@ -99,21 +97,17 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 try {
                     registrarse();
+                } catch (ErrVariados ex) {
+                    ErrVariados er = new ErrVariados("");
                 } catch (ErrInsert ex) {
-                    try {
-                        throw new ErrInsert("Registrar");
-                    } catch (ErrInsert ex1) {
-                        ex1.printStackTrace();
-                    }
+                    ErrInsert er = new ErrInsert("Usuario");
                 } catch (ErrSelect ex) {
-                    try {
-                        throw new ErrSelect("Registrar");
-                    } catch (ErrSelect ex1) {
-                        ex1.printStackTrace();
-                    }
+                    ErrSelect er = new ErrSelect("Usuario");
                 }
+
             }
         });
         register.add(cmd, "w 40%, h 40");
@@ -131,11 +125,13 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtUsuarioReg = new MyTextField();
         txtUsuarioReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/user.png")));
         txtUsuarioReg.setHint("Usuario");
+        txtUsuarioReg.setText("nárdiz");
         login.add(txtUsuarioReg, "w 60%");
 
         txtContraseniaReg = new MyPasswordField();
         txtContraseniaReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/pass.png")));
         txtContraseniaReg.setHint("Contraseña");
+        txtContraseniaReg.setText("1234");
         login.add(txtContraseniaReg, "w 60%");
 
         JButton cmdForget = new JButton("Recuperar contraseña");
@@ -155,19 +151,10 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     iniciarSesion();
-                } catch (ErrImagenes ex) {
-                    try {
-                        throw new ErrImagenes("Registrar");
-                    } catch (ErrImagenes ex1) {
-                        ex1.printStackTrace();
-                    }
-
+                } catch (ErrVariados ex) {
+                    ErrVariados er = new ErrVariados("");
                 } catch (ErrSelect ex) {
-                    try {
-                        throw new ErrSelect("Registrar");
-                    } catch (ErrSelect ex1) {
-                        ex1.printStackTrace();
-                    }
+                    ErrSelect er = new ErrSelect("Usuario");
                 }
             }
 
@@ -175,7 +162,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         login.add(cmd, "w 40%, h 40");
     }
 
-    private void iniciarSesion() throws ErrImagenes, ErrSelect {
+    private void iniciarSesion() throws ErrVariados, ErrSelect {
         error = "";
         boolean bien = false;
 
@@ -193,7 +180,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             txtContraseniaReg.setBackground(new Color(208, 56, 24));
 
         } else {
-            txtContraseniaReg.setBackground(new Color(179, 231, 77));
             bien = true;
         }
 
@@ -203,22 +189,23 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             System.out.println(us.toString());
 
             if (us.getUsuario() != null) {
+                txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
+                txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
                 conector.setOpacity(0);
-                ParaTi parati = new ParaTi(this, true, dao, us);
+                ParaTi parati = new ParaTi(conector, this, true, dao, us);
                 parati.setVisible(true);
 
             } else {
-                VentanaError ve = new VentanaError("El usuario y la contraseña no coinciden");
-
+                JOptionPane.showMessageDialog(this, "El usuario y la contraseña no coinciden", "ERROR", 0);
+                txtContraseniaReg.setBackground(new Color(208, 56, 24));
             }
 
         } else {
             VentanaError ve = new VentanaError(error);
-
         }
     }
 
-    private void registrarse() throws ErrInsert, ErrSelect {
+    private void registrarse() throws ErrVariados, ErrInsert, ErrSelect {
         error = comprobarDatosUsuario();
         if (error == "") {
             Usuario us = new Usuario();
@@ -241,17 +228,14 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
             if (dao.registrar(us)) {
                 VentanaError ve = new VentanaError("Registro correctamente hecha!!!");
-
                 limpiar();
 
             } else {
                 VentanaError ve = new VentanaError("Registro no completado!!!");
-
             }
 
         } else {
             VentanaError ve = new VentanaError(error);
-
         }
     }
 
@@ -310,7 +294,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private javax.swing.JPanel register;
     // End of variables declaration//GEN-END:variables
 
-    private String comprobarDatosUsuario() throws ErrSelect {
+    private String comprobarDatosUsuario() throws ErrVariados, ErrSelect {
         String error = "";
 
         if (txtUsuario.getText().length() > 20 || txtUsuario.getText().length() == 0) {
@@ -346,7 +330,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             txtEmail.setBackground(new Color(142, 246, 86));
         }
 
-        if (txtTelefono.getText().matches("[0-9]{0,8}")) {
+        //Pattern patternTelefono = Pattern.compile("^(\+34|0034|34)?[6|7|9][0-9]{8}$");
+        //Matcher matcher2 = pattern.matcher(txtTelefono.getText());
+        if (txtTelefono.getText().matches("[0-9]{0,9}")) {
             error += "El teléfono no es válido.\n";
             txtTelefono.setBackground(new Color(233, 0, 0));
         } else {
@@ -366,7 +352,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtDni.setText("");
     }
 
-    private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) throws ErrSelect {
+    private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = dao.listarUsuario();
 
         boolean salir = false;

@@ -1,18 +1,16 @@
 package controlador;
 
-import excepciones.VentanaError;
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
 import vista.Conector;
 
 public class Instagram {
 
-    public static void main(String[] args) {
-        DAO dao = new DAOImplementacionBD();
+	public static void main(String[] args) {
+		DAO dao = new DAOImplementacionBD();
+		Conector main = new Conector(dao);
+                main.setVisible(true);
 
-        Conector main = new Conector(dao);
-        main.setVisible(true);
-
-    }
+	}
 
 }

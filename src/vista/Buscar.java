@@ -1,16 +1,12 @@
 package vista;
 
 import clases.Usuario;
-import excepciones.ErrImagenes;
-import excepciones.ErrInsert;
 import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
@@ -23,20 +19,22 @@ public class Buscar extends javax.swing.JDialog {
     private Usuario usu;
     private ParaTi paraTi;
     private List<Usuario> usuariosList;
+    private Conector conector;
 
     private boolean conver;
 
-    public Buscar(ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) throws ErrSelect {
+    public Buscar(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) throws ErrVariados, ErrSelect {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
         this.paraTi = parent;
         this.usuariosList = dao.listarUsuario();
+        this.conector = conector;
+
         setTitle("Buscar");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
-        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
         initComponents();
 
         setLocationRelativeTo(null);
@@ -83,14 +81,14 @@ public class Buscar extends javax.swing.JDialog {
 
     }
 
-    private void buscarUsuario(String usuario) throws ErrSelect {
+    private void buscarUsuario(String usuario) throws ErrVariados, ErrSelect {
         Usuario perf = dao.buscarUsuario(usuario);
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, perf);
+        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, perf);
         this.setVisible(false);
         perfil.setVisible(true);
     }
 
-    private void cambiarFiltro() throws ErrSelect {
+    private void cambiarFiltro() throws ErrVariados, ErrSelect {
         if (buscador.isSelected()) {
             int opcion = buscador.getSelectedIndex();
 
@@ -124,10 +122,10 @@ public class Buscar extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
+        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
         scroll = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         lblBuscadorText = new javax.swing.JLabel();
-        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -166,8 +164,6 @@ public class Buscar extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
@@ -281,6 +277,12 @@ public class Buscar extends javax.swing.JDialog {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
+        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscadorKeyReleased(evt);
+            }
+        });
+
         scroll.setBackground(getBackground());
         scroll.setForeground(new java.awt.Color(255, 255, 255));
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -314,36 +316,13 @@ public class Buscar extends javax.swing.JDialog {
         tablaUsuarios.setTableHeader(null);
         tablaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                try {
-                    tablaUsuariosMouseClicked(evt);
-                } catch (ErrSelect e) {
-                   //throw new ErrSelect("Buscar");
-                }
+                tablaUsuariosMouseClicked(evt);
             }
         });
         scroll.setViewportView(tablaUsuarios);
 
         lblBuscadorText.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblBuscadorText.setText("Buscador:");
-
-        buscador.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                try {
-                    buscadorMouseClicked(evt);
-                } catch (ErrSelect e) {
-                    //throw new ErrSelect("Buscar");
-                }
-            }
-        });
-        buscador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    buscadorActionPerformed(evt);
-                } catch (ErrSelect e) {
-                   //throw new ErrSelect("Buscar");
-                }
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -357,8 +336,10 @@ public class Buscar extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblBuscadorText)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -367,8 +348,8 @@ public class Buscar extends javax.swing.JDialog {
                 .addComponent(franjaArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBuscadorText)
-                    .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBuscadorText))
                 .addGap(26, 26, 26)
                 .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -385,39 +366,71 @@ public class Buscar extends javax.swing.JDialog {
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnBuscarActionPerformed
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
-        this.dispose();
-        buscar.setVisible(true);
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            // TODO add your handling code here:
+            Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+            this.dispose();
+            buscar.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) throws ErrInsert, ErrSelect{//GEN-FIRST:event_btnSubirActionPerformed
-        Subir subir = new Subir(paraTi, true, dao, usu);
-        this.dispose();
-        subir.setVisible(true);
+    private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
+        try {
+            // TODO add your handling code here:
+            Subir subir = new Subir(conector, paraTi, true, dao, usu);
+            this.dispose();
+            subir.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
-    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
-        this.dispose();
-        perfil.setVisible(true);
+    private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
+        try {
+            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+            this.dispose();
+            perfil.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");;
+        }
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void buscadorKeyReleased(java.awt.event.KeyEvent evt) throws ErrSelect {//GEN-FIRST:event_buscadorKeyReleased
-        cambiarFiltro();
+    private void buscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscadorKeyReleased
+        try {
+            cambiarFiltro();
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_buscadorKeyReleased
 
-    private void buscadorMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect {//GEN-FIRST:event_buscadorMouseClicked
-        cambiarFiltro();
+    private void buscadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscadorMouseClicked
+        try {
+            cambiarFiltro();
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }//GEN-LAST:event_buscadorMouseClicked
 
-    private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) throws ErrSelect {//GEN-FIRST:event_tablaUsuariosMouseClicked
+    private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
         int fila = tablaUsuarios.rowAtPoint(evt.getPoint());
 
         if (conver) {
@@ -425,15 +438,13 @@ public class Buscar extends javax.swing.JDialog {
         } else {
             try {
                 buscarUsuario(tablaUsuarios.getValueAt(fila, 2).toString());
+            } catch (ErrVariados ex) {
+                ErrVariados er = new ErrVariados("");
             } catch (ErrSelect ex) {
-                throw new ErrSelect("Buscar");
+                ErrSelect er = new ErrSelect("Usuario");
             }
         }        // TODO add your handling code here:
     }//GEN-LAST:event_tablaUsuariosMouseClicked
-
-    private void buscadorActionPerformed(java.awt.event.ActionEvent evt) throws ErrSelect {//GEN-FIRST:event_buscadorActionPerformed
-        cambiarFiltro();
-    }//GEN-LAST:event_buscadorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
