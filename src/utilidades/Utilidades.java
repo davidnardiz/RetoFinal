@@ -70,6 +70,51 @@ public class Utilidades {
         return null;
 
     }
+    
+    public static String seleccionarIcono(JDialog ventana) {
+        File imagen = null;
+
+        String rutaProyecto = System.getProperty("user.dir");
+        File rutaExplorador = new File(rutaProyecto + "/src/imagenes/iconos/");
+
+        JnaFileChooser ch = new JnaFileChooser(rutaExplorador);
+        boolean seleccionado = ch.showOpenDialog(ventana);
+
+        if (seleccionado) {
+            imagen = ch.getSelectedFile();
+
+            if (!imagen.getAbsolutePath().contains("\\RetoFinal\\src\\imagenes\\iconos")) {
+
+                try {
+                    File nuevaFoto = new File(imagen.getAbsolutePath());
+                    BufferedImage image = ImageIO.read(nuevaFoto);
+
+                    // Si la foto esta en vertical redimensionarla con unos valores
+                   
+                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 64, 64);
+                    
+
+                    // Ruta origina del archivo
+                    Path rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
+
+                    // Ruta donde vamos a pegar
+                    Path rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
+
+                    // Copia la imagen al nuevo destino
+                    Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
+                            StandardCopyOption.REPLACE_EXISTING);
+
+                    nuevaFoto.delete();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return imagen.getName();
+        }
+        return null;
+
+    }
 
     /*
     public static String exploradorArchivos(JDialog ventana) {

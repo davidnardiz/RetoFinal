@@ -170,7 +170,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
             if (us.getUsuario() != null) {
                 txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
-                 txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
+                txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
                 conector.setOpacity(0);
                 ParaTi parati = new ParaTi(conector, this, true, dao, us);
                 parati.setVisible(true);

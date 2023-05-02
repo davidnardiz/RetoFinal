@@ -62,6 +62,8 @@ public interface DAO {
     public List<Usuario> listarDesbloqueados(Usuario usuario);
 
     // Alters
+    public void editarPerfil(Usuario us);
+    
     // Deletes
     public void quirarLike(String usuario, String publicacion);
     

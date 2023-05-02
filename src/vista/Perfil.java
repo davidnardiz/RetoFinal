@@ -77,6 +77,7 @@ public class Perfil extends javax.swing.JDialog {
         }
         
         franjaMenu.setVisible(false);
+        
     }
 
     private void cargarTabla(List<Publicacion> publicacionesList) {
@@ -483,6 +484,11 @@ public class Perfil extends javax.swing.JDialog {
         btnEditarPerfil.setBorder(null);
         btnEditarPerfil.setBorderPainted(false);
         btnEditarPerfil.setFocusPainted(false);
+        btnEditarPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarPerfilActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
 
         btnMenu.setBackground(new java.awt.Color(227, 227, 227));
@@ -770,10 +776,7 @@ public class Perfil extends javax.swing.JDialog {
             if(dialogButton == JOptionPane.NO_OPTION) {
                   remove(dialogButton);
                 }
-              }
-
-        
-        
+            }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
@@ -782,9 +785,17 @@ public class Perfil extends javax.swing.JDialog {
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
         // TODO add your handling code here:
-        BloquearDesbloquear bd = new BloquearDesbloquear(this, true, dao, usu);
+        BloquearDesbloquear bd = new BloquearDesbloquear(conector, this, true, dao, usu);
         bd.setVisible(true);
     }//GEN-LAST:event_btnBloquearActionPerformed
+
+    private void btnEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPerfilActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        EditarPerfil vent = new EditarPerfil(conector, paraTi, true, dao, usu, usuarioPerfil);
+        vent.setVisible(true);
+        
+    }//GEN-LAST:event_btnEditarPerfilActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBloquear;

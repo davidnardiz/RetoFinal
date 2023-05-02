@@ -82,6 +82,7 @@ public class DAOImplementacionBD implements DAO {
     final private String RESTAR_SEGUIDOR = "UPDATE usuario set numSeguidores = numSeguidores - 1 WHERE usuario = ?";
     final private String SUMAR_SEGUIDO = "UPDATE usuario set numSeguidos = numSeguidos - 1 WHERE usuario = ?";
     final private String RESTAR_SEGUIDO = "UPDATE usuario set numSeguidos = numSeguidos - 1 WHERE usuario = ?";
+    final private String EDITAR_PERFIL = "UPDATE usuario set contrasenia = ?, icono = ?, correo = ?, telefono = ? WHERE usuario = ?";
 
     // Deletes
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
@@ -976,5 +977,28 @@ public class DAOImplementacionBD implements DAO {
         
         this.cerrarConexion();
     }
+
+    @Override
+    public void editarPerfil(Usuario us) {
+        this.abrirConexion();
+        
+        try {
+            stmt = con.prepareStatement(EDITAR_PERFIL);
+            
+            stmt.setString(1, us.getContrasenia());
+            stmt.setString(2, us.getIcono());
+            stmt.setString(3, us.getCorreo());
+            stmt.setString(4, us.getTelefono()+"");
+            stmt.setString(5, us.getUsuario());
+            
+            stmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplementacionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.cerrarConexion();
+        
+    }
+    
 
 }
