@@ -13,6 +13,9 @@ public class ErrVariados extends Exception {
             case "ConexionBDA":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de conectarse con la base de datos";
                 break;
+            case "Imagen":
+                mensaje = "Lo sentimos, ha ocurrido un error a la hora de cargar una imagen";
+                break;
             default:
                 mensaje = "Lo sentimos, no se ha encontrado el fichero";
         }

@@ -2,13 +2,8 @@ package vista;
 
 import clases.Cancion;
 import clases.Usuario;
-import excepciones.ErrInsert;
-import excepciones.ErrSelect;
-import excepciones.ErrVariados;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Foto extends javax.swing.JPanel {
@@ -17,7 +12,7 @@ public class Subir_Foto extends javax.swing.JPanel {
     private Usuario usu;
     private Subir subir;
 
-    public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) throws ErrVariados, ErrSelect {
+    public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
         initComponents();
 
         this.subir = subir;
@@ -162,15 +157,7 @@ public class Subir_Foto extends javax.swing.JPanel {
     }//GEN-LAST:event_btnFotoActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        try {
-            subir.comprobarDatos();
-        } catch (ErrVariados ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ErrSelect ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ErrInsert ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -5,15 +5,17 @@ import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
-import excepciones.ErrDelete;
-import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import modelo.DAO;
 import utilidades.Utilidades;
 
@@ -26,7 +28,7 @@ public class ParaTi extends javax.swing.JDialog {
     private Usuario usuPubli;
     private List<String> hanSalido = new ArrayList<>();
 
-    public ParaTi(Conector conector, JLayeredPane parent, boolean modal, DAO dao, Usuario usu) throws ErrVariados, NullPointerException, ErrSelect {
+    public ParaTi(Conector conector, JLayeredPane parent, boolean modal, DAO dao, Usuario usu) {
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
@@ -42,18 +44,30 @@ public class ParaTi extends javax.swing.JDialog {
         siguienteFoto();
     }
 
-    private void siguienteFoto() throws NullPointerException, ErrVariados, ErrSelect {
-        // Buscamos una publicacion con una id aleatoria
-        publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
-        usuPubli = dao.buscarUsuario(publi.getUsuario());
+    private void siguienteFoto() {
+        try {
+            // Buscamos una publicacion con una id aleatoria
+            publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
+            usuPubli = dao.buscarUsuario(publi.getUsuario());
 
-        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
-        imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+            if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
+                btnLike.setSelected(true);
+            } else {
+                btnLike.setSelected(false);
+            }
 
-        if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
-            btnLike.setSelected(true);
-        } else {
-            btnLike.setSelected(false);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados(ex.getMessage());
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect(ex.getMessage());
+        }
+
+        try {
+            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+            imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+
+        } catch (NullPointerException e) {
+            ErrVariados er = new ErrVariados("Imagen");
         }
 
         lblDescripcion.setVisible(true);
@@ -96,7 +110,7 @@ public class ParaTi extends javax.swing.JDialog {
 
     }
 
-    private String generarPublicacionAleatoria() throws ErrVariados, ErrSelect {
+    private String generarPublicacionAleatoria() {
         List<Publicacion> id = dao.listarPublicaciones();
         String publiActual = "";
         int numRandom;
@@ -124,7 +138,7 @@ public class ParaTi extends javax.swing.JDialog {
         return publiActual;
     }
 
-    private void darLike() throws ErrVariados, ErrInsert, ErrDelete {
+    private void darLike() {
         if (btnLike.isSelected()) {
             lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
             dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
@@ -428,27 +442,15 @@ public class ParaTi extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMensajeActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnBuscarActionPerformed
-        try {
-            Buscar buscar = new Buscar(conector, this, true, dao, usu, false);
-            this.setVisible(false);
-            buscar.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        Buscar buscar = new Buscar(conector, this, true, dao, usu, false);
+        this.setVisible(false);
+        buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        try {
-            Subir subir = new Subir(conector, this, true, dao, usu);
-            this.setVisible(false);
-            subir.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Subir");
-        }
+        Subir subir = new Subir(conector, this, true, dao, usu);
+        this.setVisible(false);
+        subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
@@ -458,85 +460,53 @@ public class ParaTi extends javax.swing.JDialog {
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnCuentaActionPerformed
-        try {
-            Perfil perfil = new Perfil(conector, this, true, dao, usu, usu);
-            this.setVisible(false);
-            perfil.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        Perfil perfil = new Perfil(conector, this, true, dao, usu, usu);
+        this.setVisible(false);
+        perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
     private void imagenClickada(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenClickada
         try {
             siguienteFoto();
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
+        } catch (NullPointerException e) {
+            siguienteFoto();
+
+            JOptionPane.showMessageDialog(this, "No se encuentra la ruta de la imagen", "Fallo", 2);
+            System.out.println(publi.toString());
+            System.out.println(usuPubli.toString());
+
         }
 
     }//GEN-LAST:event_imagenClickada
 
     private void btnLikeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLikeMouseClicked
-        try {
-            darLike();
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Like");
-        } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Like");
-        }
+        darLike();
     }//GEN-LAST:event_btnLikeMouseClicked
 
     private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
-        try {
-            Usuario etiquetado = dao.buscarUsuario(publi.getUsuario());
-            Perfil perfil = new Perfil(conector, this, true, dao, usu, etiquetado);
-            this.setVisible(false);
-            perfil.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        Usuario etiquetado = dao.buscarUsuario(publi.getUsuario());
+        Perfil perfil = new Perfil(conector, this, true, dao, usu, etiquetado);
+        this.setVisible(false);
+        perfil.setVisible(true);
     }//GEN-LAST:event_buscarPerfil
 
     private void buscarEtiquetado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarEtiquetado
-        try {
-            Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
-            Perfil perfil = new Perfil(conector, this, true, dao, usu, etiquetado);
-            this.setVisible(false);
-            perfil.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+        Perfil perfil = new Perfil(conector, this, true, dao, usu, etiquetado);
+        this.setVisible(false);
+        perfil.setVisible(true);
     }//GEN-LAST:event_buscarEtiquetado
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        try {
-            guardar();
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Publicacion");
-        } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Publicacion");
-        }
-
+        // TODO add your handling code here:
+        guardar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void guardar() throws ErrVariados, ErrInsert, ErrDelete {
+    private void guardar() {
         if (btnGuardar.isSelected()) {
             dao.guardarPublicación(usu.getUsuario(), publi.getId_publicacion());
         } else {
             dao.eliminarPublicacion(usu.getUsuario(), publi.getId_publicacion());
-
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

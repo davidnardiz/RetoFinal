@@ -22,6 +22,7 @@ import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
 import clases.Usuario;
+import excepciones.ErrAlter;
 import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
@@ -86,6 +87,7 @@ public class DAOImplementacionBD implements DAO {
     final private String RESTAR_SEGUIDOR = "UPDATE usuario set numSeguidores = numSeguidores - 1 WHERE usuario = ?";
     final private String SUMAR_SEGUIDO = "UPDATE usuario set numSeguidos = numSeguidos - 1 WHERE usuario = ?";
     final private String RESTAR_SEGUIDO = "UPDATE usuario set numSeguidos = numSeguidos - 1 WHERE usuario = ?";
+    final private String EDITAR_PERFIL = "UPDATE usuario set contrasenia = ?, icono = ?, correo = ?, telefono = ? WHERE usuario = ?";
 
     // Deletes
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
@@ -108,7 +110,7 @@ public class DAOImplementacionBD implements DAO {
         } catch (FileNotFoundException e) {
             throw new ErrVariados("Fichero");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ErrVariados("");
         } catch (SQLException e) {
             throw new ErrVariados("ConexionBDA");
         }
@@ -261,6 +263,7 @@ public class DAOImplementacionBD implements DAO {
         }
 
         this.cerrarConexion();
+
         return publi;
     }
 
@@ -281,7 +284,7 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException e) {
-            throw new ErrInsert("Like");
+            throw new ErrInsert("Likes");
         }
         this.cerrarConexion();
 
@@ -303,7 +306,7 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException e) {
-            throw new ErrDelete("Like");
+            throw new ErrDelete("Likes");
         }
         this.cerrarConexion();
 
@@ -644,7 +647,7 @@ public class DAOImplementacionBD implements DAO {
                 like = true;
             }
         } catch (SQLException e) {
-            throw new ErrSelect("Like");
+            throw new ErrSelect("Likes");
         }
 
         this.cerrarConexion();
@@ -685,7 +688,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("Usuario");
+            throw new ErrSelect("Publicacion");
         }
 
         this.cerrarConexion();
@@ -708,7 +711,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            throw new ErrSelect("Ubicacion");
+            throw new ErrSelect("Publicacion");
         }
         this.cerrarConexion();
         return numPubli;
@@ -739,7 +742,6 @@ public class DAOImplementacionBD implements DAO {
                 registrar = true;
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             throw new ErrInsert("Usuario");
         }
         this.cerrarConexion();
@@ -950,7 +952,7 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException ex) {
-            throw new ErrInsert("Bloqueado");
+            throw new ErrInsert("Bloquear");
         }
 
         this.cerrarConexion();
@@ -970,10 +972,32 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException ex) {
-            throw new ErrDelete("Bloqueado");
+            throw new ErrDelete("Bloquear");
         }
 
         this.cerrarConexion();
+    }
+
+    @Override
+    public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(EDITAR_PERFIL);
+
+            stmt.setString(1, us.getContrasenia());
+            stmt.setString(2, us.getIcono());
+            stmt.setString(3, us.getCorreo());
+            stmt.setString(4, us.getTelefono() + "");
+            stmt.setString(5, us.getUsuario());
+
+            stmt.execute();
+        } catch (SQLException ex) {
+            throw new ErrAlter("Usuario");
+        }
+
+        this.cerrarConexion();
+
     }
 
 }

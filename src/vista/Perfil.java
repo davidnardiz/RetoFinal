@@ -2,15 +2,15 @@ package vista;
 
 import clases.Publicacion;
 import clases.Usuario;
-import excepciones.ErrDelete;
-import excepciones.ErrInsert;
-import excepciones.ErrSelect;
-import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
@@ -26,7 +26,7 @@ public class Perfil extends javax.swing.JDialog {
     private Conector conector;
     private List<Publicacion> publicacionesList;
 
-    public Perfil(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) throws ErrVariados, ErrSelect {
+    public Perfil(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
@@ -60,12 +60,24 @@ public class Perfil extends javax.swing.JDialog {
         lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
         lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
         lblUsuario.setText(usuarioPerfil.getUsuario());
-        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+
+        try {
+            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "No se encuentra la ruta del icono", "Fallo", 2);
+            System.out.println(usuarioPerfil.toString());
+        }
 
         publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        cargarTabla(publicacionesList);
-
+        try {
+            cargarTabla(publicacionesList);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "No se encuentra la ruta de una imagen");
+            e.printStackTrace();
+        }
+        
         franjaMenu.setVisible(false);
+        
     }
 
     private void cargarTabla(List<Publicacion> publicacionesList) {
@@ -103,7 +115,7 @@ public class Perfil extends javax.swing.JDialog {
 
     }
 
-    private void abrirFoto(String foto) throws ErrVariados, ErrSelect {
+    private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
         Publicacion publi = null;
 
@@ -118,7 +130,7 @@ public class Perfil extends javax.swing.JDialog {
         publiPop.setVisible(true);
 
     }
-
+    
     @SuppressWarnings("unchecked")
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -472,6 +484,11 @@ public class Perfil extends javax.swing.JDialog {
         btnEditarPerfil.setBorder(null);
         btnEditarPerfil.setBorderPainted(false);
         btnEditarPerfil.setFocusPainted(false);
+        btnEditarPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarPerfilActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
 
         btnMenu.setBackground(new java.awt.Color(227, 227, 227));
@@ -505,7 +522,7 @@ public class Perfil extends javax.swing.JDialog {
         btnSeguir.setRolloverEnabled(false);
         btnSeguir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSeguirActionPerformed(evt);
+                seguir(evt);
             }
         });
         getContentPane().add(btnSeguir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
@@ -599,33 +616,24 @@ public class Perfil extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        try {
-            Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
-            this.dispose();
-            buscar.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        // TODO add your handling code here:
+        Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+        this.dispose();
+        buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        try {
-            Subir subir = new Subir(conector, paraTi, true, dao, usu);
-            this.dispose();
-            subir.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Subir");
-        }
+        // TODO add your handling code here:
+        Subir subir = new Subir(conector, paraTi, true, dao, usu);
+        this.dispose();
+        subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
@@ -635,49 +643,40 @@ public class Perfil extends javax.swing.JDialog {
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        try {
-            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
-            this.dispose();
-            perfil.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+        this.dispose();
+        perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
     private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
-        try {
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-            cargarTabla(publicacionesList);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
-        }
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+        cargarTabla(publicacionesList);
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
     private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
-        try {
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
-            cargarTabla(publicacionesList);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
-        }
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
+        cargarTabla(publicacionesList);
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
     private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
-        try {
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
-            cargarTabla(publicacionesList);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
-        }
+        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
+        cargarTabla(publicacionesList);
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
+
+    private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
+
+        if (btnSeguir.isSelected()) {
+            dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+            btnSeguir.setText("Siguiendo");
+            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
+
+        } else {
+            dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+            btnSeguir.setText("Seguir");
+            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+
+        }
+    }//GEN-LAST:event_seguir
 
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
@@ -689,10 +688,6 @@ public class Perfil extends javax.swing.JDialog {
             //Clickas en la tercera celda de la tabla y al haber menos imagenes da fallo;
             //El fallo no repercute al codigo por lo que no quiero gestionarlo ni avisar
         } catch (NullPointerException e) {
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");;
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
         }
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
@@ -741,7 +736,8 @@ public class Perfil extends javax.swing.JDialog {
         btnEtiquetas.setBorder(null);
         btnCerrarSesion.setBorder(null);
         btnMejoresAmigos.setBorder(null);
-
+        
+        
         Point img1L = franjaMenu.getLocationOnScreen();
         int targetX = img1L.x;
         int targetY = img1L.y;
@@ -749,7 +745,7 @@ public class Perfil extends javax.swing.JDialog {
         int startX = franjaMenu.getX();
         int startY = franjaMenu.getY();
         int endX = targetX;
-        int endY = targetY;
+        int endY = targetY ;
         Animator animator = new Animator(750, new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
@@ -757,6 +753,7 @@ public class Perfil extends javax.swing.JDialog {
                 int y = (int) (startY + (endY - startY) * fraction);
                 franjaMenu.setLocation(x, y);
 
+             
             }
         });
     }//GEN-LAST:event_btnMenuMouseClicked
@@ -772,53 +769,33 @@ public class Perfil extends javax.swing.JDialog {
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         // TODO add your handling code here:
         int dialogButton = JOptionPane.YES_NO_OPTION;
-        JOptionPane.showConfirmDialog(null, "¿Éstas seguro de que quieres cerrar sesión?", "ATENCIÓN!!", dialogButton);
-        if (dialogButton == JOptionPane.YES_OPTION) {
-            this.dispose();
-            conector.setOpacity(1);
-            if (dialogButton == JOptionPane.NO_OPTION) {
-                remove(dialogButton);
+            JOptionPane.showConfirmDialog (null, "¿Éstas seguro de que quieres cerrar sesión?","ATENCIÓN!!", dialogButton);
+            if(dialogButton == JOptionPane.YES_OPTION) {
+                this.dispose();
+                conector.setOpacity(1);
+            if(dialogButton == JOptionPane.NO_OPTION) {
+                  remove(dialogButton);
+                }
             }
-        }
-
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
-
+        // TODO add your handling code here:
     }//GEN-LAST:event_btnMejoresAmigosActionPerformed
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
-        try {
-            BloquearDesbloquear bd = new BloquearDesbloquear(this, true, dao, usu);
-            bd.setVisible(true);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Bloqueo");
-        }
+        // TODO add your handling code here:
+        BloquearDesbloquear bd = new BloquearDesbloquear(conector, this, true, dao, usu);
+        bd.setVisible(true);
     }//GEN-LAST:event_btnBloquearActionPerformed
 
-    private void btnSeguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeguirActionPerformed
-        try {
-            if (btnSeguir.isSelected()) {
-                dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
-                btnSeguir.setText("Siguiendo");
-                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
-
-            } else {
-                dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
-                btnSeguir.setText("Seguir");
-                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
-            }
-
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Sigue");
-        } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Sigue");
-        }
-    }//GEN-LAST:event_btnSeguirActionPerformed
+    private void btnEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPerfilActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        EditarPerfil vent = new EditarPerfil(conector, paraTi, true, dao, usu, usuarioPerfil);
+        vent.setVisible(true);
+        
+    }//GEN-LAST:event_btnEditarPerfilActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBloquear;

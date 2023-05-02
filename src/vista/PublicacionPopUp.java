@@ -5,10 +5,6 @@ import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
-import excepciones.ErrDelete;
-import excepciones.ErrInsert;
-import excepciones.ErrSelect;
-import excepciones.ErrVariados;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -23,7 +19,7 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private Perfil cerrarPerfil;
     private Conector conector;
 
-    public PublicacionPopUp(Conector conector1, ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) throws ErrVariados, ErrSelect {
+    public PublicacionPopUp(Conector conector1, ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
         super(parent, modal);
         this.setModal(modal);
         this.paraTi = parent;
@@ -162,40 +158,24 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void darLike(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_darLike
-        try {
-            if (btnLike.isSelected()) {
-                lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
-                dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
+        if (btnLike.isSelected()) {
+            lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) + 1 + "");
+            dao.insertarLike(usu.getUsuario(), publi.getId_publicacion());
 
-            } else {
-                lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
-                dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
-            }
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-        } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Like");
-        } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Like");
+        } else {
+            lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
+            dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
         }
     }//GEN-LAST:event_darLike
 
     private void btnEtiquetadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEtiquetadoMouseClicked
-        try {
-            this.dispose();
-            cerrarPerfil.dispose();
+        this.dispose();
+        cerrarPerfil.dispose();
 
-            Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
-            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, etiquetado);
-            this.setVisible(false);
-            perfil.setVisible(true);
-
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
-
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
-        }
+        Usuario etiquetado = dao.buscarUsuario(publi.getEtiquetado());
+        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, etiquetado);
+        this.setVisible(false);
+        perfil.setVisible(true);
 
     }//GEN-LAST:event_btnEtiquetadoMouseClicked
 

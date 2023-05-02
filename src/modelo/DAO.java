@@ -6,6 +6,7 @@ import clases.Cancion;
 import clases.Publicacion;
 import clases.TipoHistoria;
 import clases.Usuario;
+import excepciones.ErrAlter;
 import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
@@ -39,7 +40,7 @@ public interface DAO {
 
     public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrVariados, ErrSelect;
 
-    public List<Usuario> listarUsuario() throws ErrVariados, ErrVariados, ErrSelect;
+    public List<Usuario> listarUsuario() throws ErrVariados, ErrSelect;
 
     public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrVariados, ErrSelect;
 
@@ -66,6 +67,8 @@ public interface DAO {
     public List<Usuario> listarDesbloqueados(Usuario usuario) throws ErrVariados, ErrSelect;
 
     // Alters
+    public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
+
     // Deletes
     public void quirarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete;
 

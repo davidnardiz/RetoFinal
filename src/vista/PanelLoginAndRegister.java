@@ -4,10 +4,6 @@ import clases.Button;
 import clases.MyPasswordField;
 import clases.MyTextField;
 import clases.Usuario;
-import excepciones.ErrInsert;
-import excepciones.ErrSelect;
-import excepciones.ErrVariados;
-import excepciones.VentanaError;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -97,17 +93,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                try {
-                    registrarse();
-                } catch (ErrVariados ex) {
-                    ErrVariados er = new ErrVariados("");
-                } catch (ErrInsert ex) {
-                    ErrInsert er = new ErrInsert("Usuario");
-                } catch (ErrSelect ex) {
-                    ErrSelect er = new ErrSelect("Usuario");
-                }
-
+                registrarse();
             }
         });
         register.add(cmd, "w 40%, h 40");
@@ -149,20 +135,14 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    iniciarSesion();
-                } catch (ErrVariados ex) {
-                    ErrVariados er = new ErrVariados("");
-                } catch (ErrSelect ex) {
-                    ErrSelect er = new ErrSelect("Usuario");
-                }
+                iniciarSesion();
             }
 
         });
         login.add(cmd, "w 40%, h 40");
     }
 
-    private void iniciarSesion() throws ErrVariados, ErrSelect {
+    private void iniciarSesion() {
         error = "";
         boolean bien = false;
 
@@ -201,11 +181,11 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             }
 
         } else {
-            VentanaError ve = new VentanaError(error);
+            JOptionPane.showMessageDialog(this, error, "Error", 0);
         }
     }
 
-    private void registrarse() throws ErrVariados, ErrInsert, ErrSelect {
+    private void registrarse() {
         error = comprobarDatosUsuario();
         if (error == "") {
             Usuario us = new Usuario();
@@ -227,15 +207,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             }
 
             if (dao.registrar(us)) {
-                VentanaError ve = new VentanaError("Registro correctamente hecha!!!");
+                JOptionPane.showMessageDialog(this, "Registro correctamente hecha!!!");
                 limpiar();
 
             } else {
-                VentanaError ve = new VentanaError("Registro no completado!!!");
+                JOptionPane.showMessageDialog(this, "Registro no completado!!!");
             }
 
         } else {
-            VentanaError ve = new VentanaError(error);
+            JOptionPane.showMessageDialog(this, error, "Error", 0);
         }
     }
 
@@ -294,7 +274,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private javax.swing.JPanel register;
     // End of variables declaration//GEN-END:variables
 
-    private String comprobarDatosUsuario() throws ErrVariados, ErrSelect {
+    private String comprobarDatosUsuario() {
         String error = "";
 
         if (txtUsuario.getText().length() > 20 || txtUsuario.getText().length() == 0) {
@@ -332,6 +312,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
         //Pattern patternTelefono = Pattern.compile("^(\+34|0034|34)?[6|7|9][0-9]{8}$");
         //Matcher matcher2 = pattern.matcher(txtTelefono.getText());
+        
         if (txtTelefono.getText().matches("[0-9]{0,9}")) {
             error += "El teléfono no es válido.\n";
             txtTelefono.setBackground(new Color(233, 0, 0));
@@ -352,7 +333,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtDni.setText("");
     }
 
-    private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) throws ErrVariados, ErrSelect {
+    private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) {
         List<Usuario> usuarios = dao.listarUsuario();
 
         boolean salir = false;
