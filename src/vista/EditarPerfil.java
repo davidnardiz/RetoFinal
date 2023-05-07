@@ -5,8 +5,12 @@
 package vista;
 
 import clases.Usuario;
+import excepciones.ErrAlter;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Frame;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import modelo.DAO;
 import utilidades.Utilidades;
@@ -28,11 +32,11 @@ public class EditarPerfil extends javax.swing.JDialog {
     public EditarPerfil(Conector con, ParaTi paraTi, boolean modal, DAO dao, Usuario usu, Usuario usuarioPerfil) {
         super(con, modal);
         this.nosotros = usu;
-        this.dao=dao;
-        this.conector=con;
-        this.us=usu;
-        this.usuarioPerfil=usuarioPerfil;
-        this.paraTi=paraTi;
+        this.dao = dao;
+        this.conector = con;
+        this.us = usu;
+        this.usuarioPerfil = usuarioPerfil;
+        this.paraTi = paraTi;
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
         setLocationRelativeTo(null);
@@ -41,7 +45,12 @@ public class EditarPerfil extends javax.swing.JDialog {
     }
 
     private void cargarDatos(Usuario us) {
-        fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + nosotros.getIcono())));
+        try {
+            fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + nosotros.getIcono())));
+        } catch (NullPointerException e) {
+            ErrVariados ex = new ErrVariados("Imagen");
+        }
+
         usuario.setText(us.getUsuario());
         dni.setText(us.getDni());
         contrasenia.setText(us.getContrasenia());
@@ -165,8 +174,8 @@ public class EditarPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEnviarDatosActionPerformed
 
     private void fotoPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoPerfilMouseClicked
-       ruta=Utilidades.seleccionarIcono(this);
-       fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" +ruta)));
+        ruta = Utilidades.seleccionarIcono(this);
+        fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + ruta)));
     }//GEN-LAST:event_fotoPerfilMouseClicked
 
     private void cerrar() {
@@ -176,15 +185,20 @@ public class EditarPerfil extends javax.swing.JDialog {
     }
 
     private void editarDatos() {
-        Usuario us = new Usuario();
-        us.setUsuario(usuario.getText());
-        us.setIcono(ruta);
-        us.setContrasenia(contrasenia.getText());
-        us.setCorreo(correo.getText());
-        us.setTelefono(Integer.parseInt(telefono.getText()));
-        dao.editarPerfil(us);
-       
-        
+        try {
+            Usuario us = new Usuario();
+            us.setUsuario(usuario.getText());
+            us.setIcono(ruta);
+            us.setContrasenia(contrasenia.getText());
+            us.setCorreo(correo.getText());
+            us.setTelefono(Integer.parseInt(telefono.getText()));
+            dao.editarPerfil(us);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrAlter ex) {
+            ErrAlter er = new ErrAlter("Usuario");
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

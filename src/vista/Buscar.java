@@ -1,8 +1,14 @@
 package vista;
 
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -19,7 +25,7 @@ public class Buscar extends javax.swing.JDialog {
     private ParaTi paraTi;
     private List<Usuario> usuariosList;
     private Conector conector;
-    
+
     private boolean conver;
 
     public Buscar(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) {
@@ -28,9 +34,16 @@ public class Buscar extends javax.swing.JDialog {
         this.dao = dao;
         this.usu = usu;
         this.paraTi = parent;
-        this.usuariosList = dao.listarUsuario();
-        this.conector=conector;
-        
+        this.conector = conector;
+
+        try {
+            this.usuariosList = dao.listarUsuario();
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
+
         setTitle("Buscar");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
@@ -49,9 +62,18 @@ public class Buscar extends javax.swing.JDialog {
 
         buscador.addOption(new SearchOption("usuario", new ImageIcon(getClass().getResource("/utilidades/Filtros_Buscador/user.png"))));
         buscador.addOption(new SearchOption("verificado", new ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))));
+        buscador.addOption(new SearchOption("mejos", new ImageIcon(getClass().getResource("/imagenes/pantalla/mejoresAmigosBuscar.png"))));
         buscador.addOption(new SearchOption("seguidores", new ImageIcon(getClass().getResource("/utilidades/Filtros_Buscador/address.png"))));
         buscador.setSelectedIndex(0);
         cargarTabla(usuariosList);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cerrar();
+            }
+
+        });
     }
 
     private void cargarTabla(List<Usuario> usuariosList) throws NullPointerException {
@@ -82,30 +104,44 @@ public class Buscar extends javax.swing.JDialog {
     }
 
     private void buscarUsuario(String usuario) {
-        Usuario perf = dao.buscarUsuario(usuario);
-        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, perf);
-        this.setVisible(false);
-        perfil.setVisible(true);
+        try {
+            Usuario perf = dao.buscarUsuario(usuario);
+            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, perf);
+            this.setVisible(false);
+            perfil.setVisible(true);
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        }
     }
 
     private void cambiarFiltro() {
         if (buscador.isSelected()) {
-            int opcion = buscador.getSelectedIndex();
+            try {
+                int opcion = buscador.getSelectedIndex();
 
-            switch (opcion) {
-                case 0:
-                    usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
-                    break;
-                case 1:
-                    usuariosList = dao.listarUsuariosVerificados(buscador.getText());
-                    break;
-                case 2:
-                    usuariosList = dao.listarUsuariosXSeguidores(buscador.getText());
-                    break;
-                default:
+                switch (opcion) {
+                    case 0:
+                        usuariosList = dao.listarUsuarioXUsuario(buscador.getText());
+                        break;
+                    case 1:
+                        usuariosList = dao.listarUsuariosVerificados(buscador.getText());
+                        break;
+                    case 2:
+                        usuariosList = dao.listarUsuarioXMejos(buscador.getText());
+                        break;
+                    case 3:
+                        usuariosList = dao.listarUsuariosXSeguidores(buscador.getText());
+                    default:
 
+                }
+                cargarTabla(usuariosList);
+            } catch (ErrVariados ex) {
+                ErrVariados er = new ErrVariados("");
+            } catch (ErrSelect ex) {
+                ErrSelect er = new ErrSelect("Usuario");
             }
-            cargarTabla(usuariosList);
         }
     }
 
@@ -122,10 +158,10 @@ public class Buscar extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-        buscador = new vista.textfield.TextFieldSearchOption();
         scroll = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         lblBuscadorText = new javax.swing.JLabel();
+        buscador = new utilidades.Filtros_Buscador.TextFieldSearchOption();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -133,6 +169,7 @@ public class Buscar extends javax.swing.JDialog {
         setName("paraTi"); // NOI18N
         setPreferredSize(new java.awt.Dimension(648, 864));
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
         franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -164,6 +201,8 @@ public class Buscar extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
@@ -277,16 +316,7 @@ public class Buscar extends javax.swing.JDialog {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        buscador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscadorActionPerformed(evt);
-            }
-        });
-        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                buscadorKeyReleased(evt);
-            }
-        });
+        getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 725, -1, -1));
 
         scroll.setBackground(getBackground());
         scroll.setForeground(new java.awt.Color(255, 255, 255));
@@ -326,42 +356,24 @@ public class Buscar extends javax.swing.JDialog {
         });
         scroll.setViewportView(tablaUsuarios);
 
+        getContentPane().add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(44, 156, 560, 522));
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+
         lblBuscadorText.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblBuscadorText.setText("Buscador:");
+        getContentPane().add(lblBuscadorText, new org.netbeans.lib.awtextra.AbsoluteConstraints(44, 109, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(franjaArriba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(franajAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblBuscadorText)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(franjaArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBuscadorText))
-                .addGap(26, 26, 26)
-                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(franajAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        scroll.setBorder(BorderFactory.createEmptyBorder());
+        buscador.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscadorMouseClicked(evt);
+            }
+        });
+        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscadorKeyReleased(evt);
+            }
+        });
+        getContentPane().add(buscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 300, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -380,7 +392,7 @@ public class Buscar extends javax.swing.JDialog {
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(conector, paraTi, true, dao, usu);
+        Subir subir = new Subir(conector, paraTi, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
@@ -397,10 +409,6 @@ public class Buscar extends javax.swing.JDialog {
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void buscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscadorKeyReleased
-        cambiarFiltro();
-    }//GEN-LAST:event_buscadorKeyReleased
-
     private void buscadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscadorMouseClicked
         cambiarFiltro();
     }//GEN-LAST:event_buscadorMouseClicked
@@ -415,13 +423,22 @@ public class Buscar extends javax.swing.JDialog {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
+    private void buscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscadorKeyReleased
+        cambiarFiltro();
+    }//GEN-LAST:event_buscadorKeyReleased
+
+    private void cerrar() {
+        this.dispose();
+        conector.dispose();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-    private vista.textfield.TextFieldSearchOption buscador;
+    private utilidades.Filtros_Buscador.TextFieldSearchOption buscador;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JLabel lblBuscadorText;

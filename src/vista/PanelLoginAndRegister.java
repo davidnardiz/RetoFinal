@@ -4,6 +4,10 @@ import clases.Button;
 import clases.MyPasswordField;
 import clases.MyTextField;
 import clases.Usuario;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
+import excepciones.VentanaError;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -23,15 +27,14 @@ import utilidades.Utilidades;
 
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
-//public class PanelLoginAndRegister extends javax.swing.JFrame {
     private MyTextField txtUsuario;
     private MyTextField txtEmail;
     private MyPasswordField txtContrasenia;
     private MyTextField txtTelefono;
     private MyTextField txtDni;
     private MyTextField txtFecha;
-    MyTextField txtUsuarioReg;
-    MyPasswordField txtContraseniaReg;
+    private MyTextField txtUsuarioReg;
+    private MyPasswordField txtContraseniaReg;
 
     private Usuario us;
     private DAO dao;
@@ -111,13 +114,13 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtUsuarioReg = new MyTextField();
         txtUsuarioReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/user.png")));
         txtUsuarioReg.setHint("Usuario");
-        txtUsuarioReg.setText("nárdiz");
+        txtUsuarioReg.setText("xDoble_Jx");
         login.add(txtUsuarioReg, "w 60%");
 
         txtContraseniaReg = new MyPasswordField();
         txtContraseniaReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/pass.png")));
         txtContraseniaReg.setHint("Contraseña");
-        txtContraseniaReg.setText("1234");
+        txtContraseniaReg.setText("abcd");
         login.add(txtContraseniaReg, "w 60%");
 
         JButton cmdForget = new JButton("Recuperar contraseña");
@@ -164,11 +167,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         }
 
         if (bien) {
-            us = dao.iniciarSesion(txtUsuarioReg.getText(), txtContraseniaReg.getText());
+            try {
+                us = dao.iniciarSesion(txtUsuarioReg.getText(), txtContraseniaReg.getText());
+            } catch (ErrVariados ex) {
+                ErrVariados er = new ErrVariados("");
+            } catch (ErrSelect ex) {
+                ErrSelect er = new ErrSelect("Usuario");
+            }
 
-            System.out.println(us.toString());
-
-            if (us.getUsuario() != null) {
+            if (us != null) {
                 txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
                 txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
                 conector.setOpacity(0);
@@ -176,46 +183,52 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 parati.setVisible(true);
 
             } else {
-                JOptionPane.showMessageDialog(this, "El usuario y la contraseña no coinciden", "ERROR", 0);
+                VentanaError ve = new VentanaError("El usuario y la contraseña no coinciden");
                 txtContraseniaReg.setBackground(new Color(208, 56, 24));
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, error, "Error", 0);
+            VentanaError ve = new VentanaError(error);
         }
     }
 
     private void registrarse() {
         error = comprobarDatosUsuario();
         if (error == "") {
-            Usuario us = new Usuario();
-            us.setUsuario(txtUsuario.getText());
-            us.setContrasenia(txtContrasenia.getText());
-            us.setDni(txtDni.getText());
-            us.setCorreo(txtEmail.getText());
-            us.setTelefono(Integer.parseInt(txtTelefono.getText()));
-            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate fecha = LocalDate.parse(txtFecha.getText(), formateador);
-            us.setFecha_nac(fecha);
-            us.setNumSeguidores(Utilidades.numeros_aleatorios(0, 5000000));
-            us.setNumSeguidos(Utilidades.numeros_aleatorios(0, (int) (us.getNumSeguidores() * 0.3)));
+            try {
+                Usuario us = new Usuario();
+                us.setUsuario(txtUsuario.getText());
+                us.setContrasenia(txtContrasenia.getText());
+                us.setDni(txtDni.getText());
+                us.setCorreo(txtEmail.getText());
+                us.setTelefono(Integer.parseInt(txtTelefono.getText()));
+                DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate fecha = LocalDate.parse(txtFecha.getText(), formateador);
+                us.setFecha_nac(fecha);
+                us.setNumSeguidores(Utilidades.numeros_aleatorios(0, 5000000));
+                us.setNumSeguidos(Utilidades.numeros_aleatorios(0, (int) (us.getNumSeguidores() * 0.3)));
 
-            if (us.getNumSeguidores() > 4500000) {
-                us.setVerificado(true);
-            } else {
-                us.setVerificado(false);
-            }
+                if (us.getNumSeguidores() > 4500000) {
+                    us.setVerificado(true);
+                } else {
+                    us.setVerificado(false);
+                }
 
-            if (dao.registrar(us)) {
-                JOptionPane.showMessageDialog(this, "Registro correctamente hecha!!!");
-                limpiar();
+                if (dao.registrar(us)) {
+                    VentanaError ve = new VentanaError("Registrado correctamente");
+                    limpiar();
 
-            } else {
-                JOptionPane.showMessageDialog(this, "Registro no completado!!!");
+                } else {
+                    VentanaError ve = new VentanaError("Error al registrarse");
+                }
+            } catch (ErrVariados ex) {
+                ErrVariados er = new ErrVariados("");
+            } catch (ErrInsert ex) {
+                ErrInsert er = new ErrInsert("Usuario");
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, error, "Error", 0);
+            VentanaError ve = new VentanaError(error);
         }
     }
 
@@ -312,7 +325,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
         //Pattern patternTelefono = Pattern.compile("^(\+34|0034|34)?[6|7|9][0-9]{8}$");
         //Matcher matcher2 = pattern.matcher(txtTelefono.getText());
-        
         if (txtTelefono.getText().matches("[0-9]{0,9}")) {
             error += "El teléfono no es válido.\n";
             txtTelefono.setBackground(new Color(233, 0, 0));
@@ -334,45 +346,51 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
 
     private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) {
-        List<Usuario> usuarios = dao.listarUsuario();
+        try {
+            List<Usuario> usuarios = dao.listarUsuario();
 
-        boolean salir = false;
+            boolean salir = false;
 
-        for (int i = 0; i < usuarios.size(); i++) {
+            for (int i = 0; i < usuarios.size(); i++) {
 
-            if (usuarios.get(i).getUsuario().equalsIgnoreCase(usuario)) {
-                error += "Ya existe una cuenta con ese nombre \n";
-                txtTelefono.setBackground(new Color(233, 0, 0));
-                salir = true;
+                if (usuarios.get(i).getUsuario().equalsIgnoreCase(usuario)) {
+                    error += "Ya existe una cuenta con ese nombre \n";
+                    txtTelefono.setBackground(new Color(233, 0, 0));
+                    salir = true;
+                }
+
+                if (usuarios.get(i).getCorreo().equalsIgnoreCase(email)) {
+                    error += "Ya existe una cuenta con ese correo \n";
+                    txtTelefono.setBackground(new Color(233, 0, 0));
+                    salir = true;
+                }
+
+                String tf = usuarios.get(i).getTelefono() + "";
+
+                if (tf.equalsIgnoreCase(tlf)) {
+                    error += "Ya existe una cuenta con ese teléfono \n";
+                    txtTelefono.setBackground(new Color(233, 0, 0));
+                    salir = true;
+                }
+
+                if (usuarios.get(i).getDni().equalsIgnoreCase(dni)) {
+                    error += "Ya existe una cuenta con ese dni \n";
+                    txtDni.setBackground(new Color(233, 0, 0));
+                    salir = true;
+                }
+
+                if (salir) {
+                    i = usuarios.size();
+                }
             }
 
-            if (usuarios.get(i).getCorreo().equalsIgnoreCase(email)) {
-                error += "Ya existe una cuenta con ese correo \n";
-                txtTelefono.setBackground(new Color(233, 0, 0));
-                salir = true;
-            }
-
-            String tf = usuarios.get(i).getTelefono() + "";
-
-            if (tf.equalsIgnoreCase(tlf)) {
-                error += "Ya existe una cuenta con ese teléfono \n";
-                txtTelefono.setBackground(new Color(233, 0, 0));
-                salir = true;
-            }
-
-            if (usuarios.get(i).getDni().equalsIgnoreCase(dni)) {
-                error += "Ya existe una cuenta con ese dni \n";
-                txtDni.setBackground(new Color(233, 0, 0));
-                salir = true;
-            }
-
-            if (salir) {
-                i = usuarios.size();
-            }
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
         }
 
         return error;
-
     }
 
 }

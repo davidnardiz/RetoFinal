@@ -27,8 +27,6 @@ import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DAOImplementacionBD implements DAO {
 
@@ -63,6 +61,7 @@ public class DAOImplementacionBD implements DAO {
     final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
     final private String LISTAR_USUARIOS_VERIFICADOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ? and verificado = true";
     final private String LISTAR_USUARIOS_X_SEGUIDORES = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE numSeguidores >= ?";
+    final private String LISTAR_USUARIOS_X_MEJOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario in (SELECT mejor_amigo FROM mejorAmigo WHERE usuario like ?)";
     final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
     final private String INICIAR_SESION = "SELECT * FROM usuario WHERE usuario = ? and contrasenia=?";
     final private String LISTAR_BLOQUEADOS = "SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?";
@@ -74,6 +73,11 @@ public class DAOImplementacionBD implements DAO {
     final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
     final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
     final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
+
+    final private String MODIFICAR_PUBLICACION = "UPDATE publicacion SET imagen = ?, ubicacion = ?, id_cancion = ? WHERE id_publicacion = ?";
+    final private String MODIFICAR_FOTO = "UPDATE foto SET descripcion = ?, resolucion = ?, etiquetado = ? WHERE id_publicacion = ?";
+    final private String MODIFICAR_REEL = "UPDATE reel SET duracion = ?, descripcion = ? WHERE id_publicacion = ?";
+    final private String MODIFICAR_HISTORIA = "UPDATE historia SET mejores_amigos = ?, cod_tipo = ? WHERE id_publicacion = ?";
 
     // PERFIL
     final private String NUM_PUBLICACIONES_USUARIO = "SELECT count(*) FROM publicacion WHERE usuario = ?";
@@ -92,6 +96,8 @@ public class DAOImplementacionBD implements DAO {
     // Deletes
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
     final private String DESBLOQUEAR_USUARIO = "DELETE FROM bloqueados were usuario = ? and usuario_bloqueado=?";
+
+    final private String ELIMINAR_PUBLICACION = "DELETE FROM publicacion WHERE id_publicacion = ?";
 
     public void abrirConexion() throws ErrVariados {
 
@@ -442,7 +448,8 @@ public class DAOImplementacionBD implements DAO {
 
         try {
             stmt = con.prepareStatement(LISTAR_USUARIOS_X_SEGUIDORES);
-            stmt.setString(1, seguidores);
+            stmt.setString(1, "%" + seguidores + "%");
+
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -457,6 +464,36 @@ public class DAOImplementacionBD implements DAO {
         } catch (SQLException e) {
             throw new ErrSelect("Usuario");
         }
+        this.cerrarConexion();
+        return usuarios;
+    }
+
+    @Override
+    public List<Usuario> listarUsuarioXMejos(String usuario) throws ErrVariados, ErrSelect {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_USUARIOS_X_MEJOS);
+            stmt.setString(1, "%" + usuario + "%");
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Usuario usu = new Usuario();
+                usu.setUsuario(rs.getString("usuario"));
+                usu.setIcono(rs.getString("icono"));
+                usu.setNumSeguidores(rs.getInt("numSeguidores"));
+                usu.setVerificado(rs.getBoolean("verificado"));
+                usuarios.add(usu);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ErrSelect("Usuario");
+        }
+
         this.cerrarConexion();
         return usuarios;
     }
@@ -478,10 +515,8 @@ public class DAOImplementacionBD implements DAO {
 
             if (rs.next()) {
                 id = rs.getString("id_publicacion");
-
                 cod = tipo + "-" + String.format("%03d", Integer.parseInt(id.substring(2, 5)) + 1);
-                System.out.println(id);
-                System.out.println(cod);
+
             }
         } catch (SQLException e) {
             throw new ErrSelect("Publicacion");
@@ -626,6 +661,54 @@ public class DAOImplementacionBD implements DAO {
         }
         this.cerrarConexion();
         return cod;
+    }
+
+    @Override
+    public void editarPublicacion(Publicacion publi) throws ErrVariados, ErrAlter {
+        this.abrirConexion();
+
+        try {
+
+            stmt = con.prepareStatement(MODIFICAR_PUBLICACION);
+            stmt.setString(1, publi.getImagen());
+            stmt.setString(2, publi.getUbicacion());
+            stmt.setString(3, publi.getId_cancion());
+            stmt.setString(4, publi.getId_publicacion());
+
+            stmt.execute();
+
+            if (publi instanceof Foto) {
+                stmt = con.prepareStatement(MODIFICAR_FOTO);
+                stmt.setString(1, ((Foto) publi).getDescripcion());
+                stmt.setString(2, ((Foto) publi).getResolucion());
+                stmt.setString(3, ((Foto) publi).getEtiquetado());
+                stmt.setString(4, publi.getId_publicacion());
+
+                stmt.execute();
+
+            } else if (publi instanceof Reel) {
+                stmt = con.prepareStatement(MODIFICAR_REEL);
+                stmt.setInt(1, ((Reel) publi).getDuracion());
+                stmt.setString(2, ((Reel) publi).getDescripcion());
+                stmt.setString(3, publi.getId_publicacion());
+
+                stmt.execute();
+
+            } else {
+                stmt = con.prepareStatement(MODIFICAR_HISTORIA);
+                stmt.setBoolean(1, ((Historia) publi).isMejores_amigos());
+                stmt.setString(2, ((Historia) publi).getCod_tipo());
+                stmt.setString(3, publi.getId_publicacion());
+
+                stmt.execute();
+            }
+
+        } catch (SQLException e) {
+            throw new ErrAlter("Publicacion");
+
+        }
+
+        this.cerrarConexion();
     }
 
     /**
@@ -815,7 +898,6 @@ public class DAOImplementacionBD implements DAO {
             stmt.setString(1, nosotros);
             stmt.setString(2, usuarioPerfil);
 
-            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -842,8 +924,6 @@ public class DAOImplementacionBD implements DAO {
             stmt.setString(1, usuario);
             stmt.setString(2, contrasenia);
 
-            System.out.println(stmt);
-
             rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -867,16 +947,12 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.setString(1, usuario.getUsuario());
 
-            System.out.println(stmt);
-
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 stmt = con.prepareStatement(BUSCAR_USUARIO);
 
                 stmt.setString(1, rs.getString("usuario_bloqueado"));
-
-                System.out.println(stmt);
 
                 ResultSet rs2 = stmt.executeQuery();
 
@@ -903,16 +979,12 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.setString(1, usuario.getUsuario());
 
-            System.out.println(stmt);
-
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 stmt = con.prepareStatement(BUSCAR_USUARIO);
 
                 stmt.setString(1, rs.getString("usuario"));
-
-                System.out.println(stmt);
 
                 ResultSet rs2 = stmt.executeQuery();
 
@@ -930,8 +1002,22 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public void eliminarPublicacion(String usuario, String id_publicacion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void eliminarPublicacion(String id_publicacion) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ELIMINAR_PUBLICACION);
+            stmt.setString(1, id_publicacion);
+
+            System.out.println(stmt);
+            stmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ErrDelete("Publicacion");
+        }
+
+        this.cerrarConexion();
     }
 
     @Override

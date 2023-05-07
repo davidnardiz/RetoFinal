@@ -17,7 +17,7 @@ public class ErrVariados extends Exception {
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de cargar una imagen";
                 break;
             default:
-                mensaje = "Lo sentimos, no se ha encontrado el fichero";
+                mensaje = "Lo sentimos, ha ocurrido un error inesperado";
         }
 
         VentanaError vent = new VentanaError(mensaje);

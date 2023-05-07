@@ -2,8 +2,12 @@ package vista;
 
 import clases.Cancion;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Foto extends javax.swing.JPanel {
@@ -13,31 +17,30 @@ public class Subir_Foto extends javax.swing.JPanel {
     private Subir subir;
 
     public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
-        initComponents();
-
-        this.subir = subir;
-        this.dao = dao;
-        this.usu = usu;
-
-        List<Cancion> canciones = dao.listarCanciones();
-        for (Cancion i : canciones) {
-            cbCancion.addItem(i.getTitulo());
-        }
-        cbCancion.setSelectedIndex(-1);
-
-        List<Usuario> etiquetados = dao.listarUsuario();
-        for (Usuario i : etiquetados) {
-            cbEtiquetado.addItem(i.getUsuario());
-        }
-        cbEtiquetado.setSelectedIndex(-1);
-
-        /*
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
+            initComponents();
+
+            this.subir = subir;
+            this.dao = dao;
+            this.usu = usu;
+
+            List<Cancion> canciones = dao.listarCanciones();
+            for (Cancion i : canciones) {
+                cbCancion.addItem(i.getTitulo());
+            }
+            cbCancion.setSelectedIndex(-1);
+
+            List<Usuario> etiquetados = dao.listarUsuario();
+            for (Usuario i : etiquetados) {
+                cbEtiquetado.addItem(i.getUsuario());
+            }
+            cbEtiquetado.setSelectedIndex(-1);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("");
         }
-         */
     }
 
     @SuppressWarnings("unchecked")

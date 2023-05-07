@@ -48,6 +48,8 @@ public interface DAO {
 
     public List<Usuario> listarUsuariosXSeguidores(String usuario) throws ErrVariados, ErrSelect;
 
+    public List<Usuario> listarUsuarioXMejos(String usuario) throws ErrVariados, ErrSelect;
+
     public int numPublicacionesUsuario(String usuario) throws ErrVariados, ErrSelect;
 
     public List<Cancion> listarCanciones() throws ErrVariados, ErrSelect;
@@ -69,12 +71,15 @@ public interface DAO {
     // Alters
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
 
+    public void editarPublicacion(Publicacion publi) throws ErrVariados, ErrAlter;
+
     // Deletes
     public void quirarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete;
 
     public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrDelete;
 
-    public void eliminarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete;
+    public void eliminarPublicacion(String id_publicacion) throws ErrVariados, ErrDelete;
 
     public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
+
 }

@@ -2,7 +2,11 @@ package vista;
 
 import clases.Cancion;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Reel extends javax.swing.JPanel {
@@ -12,25 +16,24 @@ public class Subir_Reel extends javax.swing.JPanel {
     private Subir subir;
 
     public Subir_Reel(Subir subir, boolean par, DAO dao, Usuario usu) {
-        initComponents();
-
-        this.dao = dao;
-        this.usu = usu;
-        this.subir = subir;
-
-        List<Cancion> canciones = dao.listarCanciones();
-        for (Cancion i : canciones) {
-            cbCancion.addItem(i.getTitulo());
-        }
-        cbCancion.setSelectedIndex(-1);
-
-        /*
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
+            initComponents();
+
+            this.dao = dao;
+            this.usu = usu;
+            this.subir = subir;
+
+            List<Cancion> canciones = dao.listarCanciones();
+            for (Cancion i : canciones) {
+                cbCancion.addItem(i.getTitulo());
+            }
+            cbCancion.setSelectedIndex(-1);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Cancion");
         }
-         */
     }
 
     @SuppressWarnings("unchecked")

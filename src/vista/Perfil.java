@@ -2,10 +2,18 @@ package vista;
 
 import clases.Publicacion;
 import clases.Usuario;
+import excepciones.ErrDelete;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -28,56 +36,58 @@ public class Perfil extends javax.swing.JDialog {
 
     public Perfil(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
         super(parent, modal);
-        this.setModal(modal);
-        this.dao = dao;
-        this.usu = nosotros;
-        this.usuarioPerfil = usuarioPerfil;
-        this.paraTi = parent;
-        this.conector = conector;
+        try {
+            this.setModal(modal);
+            this.dao = dao;
+            this.usu = nosotros;
+            this.usuarioPerfil = usuarioPerfil;
+            this.paraTi = parent;
+            this.conector = conector;
+            setTitle("Perfil");
+            setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
+            getContentPane().setBackground(new Color(49, 51, 53));
+            initComponents();
+            setLocationRelativeTo(null);
 
-        setTitle("Perfil");
-        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
-        getContentPane().setBackground(new Color(49, 51, 53));
-        initComponents();
+            if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+                btnMenu.setVisible(false);
+                btnEditarPerfil.setVisible(false);
 
-        setLocationRelativeTo(null);
-
-        if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
-            btnMenu.setVisible(false);
-            btnEditarPerfil.setVisible(false);
-
-            if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
-                btnSeguir.setSelected(true);
-                btnSeguir.setText("Siguiendo");
+                if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
+                    btnSeguir.setSelected(true);
+                    btnSeguir.setText("Siguiendo");
+                }
             }
-        }
+            if (!usuarioPerfil.isVerificado()) {
+                lblVerificado.setVisible(false);
+            }
+            lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
+            lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
+            lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
+            lblUsuario.setText(usuarioPerfil.getUsuario());
 
-        if (!usuarioPerfil.isVerificado()) {
-            lblVerificado.setVisible(false);
-        }
-
-        lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
-        lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
-        lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
-        lblUsuario.setText(usuarioPerfil.getUsuario());
-
-        try {
             lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "No se encuentra la ruta del icono", "Fallo", 2);
-            System.out.println(usuarioPerfil.toString());
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+
+            cargarTabla(publicacionesList);
+
+            franjaMenu.setVisible(false);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Usuario");
+        } catch (NullPointerException ex) {
+            ErrVariados er = new ErrVariados("Imagen");
         }
 
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        try {
-            cargarTabla(publicacionesList);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "No se encuentra la ruta de una imagen");
-            e.printStackTrace();
-        }
-        
-        franjaMenu.setVisible(false);
-        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cerrar();
+            }
+
+        });
     }
 
     private void cargarTabla(List<Publicacion> publicacionesList) {
@@ -130,7 +140,7 @@ public class Perfil extends javax.swing.JDialog {
         publiPop.setVisible(true);
 
     }
-    
+
     @SuppressWarnings("unchecked")
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -616,7 +626,6 @@ public class Perfil extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
         this.dispose();
         paraTi.setVisible(true);
@@ -631,7 +640,7 @@ public class Perfil extends javax.swing.JDialog {
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(conector, paraTi, true, dao, usu);
+        Subir subir = new Subir(conector, paraTi, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
@@ -649,32 +658,61 @@ public class Perfil extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCuentaActionPerformed
 
     private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        cargarTabla(publicacionesList);
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+            cargarTabla(publicacionesList);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
+        }
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
     private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
-        cargarTabla(publicacionesList);
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
+            cargarTabla(publicacionesList);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
+        }
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
     private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
-        cargarTabla(publicacionesList);
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
+            cargarTabla(publicacionesList);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("Publicacion");
+        }
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
     private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
+        try {
+            if (btnSeguir.isSelected()) {
 
-        if (btnSeguir.isSelected()) {
-            dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
-            btnSeguir.setText("Siguiendo");
-            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
+                dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+                btnSeguir.setText("Siguiendo");
+                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
 
-        } else {
-            dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
-            btnSeguir.setText("Seguir");
-            lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+            } else {
+                dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+                btnSeguir.setText("Seguir");
+                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+            }
 
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrInsert ex) {
+            ErrInsert er = new ErrInsert("Sigue");
+        } catch (ErrDelete ex) {
+            ErrDelete er = new ErrDelete("Sigue");
         }
     }//GEN-LAST:event_seguir
 
@@ -736,8 +774,7 @@ public class Perfil extends javax.swing.JDialog {
         btnEtiquetas.setBorder(null);
         btnCerrarSesion.setBorder(null);
         btnMejoresAmigos.setBorder(null);
-        
-        
+
         Point img1L = franjaMenu.getLocationOnScreen();
         int targetX = img1L.x;
         int targetY = img1L.y;
@@ -745,7 +782,7 @@ public class Perfil extends javax.swing.JDialog {
         int startX = franjaMenu.getX();
         int startY = franjaMenu.getY();
         int endX = targetX;
-        int endY = targetY ;
+        int endY = targetY;
         Animator animator = new Animator(750, new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
@@ -753,7 +790,6 @@ public class Perfil extends javax.swing.JDialog {
                 int y = (int) (startY + (endY - startY) * fraction);
                 franjaMenu.setLocation(x, y);
 
-             
             }
         });
     }//GEN-LAST:event_btnMenuMouseClicked
@@ -769,14 +805,14 @@ public class Perfil extends javax.swing.JDialog {
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         // TODO add your handling code here:
         int dialogButton = JOptionPane.YES_NO_OPTION;
-            JOptionPane.showConfirmDialog (null, "¿Éstas seguro de que quieres cerrar sesión?","ATENCIÓN!!", dialogButton);
-            if(dialogButton == JOptionPane.YES_OPTION) {
-                this.dispose();
-                conector.setOpacity(1);
-            if(dialogButton == JOptionPane.NO_OPTION) {
-                  remove(dialogButton);
-                }
+        JOptionPane.showConfirmDialog(null, "¿Éstas seguro de que quieres cerrar sesión?", "ATENCIÓN!!", dialogButton);
+        if (dialogButton == JOptionPane.YES_OPTION) {
+            this.dispose();
+            conector.setOpacity(1);
+            if (dialogButton == JOptionPane.NO_OPTION) {
+                remove(dialogButton);
             }
+        }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
@@ -794,8 +830,13 @@ public class Perfil extends javax.swing.JDialog {
         this.dispose();
         EditarPerfil vent = new EditarPerfil(conector, paraTi, true, dao, usu, usuarioPerfil);
         vent.setVisible(true);
-        
+
     }//GEN-LAST:event_btnEditarPerfilActionPerformed
+
+    private void cerrar() {
+        this.dispose();
+        conector.dispose();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBloquear;

@@ -239,7 +239,7 @@ public class Tienda extends javax.swing.JDialog {
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(conector, paraTi, true, dao, usu);
+        Subir subir = new Subir(conector, paraTi, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed

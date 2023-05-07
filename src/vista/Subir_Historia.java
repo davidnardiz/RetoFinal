@@ -3,7 +3,11 @@ package vista;
 import clases.Cancion;
 import clases.TipoHistoria;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Historia extends javax.swing.JPanel {
@@ -13,31 +17,30 @@ public class Subir_Historia extends javax.swing.JPanel {
     private Subir subir;
 
     public Subir_Historia(Subir subir, boolean par, DAO dao, Usuario usu) {
-        initComponents();
-
-        this.dao = dao;
-        this.usu = usu;
-        this.subir = subir;
-
-        List<Cancion> canciones = dao.listarCanciones();
-        for (Cancion i : canciones) {
-            cbCancion.addItem(i.getTitulo());
-        }
-        cbCancion.setSelectedIndex(-1);
-
-        List<TipoHistoria> tipoHistoria = dao.listarTipoHistorias();
-        for (TipoHistoria i : tipoHistoria) {
-            cbTipoHistoria.addItem(i.getCod_tipo());
-        }
-        cbTipoHistoria.setSelectedIndex(-1);
-
-        /*
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
+            initComponents();
+
+            this.dao = dao;
+            this.usu = usu;
+            this.subir = subir;
+
+            List<Cancion> canciones = dao.listarCanciones();
+            for (Cancion i : canciones) {
+                cbCancion.addItem(i.getTitulo());
+            }
+            cbCancion.setSelectedIndex(-1);
+
+            List<TipoHistoria> tipoHistoria = dao.listarTipoHistorias();
+            for (TipoHistoria i : tipoHistoria) {
+                cbTipoHistoria.addItem(i.getCod_tipo());
+            }
+            cbTipoHistoria.setSelectedIndex(-1);
+
+        } catch (ErrVariados ex) {
+            ErrVariados er = new ErrVariados("");
+        } catch (ErrSelect ex) {
+            ErrSelect er = new ErrSelect("");
         }
-         */
     }
 
     @SuppressWarnings("unchecked")
@@ -108,24 +111,26 @@ public class Subir_Historia extends javax.swing.JPanel {
         lblMejos.setText("Subir a mejores amigos?");
         add(lblMejos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 280, -1, -1));
 
-        rdbtnNo.setBackground(new java.awt.Color(49, 51, 53));
+        rdbtnNo.setBackground(getBackground());
         mejosGroup.add(rdbtnNo);
         rdbtnNo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rdbtnNo.setForeground(new java.awt.Color(255, 255, 255));
         rdbtnNo.setText("No");
         rdbtnNo.setBorder(null);
+        rdbtnNo.setContentAreaFilled(false);
         rdbtnNo.setFocusPainted(false);
         rdbtnNo.setFocusable(false);
         rdbtnNo.setRequestFocusEnabled(false);
         rdbtnNo.setRolloverEnabled(false);
         add(rdbtnNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 280, -1, -1));
 
-        rdbtnSi.setBackground(new java.awt.Color(49, 51, 53));
+        rdbtnSi.setBackground(getBackground());
         mejosGroup.add(rdbtnSi);
         rdbtnSi.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rdbtnSi.setForeground(new java.awt.Color(255, 255, 255));
         rdbtnSi.setText("Si");
         rdbtnSi.setBorder(null);
+        rdbtnSi.setContentAreaFilled(false);
         rdbtnSi.setFocusPainted(false);
         rdbtnSi.setFocusable(false);
         rdbtnSi.setRequestFocusEnabled(false);
