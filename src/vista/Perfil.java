@@ -74,9 +74,9 @@ public class Perfil extends javax.swing.JDialog {
             franjaMenu.setVisible(false);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
         }
@@ -663,9 +663,9 @@ public class Perfil extends javax.swing.JDialog {
             cargarTabla(publicacionesList);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
@@ -675,9 +675,9 @@ public class Perfil extends javax.swing.JDialog {
             cargarTabla(publicacionesList);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
@@ -687,9 +687,9 @@ public class Perfil extends javax.swing.JDialog {
             cargarTabla(publicacionesList);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
@@ -708,11 +708,11 @@ public class Perfil extends javax.swing.JDialog {
             }
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Sigue");
+            ex.mostrarError();
         } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Sigue");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_seguir
 

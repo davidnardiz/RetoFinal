@@ -37,7 +37,6 @@ public class PublicacionPopUp extends javax.swing.JDialog {
             this.publi = publi;
             this.cerrarPerfil = perfil;
 
-            System.out.println(this.publi.toString());
             getContentPane().setBackground(new Color(49, 51, 53));
             initComponents();
 
@@ -51,7 +50,6 @@ public class PublicacionPopUp extends javax.swing.JDialog {
             lblMegusta.setText(publi.getNumLikes() + "");
 
             if (usu.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
-                System.out.println("vista.PublicacionPopUp.<init>()");
                 btnEditar.setVisible(true);
                 btnEliminar.setVisible(true);
                 this.setSize(510, 760);
@@ -84,9 +82,9 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 btnLike.setSelected(true);
             }
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("");
+            ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
         }
@@ -214,11 +212,11 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
             }
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Likes");
+            ex.mostrarError();
         } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Likes");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_darLike
 
@@ -233,9 +231,9 @@ public class PublicacionPopUp extends javax.swing.JDialog {
             perfil.setVisible(true);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_btnEtiquetadoMouseClicked
 
@@ -254,9 +252,9 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 dao.eliminarPublicacion(publi.getId_publicacion());
                 this.dispose();
             } catch (ErrVariados ex) {
-                ErrVariados er = new ErrVariados("");
+                ex.mostrarError();
             } catch (ErrDelete ex) {
-                ErrDelete er = new ErrDelete("Publicacion");
+                ex.mostrarError();
             }
         }
 

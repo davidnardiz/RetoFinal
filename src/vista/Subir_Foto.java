@@ -37,9 +37,9 @@ public class Subir_Foto extends javax.swing.JPanel {
             cbEtiquetado.setSelectedIndex(-1);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("");
+            ex.mostrarError();
         }
     }
 

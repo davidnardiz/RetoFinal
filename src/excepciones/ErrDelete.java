@@ -2,8 +2,9 @@ package excepciones;
 
 public class ErrDelete extends Exception {
 
+    private String mensaje;
+
     public ErrDelete(String tabla) {
-        String mensaje = "";
 
         switch (tabla) {
             case "Publicacion":
@@ -26,9 +27,10 @@ public class ErrDelete extends Exception {
                 break;
             default:
                 mensaje = "Ha ocurrido un error inseperado a la hora de eliminar algo de la base de datos";
-
         }
+    }
 
+    public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }
 }

@@ -2,8 +2,10 @@ package excepciones;
 
 public class ErrAlter extends Exception {
 
+    private String mensaje;
+
     public ErrAlter(String tabla) {
-        String mensaje = "";
+
         switch (tabla) {
             case "ParaTi":
             case "PublicacionPopUp":
@@ -16,7 +18,9 @@ public class ErrAlter extends Exception {
             default:
                 mensaje = "Ha ocurrido un error inseperado al modificar algo en la base de datos";
         }
+    }
 
+    public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }
 

@@ -2,13 +2,16 @@ package excepciones;
 
 public class ErrVariados extends Exception {
 
-    public ErrVariados(String razon) {
+    private String mensaje;
 
-        String mensaje = "";
+    public ErrVariados(String razon) {
 
         switch (razon) {
             case "Fichero":
                 mensaje = "Lo sentimos, no se ha encontrado el fichero de configuracion";
+                break;
+            case "LeerFichero":
+                mensaje = "Lo sentimos, ha ocurrido un error a la hora de leer lo que hay dentro del fichero";
                 break;
             case "ConexionBDA":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de conectarse con la base de datos";
@@ -19,8 +22,9 @@ public class ErrVariados extends Exception {
             default:
                 mensaje = "Lo sentimos, ha ocurrido un error inesperado";
         }
-
-        VentanaError vent = new VentanaError(mensaje);
     }
 
+    public void mostrarError() {
+        VentanaError vent = new VentanaError(mensaje);
+    }
 }

@@ -2,8 +2,10 @@ package excepciones;
 
 public class ErrSelect extends Exception {
 
+    private String mensaje = "";
+
     public ErrSelect(String tabla) {
-        String mensaje = "";
+
         switch (tabla) {
             case "Usuario":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de recuperar datos sobre algun usuario";
@@ -25,7 +27,9 @@ public class ErrSelect extends Exception {
             default:
                 mensaje = "Lo sentimos, ha ocurrido un error inesperado a la hora de recuperar datos de la base de datos";
         }
+    }
 
+    public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }
 }

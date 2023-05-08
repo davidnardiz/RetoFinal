@@ -15,11 +15,8 @@ import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -102,7 +99,10 @@ public class Subir extends javax.swing.JDialog {
                     ((Foto) publi).setEtiquetado(ventanaFoto.cbEtiquetado.getSelectedItem().toString());
                 }
 
-                publi.setUbicacion(ventanaFoto.txtUbicacion.getText());
+                if (!ventanaFoto.txtUbicacion.getText().isBlank()) {
+                    publi.setUbicacion(ventanaFoto.txtUbicacion.getText());
+                }
+
                 ((Foto) publi).setResolucion(ventanaFoto.cbResolucion.getSelectedItem().toString());
                 ((Foto) publi).setDescripcion(ventanaFoto.txtDescripcion.getText());
 
@@ -115,7 +115,10 @@ public class Subir extends javax.swing.JDialog {
                     publi.setId_cancion(dao.buscarCancionXTitulo(ventanaReel.cbCancion.getSelectedItem().toString()).getId_cancion());
                 }
 
-                publi.setUbicacion(ventanaReel.txtUbicacion.getText());
+                if (!ventanaReel.txtUbicacion.getText().isBlank()) {
+                    publi.setUbicacion(ventanaReel.txtUbicacion.getText());
+                }
+
                 ((Reel) publi).setDuracion(ventanaReel.sliderDuracion.getValue());
                 ((Reel) publi).setDescripcion(ventanaReel.txtDescripcion.getText());
 
@@ -129,7 +132,7 @@ public class Subir extends javax.swing.JDialog {
                 }
 
                 if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() != -1) {
-                    ((Historia) publi).setCod_tipo(dao.tipoHistoria(ventanaHistoria.cbTipoHistoria.getSelectedItem().toString()));
+                    ((Historia) publi).setCod_tipo(dao.buscarCodTipoHistoria(ventanaHistoria.cbTipoHistoria.getSelectedItem().toString()));
                 }
 
                 if (ventanaHistoria.rdbtnSi.isSelected()) {
@@ -138,7 +141,9 @@ public class Subir extends javax.swing.JDialog {
                     ((Historia) publi).setMejores_amigos(false);
                 }
 
-                publi.setUbicacion(ventanaHistoria.txtUbicacion.getText());
+                if (!ventanaHistoria.txtUbicacion.getText().isBlank()) {
+                    publi.setUbicacion(ventanaHistoria.txtUbicacion.getText());
+                }
 
             }
 
@@ -162,13 +167,13 @@ public class Subir extends javax.swing.JDialog {
             paraTi.setVisible(true);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
+            ex.mostrarError();
         } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Publicacion");
+            ex.mostrarError();
         } catch (ErrAlter ex) {
-            ErrAlter er = new ErrAlter("Publicacion");
+            ex.mostrarError();
         }
     }
 
@@ -327,6 +332,59 @@ public class Subir extends javax.swing.JDialog {
             rdbtn[i].setBackground(new Color(255, 255, 255));
 
         }
+    }
+
+    private void mostrarDatos() {
+        imagen = publiEditar.getImagen();
+
+        try {
+            if (publiEditar instanceof Foto) {
+                panelSlide.show(0);
+
+                if (publiEditar.getId_cancion() != null) {
+                    ventanaFoto.cbCancion.setSelectedItem(dao.buscarCancionXId(publiEditar.getId_cancion()).getTitulo());
+                }
+
+                ventanaFoto.txtUbicacion.setText(publiEditar.getUbicacion());
+                ventanaFoto.cbResolucion.setSelectedItem(((Foto) publiEditar).getResolucion());
+                ventanaFoto.cbEtiquetado.setSelectedItem(((Foto) publiEditar).getEtiquetado());
+                ventanaFoto.txtDescripcion.setText(((Foto) publiEditar).getDescripcion());
+
+            } else if (publiEditar instanceof Reel) {
+                panelSlide.show(1);
+                rdbtnReel.setSelected(true);
+
+                if (publiEditar.getId_cancion() != null) {
+                    ventanaReel.cbCancion.setSelectedItem(dao.buscarCancionXId(publiEditar.getId_cancion()).getTitulo());
+                }
+
+                ventanaReel.txtUbicacion.setText(publiEditar.getUbicacion());
+                ventanaReel.sliderDuracion.setValue(((Reel) publiEditar).getDuracion());
+                ventanaReel.txtDescripcion.setText(((Reel) publiEditar).getDescripcion());
+
+            } else {
+                panelSlide.show(2);
+                rdbtnHistoria.setSelected(true);
+
+                if (publiEditar.getId_cancion() != null) {
+                    ventanaHistoria.cbCancion.setSelectedItem(dao.buscarCancionXId(publiEditar.getId_cancion()).getTitulo());
+                }
+
+                ventanaHistoria.txtUbicacion.setText(publiEditar.getUbicacion());
+                ventanaHistoria.cbTipoHistoria.setSelectedItem(dao.buscarTipoHistoria(((Historia) publiEditar).getCod_tipo()));
+
+                if (((Historia) publiEditar).isMejores_amigos()) {
+                    ventanaHistoria.rdbtnSi.setSelected(true);
+                } else {
+                    ventanaHistoria.rdbtnNo.setSelected(true);
+                }
+            }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -625,44 +683,6 @@ public class Subir extends javax.swing.JDialog {
     private void cerrar() {
         this.dispose();
         conector.dispose();
-    }
-
-    private void mostrarDatos() {
-        imagen = publiEditar.getImagen();
-
-        if (publiEditar instanceof Foto) {
-            panelSlide.show(0);
-
-            ventanaFoto.cbCancion.setSelectedItem(publiEditar.getId_cancion());
-            ventanaFoto.txtUbicacion.setText(publiEditar.getUbicacion());
-            ventanaFoto.cbResolucion.setSelectedItem(((Foto) publiEditar).getResolucion());
-            ventanaFoto.cbEtiquetado.setSelectedItem(((Foto) publiEditar).getEtiquetado());
-            ventanaFoto.txtDescripcion.setText(((Foto) publiEditar).getDescripcion());
-
-        } else if (publiEditar instanceof Reel) {
-            panelSlide.show(1);
-            rdbtnReel.setSelected(true);
-
-            ventanaReel.cbCancion.setSelectedItem(publiEditar.getId_cancion());
-            ventanaReel.txtUbicacion.setText(publiEditar.getUbicacion());
-            ventanaReel.sliderDuracion.setValue(((Reel) publiEditar).getDuracion());
-            ventanaReel.txtDescripcion.setText(((Reel) publiEditar).getDescripcion());
-
-        } else {
-            panelSlide.show(2);
-            rdbtnHistoria.setSelected(true);
-
-            ventanaHistoria.cbCancion.setSelectedItem(publiEditar.getId_cancion());
-            ventanaHistoria.txtUbicacion.setText(publiEditar.getUbicacion());
-            ventanaHistoria.cbTipoHistoria.setSelectedItem(((Historia) publiEditar).getCod_tipo());
-
-            if (((Historia) publiEditar).isMejores_amigos()) {
-                ventanaHistoria.rdbtnSi.setSelected(true);
-            } else {
-                ventanaHistoria.rdbtnNo.setSelected(true);
-            }
-        }
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

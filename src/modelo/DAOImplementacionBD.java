@@ -56,6 +56,8 @@ public class DAOImplementacionBD implements DAO {
     final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
     final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
 
+    final private String LISTAR_ID_DISPONIBLES = "SELECT * FROM publicacion WHERE usuario in (SELECT seguido FROM sigue WHERE seguidor = ?) and usuario not in (SELECT usuario FROM bloqueados WHERE usuario_bloqueado = ?)";
+
     // BUSCAR
     final private String LISTAR_USUARIOS = "SELECT * FROM usuario";
     final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
@@ -70,8 +72,10 @@ public class DAOImplementacionBD implements DAO {
     // SUBIR
     final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
     final private String BUSCAR_CANCION_X_TITULO = "SELECT * FROM cancion WHERE titulo = ?";
+    final private String BUSCAR_CANCION_X_ID = "SELECT * FROM cancion WHERE id_cancion = ?";
     final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
-    final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
+    final private String BUSCAR_COD_TIPOHISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
+    final private String BUSCAR_TIPO_TIPOHISTORIA = "SELECT tipo FROM tipoHistoria WHERE cod_tipo= ?";
     final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
 
     final private String MODIFICAR_PUBLICACION = "UPDATE publicacion SET imagen = ?, ubicacion = ?, id_cancion = ? WHERE id_publicacion = ?";
@@ -116,7 +120,7 @@ public class DAOImplementacionBD implements DAO {
         } catch (FileNotFoundException e) {
             throw new ErrVariados("Fichero");
         } catch (IOException e) {
-            throw new ErrVariados("");
+            throw new ErrVariados("LeerFichero");
         } catch (SQLException e) {
             throw new ErrVariados("ConexionBDA");
         }
@@ -271,6 +275,33 @@ public class DAOImplementacionBD implements DAO {
         this.cerrarConexion();
 
         return publi;
+    }
+
+    @Override
+    public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect {
+        List<Publicacion> publicaciones = new ArrayList<>();
+
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_ID_DISPONIBLES);
+            stmt.setString(1, usuario);
+            stmt.setString(2, usuario);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Publicacion publi = new Publicacion();
+                publi = this.getPublicacion(publi, rs);
+                publicaciones.add(publi);
+
+            }
+        } catch (SQLException e) {
+            throw new ErrSelect("Publicacion");
+        }
+
+        this.cerrarConexion();
+        return publicaciones;
     }
 
     //Inserta un usuario y publicacion en la tabla Likes y suma 1 like a la publicacion
@@ -600,6 +631,7 @@ public class DAOImplementacionBD implements DAO {
         try {
             stmt = con.prepareStatement(BUSCAR_CANCION_X_TITULO);
             stmt.setString(1, titulo);
+
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -611,6 +643,35 @@ public class DAOImplementacionBD implements DAO {
                 can.setDuracion(rs.getFloat("duracion"));
                 can.setCod_genero(rs.getString("cod_genero"));
             }
+
+        } catch (SQLException e) {
+            throw new ErrSelect("Cancion");
+        }
+        this.cerrarConexion();
+        return can;
+    }
+
+    @Override
+    public Cancion buscarCancionXId(String id) throws ErrVariados, ErrSelect {
+        Cancion can = null;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BUSCAR_CANCION_X_ID);
+            stmt.setString(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                can = new Cancion();
+
+                can.setId_cancion(rs.getString("id_cancion"));
+                can.setTitulo(rs.getString("titulo"));
+                can.setArtista(rs.getString("artista"));
+                can.setDuracion(rs.getFloat("duracion"));
+                can.setCod_genero(rs.getString("cod_genero"));
+            }
+
         } catch (SQLException e) {
             throw new ErrSelect("Cancion");
         }
@@ -644,23 +705,44 @@ public class DAOImplementacionBD implements DAO {
 
     //Devuvle el codigo de un tipoHistoria dependiendo de su tipo
     @Override
-    public String tipoHistoria(String tipo) throws ErrVariados, ErrSelect {
+    public String buscarCodTipoHistoria(String tipo) throws ErrVariados, ErrSelect {
         String cod = null;
         this.abrirConexion();
 
         try {
-            stmt = con.prepareStatement(TIPO_HISTORIA);
+            stmt = con.prepareStatement(BUSCAR_COD_TIPOHISTORIA);
             stmt.setString(1, tipo);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 cod = rs.getString("cod_tipo");
+
             }
         } catch (SQLException e) {
             throw new ErrSelect("Historia");
         }
         this.cerrarConexion();
         return cod;
+    }
+
+    @Override
+    public String buscarTipoHistoria(String cod) throws ErrVariados, ErrSelect {
+        String tipo = null;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BUSCAR_TIPO_TIPOHISTORIA);
+            stmt.setString(1, cod);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                tipo = rs.getString("tipo");
+            }
+        } catch (SQLException e) {
+            throw new ErrSelect("Historia");
+        }
+        this.cerrarConexion();
+        return tipo;
     }
 
     @Override
@@ -1084,6 +1166,11 @@ public class DAOImplementacionBD implements DAO {
 
         this.cerrarConexion();
 
+    }
+
+    @Override
+    public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

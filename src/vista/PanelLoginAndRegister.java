@@ -8,6 +8,7 @@ import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import excepciones.VentanaError;
+import excepciones.VentanaMensaje;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -20,7 +21,6 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import utilidades.Utilidades;
@@ -170,9 +170,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             try {
                 us = dao.iniciarSesion(txtUsuarioReg.getText(), txtContraseniaReg.getText());
             } catch (ErrVariados ex) {
-                ErrVariados er = new ErrVariados("");
+                ex.mostrarError();
             } catch (ErrSelect ex) {
-                ErrSelect er = new ErrSelect("Usuario");
+                ex.mostrarError();
             }
 
             if (us != null) {
@@ -183,12 +183,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 parati.setVisible(true);
 
             } else {
-                VentanaError ve = new VentanaError("El usuario y la contraseña no coinciden");
+                VentanaMensaje ve = new VentanaMensaje("Error", "El usuario y la contraseña no coinciden");
                 txtContraseniaReg.setBackground(new Color(208, 56, 24));
             }
 
         } else {
-            VentanaError ve = new VentanaError(error);
+            VentanaMensaje ve = new VentanaMensaje("Error", error);
         }
     }
 
@@ -215,20 +215,20 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 }
 
                 if (dao.registrar(us)) {
-                    VentanaError ve = new VentanaError("Registrado correctamente");
+                    VentanaMensaje ve = new VentanaMensaje("Enhorabuena", "Registrado correctamente");
                     limpiar();
 
                 } else {
-                    VentanaError ve = new VentanaError("Error al registrarse");
+                    VentanaMensaje ve = new VentanaMensaje("Error", "Error al registrarse");
                 }
             } catch (ErrVariados ex) {
-                ErrVariados er = new ErrVariados("");
+                ex.mostrarError();
             } catch (ErrInsert ex) {
-                ErrInsert er = new ErrInsert("Usuario");
+                ex.mostrarError();
             }
 
         } else {
-            VentanaError ve = new VentanaError(error);
+            VentanaMensaje ve = new VentanaMensaje("Error", error);
         }
     }
 
@@ -385,9 +385,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             }
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         }
 
         return error;

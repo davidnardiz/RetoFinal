@@ -30,9 +30,9 @@ public class Subir_Reel extends javax.swing.JPanel {
             cbCancion.setSelectedIndex(-1);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Cancion");
+            ex.mostrarError();
         }
     }
 

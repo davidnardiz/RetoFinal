@@ -5,8 +5,9 @@ import javax.swing.JOptionPane;
 
 public class ErrInsert extends Exception {
 
+    private String mensaje;
+
     public ErrInsert(String tabla) {
-        String mensaje;
 
         switch (tabla) {
             case "Publicacion":
@@ -30,7 +31,9 @@ public class ErrInsert extends Exception {
             default:
                 mensaje = "Ha ocurrido un error inesperado a la hora de insertar algo la base de datos";
         }
+    }
 
+    public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }
 

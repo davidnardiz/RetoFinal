@@ -34,6 +34,8 @@ public interface DAO {
 
     public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect;
 
+    public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect;
+
     public String calcularId(String tipo) throws ErrVariados, ErrSelect;
 
     public Usuario buscarUsuario(String usuario) throws ErrVariados, ErrSelect;
@@ -58,7 +60,11 @@ public interface DAO {
 
     public Cancion buscarCancionXTitulo(String titulo) throws ErrVariados, ErrSelect;
 
-    public String tipoHistoria(String tipo) throws ErrVariados, ErrSelect;
+    public Cancion buscarCancionXId(String id) throws ErrVariados, ErrSelect;
+
+    public String buscarCodTipoHistoria(String tipo) throws ErrVariados, ErrSelect;
+
+    public String buscarTipoHistoria(String id) throws ErrVariados, ErrSelect;
 
     public boolean comprobarLike(String usuario, String publicacion) throws ErrVariados, ErrSelect;
 
@@ -81,5 +87,7 @@ public interface DAO {
     public void eliminarPublicacion(String id_publicacion) throws ErrVariados, ErrDelete;
 
     public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
+
+    public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete;
 
 }

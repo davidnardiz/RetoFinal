@@ -9,6 +9,7 @@ import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
+import excepciones.VentanaMensaje;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -55,8 +56,15 @@ public class ParaTi extends javax.swing.JDialog {
     private void siguienteFoto() {
         try {
 
-            // Buscamos una publicacion con una id aleatoria
-            publi = dao.buscarPublicacionXId(generarPublicacionAleatoria());
+            String id;
+            if (rdbtnTodas.isSelected()) {
+                id = generarPublicacionAleatoria();
+            } else {
+                id = generarPublicacionAleatoriaReducida();
+                System.out.println("vista.ParaTi.siguienteFoto()");
+            }
+
+            publi = dao.buscarPublicacionXId(id);
             usuPubli = dao.buscarUsuario(publi.getUsuario());
 
             if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
@@ -106,9 +114,9 @@ public class ParaTi extends javax.swing.JDialog {
                 }
             }
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("");
+            ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
         }
@@ -143,9 +151,50 @@ public class ParaTi extends javax.swing.JDialog {
             hanSalido.add(publiActual);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Publicacion");
+            ex.mostrarError();
+        } finally {
+            return publiActual;
+        }
+
+    }
+
+    private String generarPublicacionAleatoriaReducida() {
+        String publiActual = "";
+        int numRandom;
+        boolean salir;
+
+        try {
+            List<Publicacion> id = dao.listarPublicacionesParaTi(usu.getUsuario());
+
+            if (id.size() == 0) {
+                VentanaMensaje ve = new VentanaMensaje("Disculpe", "Las personas a las que sigues no han publicado nada");
+            }
+
+            if (hanSalido.size() == id.size()) {
+                hanSalido.clear();
+            }
+
+            do {
+                salir = true;
+                numRandom = Utilidades.numeros_aleatorios(0, id.size() - 1);
+
+                for (String i : hanSalido) {
+                    if (i.equalsIgnoreCase(id.get(numRandom).getId_publicacion())) {
+                        salir = false;
+                    }
+                }
+
+            } while (!salir);
+
+            publiActual = id.get(numRandom).getId_publicacion();
+            hanSalido.add(publiActual);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         } finally {
             return publiActual;
         }
@@ -164,11 +213,11 @@ public class ParaTi extends javax.swing.JDialog {
             }
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Likes");
+            ex.mostrarError();
         } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Likes");
+            ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
         }
@@ -178,6 +227,7 @@ public class ParaTi extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tipoParaTi = new javax.swing.ButtonGroup();
         btnGuardar = new javax.swing.JToggleButton();
         franjaArriba = new javax.swing.JPanel();
         btnMensaje = new javax.swing.JButton();
@@ -198,6 +248,8 @@ public class ParaTi extends javax.swing.JDialog {
         lblMegusta = new javax.swing.JLabel();
         lblDescripcion = new javax.swing.JLabel();
         lblHistoria = new javax.swing.JLabel();
+        rdbtnTodas = new javax.swing.JRadioButton();
+        rdbtnSiguiendo = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -458,6 +510,27 @@ public class ParaTi extends javax.swing.JDialog {
         getContentPane().add(lblHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(101, 71, 100, 100));
         lblHistoria.setBounds(101, 71, 100, 100);
 
+        rdbtnTodas.setBackground(getBackground());
+        tipoParaTi.add(rdbtnTodas);
+        rdbtnTodas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rdbtnTodas.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnTodas.setSelected(true);
+        rdbtnTodas.setText("Todas");
+        rdbtnTodas.setBorder(null);
+        rdbtnTodas.setContentAreaFilled(false);
+        rdbtnTodas.setFocusPainted(false);
+        getContentPane().add(rdbtnTodas, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 110, -1, -1));
+
+        rdbtnSiguiendo.setBackground(getBackground());
+        tipoParaTi.add(rdbtnSiguiendo);
+        rdbtnSiguiendo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        rdbtnSiguiendo.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnSiguiendo.setText("Siguiendo");
+        rdbtnSiguiendo.setBorder(null);
+        rdbtnSiguiendo.setContentAreaFilled(false);
+        rdbtnSiguiendo.setFocusPainted(false);
+        getContentPane().add(rdbtnSiguiendo, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 110, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -505,9 +578,9 @@ public class ParaTi extends javax.swing.JDialog {
             perfil.setVisible(true);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_buscarPerfil
 
@@ -519,9 +592,9 @@ public class ParaTi extends javax.swing.JDialog {
             perfil.setVisible(true);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         }
     }//GEN-LAST:event_buscarEtiquetado
 
@@ -535,15 +608,15 @@ public class ParaTi extends javax.swing.JDialog {
             if (btnGuardar.isSelected()) {
                 dao.guardarPublicación(usu.getUsuario(), publi.getId_publicacion());
             } else {
-                dao.eliminarPublicacion(usu.getUsuario(), publi.getId_publicacion());
+                dao.desguardarPublicacion(usu.getUsuario(), publi.getId_publicacion());
             }
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert("Likes");
+            ex.mostrarError();
         } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete("Likes");
+            ex.mostrarError();
         }
     }
 
@@ -573,6 +646,9 @@ public class ParaTi extends javax.swing.JDialog {
     private javax.swing.JLabel lblMegusta;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVerificado;
+    private javax.swing.JRadioButton rdbtnSiguiendo;
+    private javax.swing.JRadioButton rdbtnTodas;
+    private javax.swing.ButtonGroup tipoParaTi;
     // End of variables declaration//GEN-END:variables
 
 }

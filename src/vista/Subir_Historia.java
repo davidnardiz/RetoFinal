@@ -32,14 +32,14 @@ public class Subir_Historia extends javax.swing.JPanel {
 
             List<TipoHistoria> tipoHistoria = dao.listarTipoHistorias();
             for (TipoHistoria i : tipoHistoria) {
-                cbTipoHistoria.addItem(i.getCod_tipo());
+                cbTipoHistoria.addItem(i.getTipo());
             }
             cbTipoHistoria.setSelectedIndex(-1);
 
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("");
+            ex.mostrarError();
         }
     }
 
