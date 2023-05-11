@@ -57,8 +57,9 @@ public class DAOImplementacionBD implements DAO {
     final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
 
     final private String LISTAR_ID_DISPONIBLES = "SELECT * FROM publicacion WHERE usuario in (SELECT seguido FROM sigue WHERE seguidor = ?) and usuario not in (SELECT usuario FROM bloqueados WHERE usuario_bloqueado = ?)";
+    final private String COMPROBAR_MEJOS = "SELECT * FROM  mejorAmigo WHERE mejorAmigo = ? and usuario = ? ";
 
-    // BUSCAR
+// BUSCAR
     final private String LISTAR_USUARIOS = "SELECT * FROM usuario";
     final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
     final private String LISTAR_USUARIOS_VERIFICADOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ? and verificado = true";
@@ -122,6 +123,7 @@ public class DAOImplementacionBD implements DAO {
         } catch (IOException e) {
             throw new ErrVariados("LeerFichero");
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new ErrVariados("ConexionBDA");
         }
 
@@ -1171,6 +1173,30 @@ public class DAOImplementacionBD implements DAO {
     @Override
     public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean comprobarMejos(Usuario nosotros, Usuario el) throws ErrVariados, ErrSelect {
+        boolean esMejo = false;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(COMPROBAR_MEJOS);
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, el.getUsuario());
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                esMejo = true;
+            }
+
+        } catch (SQLException ex) {
+            throw new ErrSelect("Mejor Amigo");
+        }
+
+        this.cerrarConexion();
+        return esMejo;
     }
 
 }

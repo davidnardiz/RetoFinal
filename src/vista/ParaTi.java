@@ -42,6 +42,11 @@ public class ParaTi extends javax.swing.JDialog {
 
         setLocationRelativeTo(null);
 
+        if (usu.isVerificado()) {
+            rdbtnSiguiendo.setVisible(true);
+            rdbtnTodas.setVisible(true);
+        }
+
         siguienteFoto();
 
         this.addWindowListener(new WindowAdapter() {
@@ -61,7 +66,6 @@ public class ParaTi extends javax.swing.JDialog {
                 id = generarPublicacionAleatoria();
             } else {
                 id = generarPublicacionAleatoriaReducida();
-                System.out.println("vista.ParaTi.siguienteFoto()");
             }
 
             publi = dao.buscarPublicacionXId(id);
@@ -113,12 +117,14 @@ public class ParaTi extends javax.swing.JDialog {
                     lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
                 }
             }
+
         } catch (ErrVariados ex) {
             ex.mostrarError();
         } catch (ErrSelect ex) {
             ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
+            er.mostrarError();
         }
 
     }
@@ -220,6 +226,24 @@ public class ParaTi extends javax.swing.JDialog {
             ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
+            er.mostrarError();
+        }
+    }
+
+    private void guardar() {
+        try {
+            if (btnGuardar.isSelected()) {
+                dao.guardarPublicación(usu.getUsuario(), publi.getId_publicacion());
+            } else {
+                dao.desguardarPublicacion(usu.getUsuario(), publi.getId_publicacion());
+            }
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrInsert ex) {
+            ex.mostrarError();
+        } catch (ErrDelete ex) {
+            ex.mostrarError();
         }
     }
 
@@ -514,22 +538,34 @@ public class ParaTi extends javax.swing.JDialog {
         tipoParaTi.add(rdbtnTodas);
         rdbtnTodas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rdbtnTodas.setForeground(new java.awt.Color(255, 255, 255));
-        rdbtnTodas.setSelected(true);
         rdbtnTodas.setText("Todas");
         rdbtnTodas.setBorder(null);
         rdbtnTodas.setContentAreaFilled(false);
         rdbtnTodas.setFocusPainted(false);
-        getContentPane().add(rdbtnTodas, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 110, -1, -1));
+        rdbtnTodas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbtnTodasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(rdbtnTodas, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 110, -1, -1));
+        rdbtnTodas.setVisible(false);
 
         rdbtnSiguiendo.setBackground(getBackground());
         tipoParaTi.add(rdbtnSiguiendo);
         rdbtnSiguiendo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rdbtnSiguiendo.setForeground(new java.awt.Color(255, 255, 255));
+        rdbtnSiguiendo.setSelected(true);
         rdbtnSiguiendo.setText("Siguiendo");
         rdbtnSiguiendo.setBorder(null);
         rdbtnSiguiendo.setContentAreaFilled(false);
         rdbtnSiguiendo.setFocusPainted(false);
-        getContentPane().add(rdbtnSiguiendo, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 110, -1, -1));
+        rdbtnSiguiendo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbtnTodasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(rdbtnSiguiendo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 110, -1, -1));
+        rdbtnSiguiendo.setVisible(false);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -603,22 +639,9 @@ public class ParaTi extends javax.swing.JDialog {
         guardar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void guardar() {
-        try {
-            if (btnGuardar.isSelected()) {
-                dao.guardarPublicación(usu.getUsuario(), publi.getId_publicacion());
-            } else {
-                dao.desguardarPublicacion(usu.getUsuario(), publi.getId_publicacion());
-            }
-
-        } catch (ErrVariados ex) {
-            ex.mostrarError();
-        } catch (ErrInsert ex) {
-            ex.mostrarError();
-        } catch (ErrDelete ex) {
-            ex.mostrarError();
-        }
-    }
+    private void rdbtnTodasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnTodasActionPerformed
+        hanSalido.clear();
+    }//GEN-LAST:event_rdbtnTodasActionPerformed
 
     private void cerrar() {
         this.dispose();

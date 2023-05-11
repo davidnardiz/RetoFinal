@@ -162,9 +162,9 @@ public class Subir extends javax.swing.JDialog {
                 dao.editarPublicacion(publi);
                 VentanaMensaje ve = new VentanaMensaje("Modificada correctamente", "Los datos de la imagen se han guardado correctamente en la base de datos");
             }
-
-            this.dispose();
-            paraTi.setVisible(true);
+            limpiar();
+            //this.dispose();
+            // paraTi.setVisible(true);
 
         } catch (ErrVariados ex) {
             ex.mostrarError();

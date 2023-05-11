@@ -9,11 +9,7 @@ import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
-import excepciones.VentanaMensaje;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.DAO;
@@ -49,6 +45,10 @@ public class PublicacionPopUp extends javax.swing.JDialog {
 
             lblMegusta.setText(publi.getNumLikes() + "");
 
+            if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
+                btnLike.setSelected(true);
+            }
+
             if (usu.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
                 btnEditar.setVisible(true);
                 btnEliminar.setVisible(true);
@@ -78,15 +78,13 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 }
             }
 
-            if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
-                btnLike.setSelected(true);
-            }
         } catch (ErrVariados ex) {
             ex.mostrarError();
         } catch (ErrSelect ex) {
             ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
+            er.mostrarError();
         }
     }
 
@@ -143,6 +141,8 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnLike.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(false).png"))); // NOI18N
         btnLike.setBorder(null);
         btnLike.setBorderPainted(false);
+        btnLike.setContentAreaFilled(false);
+        btnLike.setFocusPainted(false);
         btnLike.setFocusable(false);
         btnLike.setPreferredSize(new java.awt.Dimension(46, 46));
         btnLike.setRolloverEnabled(false);

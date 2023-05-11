@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,7 +33,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private MyPasswordField txtContrasenia;
     private MyTextField txtTelefono;
     private MyTextField txtDni;
-    private MyTextField txtFecha;
+    protected MyTextField txtFecha;
     private MyTextField txtUsuarioReg;
     private MyPasswordField txtContraseniaReg;
 
@@ -88,6 +89,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtFecha.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/tf.png")));
         txtFecha.setHint("Fecha de nacimiento");
         register.add(txtFecha, "w 60%");
+        txtFecha.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                calendario();
+                System.out.println(".mouseClicked()");
+            }
+        });
 
         Button cmd = new Button();
         cmd.setBackground(new Color(49, 51, 53));
@@ -240,6 +247,11 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             register.setVisible(false);
             login.setVisible(true);
         }
+    }
+
+    public void calendario() {
+        Calendario calendario = new Calendario(this, true);
+        calendario.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")

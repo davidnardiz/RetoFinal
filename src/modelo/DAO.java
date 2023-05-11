@@ -74,6 +74,8 @@ public interface DAO {
 
     public List<Usuario> listarDesbloqueados(Usuario usuario) throws ErrVariados, ErrSelect;
 
+    public boolean comprobarMejos(Usuario nosotros, Usuario el) throws ErrVariados, ErrSelect;
+
     // Alters
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
 

@@ -79,6 +79,7 @@ public class Perfil extends javax.swing.JDialog {
             ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
+            er.mostrarError();
         }
 
         this.addWindowListener(new WindowAdapter() {

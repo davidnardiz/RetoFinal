@@ -39,9 +39,9 @@ public class Buscar extends javax.swing.JDialog {
         try {
             this.usuariosList = dao.listarUsuario();
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         }
 
         setTitle("Buscar");
@@ -110,9 +110,9 @@ public class Buscar extends javax.swing.JDialog {
             this.setVisible(false);
             perfil.setVisible(true);
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect("Usuario");
+            ex.mostrarError();
         }
     }
 
@@ -138,9 +138,9 @@ public class Buscar extends javax.swing.JDialog {
                 }
                 cargarTabla(usuariosList);
             } catch (ErrVariados ex) {
-                ErrVariados er = new ErrVariados("");
+                ex.mostrarError();
             } catch (ErrSelect ex) {
-                ErrSelect er = new ErrSelect("Usuario");
+                ex.mostrarError();
             }
         }
     }

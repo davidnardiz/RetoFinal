@@ -194,9 +194,9 @@ public class EditarPerfil extends javax.swing.JDialog {
             us.setTelefono(Integer.parseInt(telefono.getText()));
             dao.editarPerfil(us);
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados("");
+            ex.mostrarError();
         } catch (ErrAlter ex) {
-            ErrAlter er = new ErrAlter("Usuario");
+            ex.mostrarError();
         }
 
     }
