@@ -1,7 +1,5 @@
 package vista;
 
-import vista.PanelCover;
-import vista.PanelLoginAndRegister;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -14,20 +12,20 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
-public class Conector extends javax.swing.JFrame {
+public class VMain extends javax.swing.JFrame {
 
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
     private MigLayout layout;
     private PanelCover cover;
-    private PanelLoginAndRegister loginAndRegister;
+    private Inicio loginAndRegister;
     private DAO dao;
     private boolean isLogin = true;
     private final double addSize = 30;
     private final double coverSize = 40;
     private final double loginSize = 60;
-    TimingTarget target;
+    private TimingTarget target;
 
-    public Conector(DAO dao) {
+    public VMain(DAO dao) {
         this.dao = dao;
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         initComponents();
@@ -38,7 +36,7 @@ public class Conector extends javax.swing.JFrame {
     private void init() {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
-        loginAndRegister = new PanelLoginAndRegister(this, dao);
+        loginAndRegister = new Inicio(this, dao);
         target = new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {

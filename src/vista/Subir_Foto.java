@@ -4,16 +4,11 @@ import clases.Cancion;
 import clases.Usuario;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
-import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Foto extends javax.swing.JPanel {
 
-    private DAO dao;
-    private Usuario usu;
     private Subir subir;
 
     public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
@@ -21,8 +16,6 @@ public class Subir_Foto extends javax.swing.JPanel {
             initComponents();
 
             this.subir = subir;
-            this.dao = dao;
-            this.usu = usu;
 
             List<Cancion> canciones = dao.listarCanciones();
             for (Cancion i : canciones) {

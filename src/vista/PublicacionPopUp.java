@@ -16,18 +16,16 @@ import modelo.DAO;
 
 public class PublicacionPopUp extends javax.swing.JDialog {
 
-    private ParaTi paraTi;
     private DAO dao;
     private Usuario usu;
     private Publicacion publi;
     private Perfil cerrarPerfil;
-    private Conector conector;
+    private VMain vMain;
 
-    public PublicacionPopUp(Conector conector1, ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
-        super(parent, modal);
+    public PublicacionPopUp(VMain vMain, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
+        super(vMain, modal);
         try {
-            this.setModal(modal);
-            this.paraTi = parent;
+            this.vMain = vMain;
             this.dao = dao;
             this.usu = usu;
             this.publi = publi;
@@ -161,6 +159,11 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnEtiquetado.setFocusPainted(false);
         btnEtiquetado.setFocusable(false);
         btnEtiquetado.setRolloverEnabled(false);
+        btnEtiquetado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEtiquetadoActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 590, -1, -1));
         btnEtiquetado.setVisible(false);
 
@@ -220,25 +223,8 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_darLike
 
-    private void btnEtiquetadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEtiquetadoMouseClicked
-        try {
-            this.dispose();
-            cerrarPerfil.dispose();
-
-            Usuario etiquetado = dao.buscarUsuario(((Foto) publi).getEtiquetado());
-            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, etiquetado);
-            this.setVisible(false);
-            perfil.setVisible(true);
-
-        } catch (ErrVariados ex) {
-            ex.mostrarError();
-        } catch (ErrSelect ex) {
-            ex.mostrarError();
-        }
-    }//GEN-LAST:event_btnEtiquetadoMouseClicked
-
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        Subir subir = new Subir(conector, paraTi, true, dao, usu, publi);
+        Subir subir = new Subir(vMain, true, dao, usu, publi);
         this.dispose();
         cerrarPerfil.dispose();
         subir.setVisible(true);
@@ -259,6 +245,23 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnEtiquetadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetadoActionPerformed
+        try {
+            this.dispose();
+            cerrarPerfil.dispose();
+
+            Usuario etiquetado = dao.buscarUsuario(((Foto) publi).getEtiquetado());
+            Perfil perfil = new Perfil(vMain, true, dao, usu, etiquetado);
+            this.setVisible(false);
+            perfil.setVisible(true);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+    }//GEN-LAST:event_btnEtiquetadoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;

@@ -6,22 +6,16 @@ import clases.Usuario;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Historia extends javax.swing.JPanel {
 
-    private DAO dao;
-    private Usuario usu;
     private Subir subir;
 
     public Subir_Historia(Subir subir, boolean par, DAO dao, Usuario usu) {
         try {
             initComponents();
 
-            this.dao = dao;
-            this.usu = usu;
             this.subir = subir;
 
             List<Cancion> canciones = dao.listarCanciones();

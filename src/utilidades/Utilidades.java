@@ -8,12 +8,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Properties;
 import java.util.Random;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import jnafilechooser.api.JnaFileChooser;
 
 public class Utilidades {
@@ -70,7 +78,7 @@ public class Utilidades {
         return null;
 
     }
-    
+
     public static String seleccionarIcono(JDialog ventana) {
         File imagen = null;
 
@@ -90,9 +98,7 @@ public class Utilidades {
                     BufferedImage image = ImageIO.read(nuevaFoto);
 
                     // Si la foto esta en vertical redimensionarla con unos valores
-                   
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 64, 64);
-                    
+                    nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 64, 64);
 
                     // Ruta origina del archivo
                     Path rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());

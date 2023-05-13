@@ -6,9 +6,9 @@ import java.util.Date;
 
 public class Calendario extends javax.swing.JDialog {
 
-    private PanelLoginAndRegister registrar;
+    private Inicio registrar;
 
-    public Calendario(PanelLoginAndRegister parent, boolean modal) {
+    public Calendario(Inicio parent, boolean modal) {
         //  super(parent, modal);
         this.registrar = parent;
 

@@ -24,19 +24,17 @@ public class EditarPerfil extends javax.swing.JDialog {
     private Usuario nosotros;
     private String ruta;
     private DAO dao;
-    private Conector conector;
+    private VMain vMain;
     private Usuario us;
     private Usuario usuarioPerfil;
-    private ParaTi paraTi = null;
 
-    public EditarPerfil(Conector con, ParaTi paraTi, boolean modal, DAO dao, Usuario usu, Usuario usuarioPerfil) {
-        super(con, modal);
+    public EditarPerfil(VMain vMain, boolean modal, DAO dao, Usuario usu, Usuario usuarioPerfil) {
+        super(vMain, modal);
         this.nosotros = usu;
         this.dao = dao;
-        this.conector = con;
+        this.vMain = vMain;
         this.us = usu;
         this.usuarioPerfil = usuarioPerfil;
-        this.paraTi = paraTi;
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
         setLocationRelativeTo(null);
@@ -179,8 +177,8 @@ public class EditarPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_fotoPerfilMouseClicked
 
     private void cerrar() {
+        Perfil per = new Perfil(vMain, true, dao, us, usuarioPerfil);
         this.dispose();
-        Perfil per = new Perfil(conector, paraTi, true, dao, us, usuarioPerfil);
         per.setVisible(true);
     }
 

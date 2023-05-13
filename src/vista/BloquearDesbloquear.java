@@ -20,7 +20,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     private Usuario nosotros;
     private int cant = 0;
 
-    public BloquearDesbloquear(Conector conector, JDialog parent, boolean modal, DAO dao, Usuario usu) {
+    public BloquearDesbloquear(VMain conector, JDialog parent, boolean modal, DAO dao, Usuario usu) {
         super(parent, modal);
         this.dao = dao;
         this.nosotros = usu;

@@ -2,13 +2,13 @@ package controlador;
 
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
-import vista.Conector;
+import vista.VMain;
 
 public class Instagram {
 
 	public static void main(String[] args) {
 		DAO dao = new DAOImplementacionBD();
-		Conector main = new Conector(dao);
+		VMain main = new VMain(dao);
                 main.setVisible(true);
 
 	}

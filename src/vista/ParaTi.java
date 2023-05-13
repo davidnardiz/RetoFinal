@@ -16,24 +16,23 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
-import javax.swing.JLayeredPane;
 import modelo.DAO;
 import utilidades.Utilidades;
 
 public class ParaTi extends javax.swing.JDialog {
 
-    private Conector conector;
+    private VMain vMain;
     private DAO dao;
     private Usuario usu;
     private Publicacion publi;
     private Usuario usuPubli;
     private List<String> hanSalido = new ArrayList<>();
 
-    public ParaTi(Conector conector, JLayeredPane parent, boolean modal, DAO dao, Usuario usu) {
-        this.setModal(modal);
+    public ParaTi(VMain conector, boolean modal, DAO dao, Usuario usu) {
+        super(conector, modal);
         this.dao = dao;
         this.usu = usu;
-        this.conector = conector;
+        this.vMain = conector;
 
         setTitle("Para Ti");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
@@ -174,6 +173,7 @@ public class ParaTi extends javax.swing.JDialog {
         try {
             List<Publicacion> id = dao.listarPublicacionesParaTi(usu.getUsuario());
 
+            System.out.println("Llamo al listar");
             if (id.size() == 0) {
                 VentanaMensaje ve = new VentanaMensaje("Disculpe", "Las personas a las que sigues no han publicado nada");
             }
@@ -575,25 +575,25 @@ public class ParaTi extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMensajeActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnBuscarActionPerformed
-        Buscar buscar = new Buscar(conector, this, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.setVisible(false);
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
-        Subir subir = new Subir(conector, this, true, dao, usu, null);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.setVisible(false);
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(conector, this, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.setVisible(false);
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(conector, this, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.setVisible(false);
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
@@ -609,7 +609,7 @@ public class ParaTi extends javax.swing.JDialog {
     private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
         try {
             Usuario etiquetado = dao.buscarUsuario(publi.getUsuario());
-            Perfil perfil = new Perfil(conector, this, true, dao, usu, etiquetado);
+            Perfil perfil = new Perfil(vMain, true, dao, usu, etiquetado);
             this.setVisible(false);
             perfil.setVisible(true);
 
@@ -623,7 +623,7 @@ public class ParaTi extends javax.swing.JDialog {
     private void buscarEtiquetado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarEtiquetado
         try {
             Usuario etiquetado = dao.buscarUsuario(((Foto) publi).getEtiquetado());
-            Perfil perfil = new Perfil(conector, this, true, dao, usu, etiquetado);
+            Perfil perfil = new Perfil(vMain, true, dao, usu, etiquetado);
             this.setVisible(false);
             perfil.setVisible(true);
 
@@ -645,7 +645,7 @@ public class ParaTi extends javax.swing.JDialog {
 
     private void cerrar() {
         this.dispose();
-        conector.dispose();
+        vMain.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

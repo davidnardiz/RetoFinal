@@ -14,6 +14,7 @@ public class VentanaMensaje extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         txt.setText(mensaje);
+        txt.setCaretPosition(0);
         lblTitulo.setText(titulo);
         this.setVisible(true);
     }
@@ -25,7 +26,8 @@ public class VentanaMensaje extends javax.swing.JDialog {
         btnOk = new excepciones.Button();
         btnCancel = new excepciones.Button();
         lblTitulo = new javax.swing.JLabel();
-        txt = new javax.swing.JLabel();
+        scroll = new javax.swing.JScrollPane();
+        txt = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(187, 187, 187));
@@ -54,27 +56,38 @@ public class VentanaMensaje extends javax.swing.JDialog {
         lblTitulo.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(80, 80, 80));
 
+        scroll.setBorder(null);
+        scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setAutoscrolls(true);
+
+        txt.setEditable(false);
         txt.setBackground(getBackground());
+        txt.setColumns(20);
+        txt.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         txt.setForeground(new java.awt.Color(133, 133, 133));
-        txt.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        txt.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        txt.setRows(3);
+        scroll.setViewportView(txt);
+        txt.setOpaque(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 240, Short.MAX_VALUE)
-                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(lblTitulo)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 12, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
@@ -82,9 +95,9 @@ public class VentanaMensaje extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -103,6 +116,7 @@ public class VentanaMensaje extends javax.swing.JDialog {
     private excepciones.Button btnCancel;
     private excepciones.Button btnOk;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JLabel txt;
+    private javax.swing.JScrollPane scroll;
+    private javax.swing.JTextArea txt;
     // End of variables declaration//GEN-END:variables
 }

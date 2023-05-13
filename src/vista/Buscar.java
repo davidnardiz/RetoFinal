@@ -24,17 +24,16 @@ public class Buscar extends javax.swing.JDialog {
     private Usuario usu;
     private ParaTi paraTi;
     private List<Usuario> usuariosList;
-    private Conector conector;
+    private VMain vMain;
 
     private boolean conver;
 
-    public Buscar(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario usu, boolean par1) {
-        super(parent, modal);
+    public Buscar(VMain vMain, boolean modal, DAO dao, Usuario usu, boolean par1) {
+        super(vMain, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
-        this.paraTi = parent;
-        this.conector = conector;
+        this.vMain = vMain;
 
         try {
             this.usuariosList = dao.listarUsuario();
@@ -106,7 +105,7 @@ public class Buscar extends javax.swing.JDialog {
     private void buscarUsuario(String usuario) {
         try {
             Usuario perf = dao.buscarUsuario(usuario);
-            Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, perf);
+            Perfil perfil = new Perfil(vMain, true, dao, usu, perf);
             this.setVisible(false);
             perfil.setVisible(true);
         } catch (ErrVariados ex) {
@@ -379,32 +378,33 @@ public class Buscar extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(conector, paraTi, true, dao, usu, null);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
@@ -429,7 +429,7 @@ public class Buscar extends javax.swing.JDialog {
 
     private void cerrar() {
         this.dispose();
-        conector.dispose();
+        vMain.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

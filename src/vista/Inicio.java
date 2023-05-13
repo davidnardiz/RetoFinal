@@ -7,16 +7,16 @@ import clases.Usuario;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
-import excepciones.VentanaError;
 import excepciones.VentanaMensaje;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
@@ -26,7 +26,7 @@ import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import utilidades.Utilidades;
 
-public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
+public class Inicio extends javax.swing.JLayeredPane {
 
     private MyTextField txtUsuario;
     private MyTextField txtEmail;
@@ -40,9 +40,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private Usuario us;
     private DAO dao;
     private String error = "";
-    private Conector conector;
+    private VMain conector;
 
-    public PanelLoginAndRegister(Conector conector, DAO dao) {
+    public Inicio(VMain conector, DAO dao) {
         initComponents();
         initRegister();
         initLogin();
@@ -92,7 +92,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtFecha.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 calendario();
-                System.out.println(".mouseClicked()");
             }
         });
 
@@ -136,6 +135,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmdForget.setContentAreaFilled(false);
         cmdForget.setBorder(null);
         cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cmdForget.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recuperarCorreo();
+            }
+        });
         login.add(cmdForget);
 
         Button cmd = new Button();
@@ -152,7 +157,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         login.add(cmd, "w 40%, h 40");
     }
 
-    private void iniciarSesion() {
+    public void iniciarSesion() {
         error = "";
         boolean bien = false;
 
@@ -186,7 +191,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
                 txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
                 conector.setOpacity(0);
-                ParaTi parati = new ParaTi(conector, this, true, dao, us);
+                ParaTi parati = new ParaTi(conector, true, dao, us);
                 parati.setVisible(true);
 
             } else {
@@ -209,11 +214,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 us.setDni(txtDni.getText());
                 us.setCorreo(txtEmail.getText());
                 us.setTelefono(Integer.parseInt(txtTelefono.getText()));
-                DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDate fecha = LocalDate.parse(txtFecha.getText(), formateador);
                 us.setFecha_nac(fecha);
                 us.setNumSeguidores(Utilidades.numeros_aleatorios(0, 5000000));
                 us.setNumSeguidos(Utilidades.numeros_aleatorios(0, (int) (us.getNumSeguidores() * 0.3)));
+                us.setCodGmail(String.format("%04d", Utilidades.numeros_aleatorios(0, 9999)) + "");
 
                 if (us.getNumSeguidores() > 4500000) {
                     us.setVerificado(true);
@@ -222,6 +228,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 }
 
                 if (dao.registrar(us)) {
+                    EnviarGmail enviarGmail = new EnviarGmail(conector, this, true, dao, us, "Registrar");
+                    enviarGmail.setVisible(true);
                     VentanaMensaje ve = new VentanaMensaje("Enhorabuena", "Registrado correctamente");
                     limpiar();
 
@@ -337,7 +345,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
         //Pattern patternTelefono = Pattern.compile("^(\+34|0034|34)?[6|7|9][0-9]{8}$");
         //Matcher matcher2 = pattern.matcher(txtTelefono.getText());
-        if (txtTelefono.getText().matches("[0-9]{0,9}")) {
+        if (!txtTelefono.getText().matches("[0-9]{9}")) {
             error += "El teléfono no es válido.\n";
             txtTelefono.setBackground(new Color(233, 0, 0));
         } else {
@@ -405,4 +413,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         return error;
     }
 
+    private void recuperarCorreo() {
+        if (txtUsuarioReg.getText().isBlank()) {
+            VentanaMensaje ve = new VentanaMensaje("Cuidado", "Por favor introduce el usuario para poder enviarte un gmail");
+
+        } else {
+            us = new Usuario();
+            us.setUsuario(txtUsuarioReg.getText());
+            EnviarGmail enviarGmail = new EnviarGmail(conector, this, true, dao, us, "Contrasenia");
+
+        }
+    }
 }

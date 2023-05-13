@@ -28,51 +28,65 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 public class Perfil extends javax.swing.JDialog {
 
     private DAO dao;
-    private ParaTi paraTi;
     private Usuario usuarioPerfil;
     private Usuario usu;
-    private Conector conector;
+    private VMain vMain;
     private List<Publicacion> publicacionesList;
 
-    public Perfil(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
-        super(parent, modal);
+    public Perfil(VMain vMain, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
+        super(vMain, modal);
         try {
             this.setModal(modal);
             this.dao = dao;
             this.usu = nosotros;
             this.usuarioPerfil = usuarioPerfil;
-            this.paraTi = parent;
-            this.conector = conector;
+            this.vMain = vMain;
+
             setTitle("Perfil");
             setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
             getContentPane().setBackground(new Color(49, 51, 53));
             initComponents();
             setLocationRelativeTo(null);
 
-            if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
-                btnMenu.setVisible(false);
+            if (dao.comprobarBloqueado(nosotros.getUsuario(), usuarioPerfil.getUsuario())) {
+                bloqueado.setVisible(true);
+                lblBloqueado.setVisible(true);
+
                 btnEditarPerfil.setVisible(false);
+                btnMenu.setVisible(false);
+                btnSeguir.setVisible(false);
+                btnMensaje.setVisible(false);
+                rdbtnFoto.setVisible(false);
+                rdbtnReel.setVisible(false);
+                rdbtnHistoria.setVisible(false);
 
-                if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
-                    btnSeguir.setSelected(true);
-                    btnSeguir.setText("Siguiendo");
+                franjaMenu.setVisible(false);
+
+            } else {
+                if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+                    btnMenu.setVisible(false);
+                    btnEditarPerfil.setVisible(false);
+
+                    if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
+                        btnSeguir.setSelected(true);
+                        btnSeguir.setText("Siguiendo");
+                    }
                 }
+                if (!usuarioPerfil.isVerificado()) {
+                    lblVerificado.setVisible(false);
+                }
+                lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
+                lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
+                lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
+                lblUsuario.setText(usuarioPerfil.getUsuario());
+
+                lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+                publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+
+                cargarTabla(publicacionesList);
+
+                franjaMenu.setVisible(false);
             }
-            if (!usuarioPerfil.isVerificado()) {
-                lblVerificado.setVisible(false);
-            }
-            lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
-            lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
-            lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
-            lblUsuario.setText(usuarioPerfil.getUsuario());
-
-            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-
-            cargarTabla(publicacionesList);
-
-            franjaMenu.setVisible(false);
-
         } catch (ErrVariados ex) {
             ex.mostrarError();
         } catch (ErrSelect ex) {
@@ -137,7 +151,7 @@ public class Perfil extends javax.swing.JDialog {
             }
         }
 
-        PublicacionPopUp publiPop = new PublicacionPopUp(conector, paraTi, true, dao, publi, usu, usuarioPerfil, this);
+        PublicacionPopUp publiPop = new PublicacionPopUp(vMain, true, dao, publi, usu, usuarioPerfil, this);
         publiPop.setVisible(true);
 
     }
@@ -148,6 +162,8 @@ public class Perfil extends javax.swing.JDialog {
     private void initComponents() {
 
         tipoPublicacion = new javax.swing.ButtonGroup();
+        bloqueado = new javax.swing.JPanel();
+        lblBloqueado = new javax.swing.JLabel();
         franjaMenu = new javax.swing.JPanel();
         equis = new javax.swing.JButton();
         btnBloquear = new javax.swing.JButton();
@@ -194,6 +210,34 @@ public class Perfil extends javax.swing.JDialog {
         setPreferredSize(new java.awt.Dimension(648, 864));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        bloqueado.setBackground(getBackground());
+
+        lblBloqueado.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        lblBloqueado.setForeground(new java.awt.Color(255, 255, 255));
+        lblBloqueado.setText("Este usuario te ha bloqueado");
+
+        javax.swing.GroupLayout bloqueadoLayout = new javax.swing.GroupLayout(bloqueado);
+        bloqueado.setLayout(bloqueadoLayout);
+        bloqueadoLayout.setHorizontalGroup(
+            bloqueadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bloqueadoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblBloqueado)
+                .addGap(15, 15, 15))
+        );
+        bloqueadoLayout.setVerticalGroup(
+            bloqueadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bloqueadoLayout.createSequentialGroup()
+                .addGap(283, 283, 283)
+                .addComponent(lblBloqueado)
+                .addContainerGap(293, Short.MAX_VALUE))
+        );
+
+        lblBloqueado.setVisible(false);
+
+        getContentPane().add(bloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 630, 640));
+        bloqueado.setVisible(false);
 
         franjaMenu.setBackground(new java.awt.Color(35, 36, 37));
         franjaMenu.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -628,32 +672,33 @@ public class Perfil extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(conector, paraTi, true, dao, usu, null);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
@@ -809,7 +854,7 @@ public class Perfil extends javax.swing.JDialog {
         JOptionPane.showConfirmDialog(null, "¿Éstas seguro de que quieres cerrar sesión?", "ATENCIÓN!!", dialogButton);
         if (dialogButton == JOptionPane.YES_OPTION) {
             this.dispose();
-            conector.setOpacity(1);
+            vMain.setOpacity(1);
             if (dialogButton == JOptionPane.NO_OPTION) {
                 remove(dialogButton);
             }
@@ -822,24 +867,25 @@ public class Perfil extends javax.swing.JDialog {
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
         // TODO add your handling code here:
-        BloquearDesbloquear bd = new BloquearDesbloquear(conector, this, true, dao, usu);
+        BloquearDesbloquear bd = new BloquearDesbloquear(vMain, this, true, dao, usu);
         bd.setVisible(true);
     }//GEN-LAST:event_btnBloquearActionPerformed
 
     private void btnEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPerfilActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        EditarPerfil vent = new EditarPerfil(conector, paraTi, true, dao, usu, usuarioPerfil);
+        EditarPerfil vent = new EditarPerfil(vMain, true, dao, usu, usuarioPerfil);
         vent.setVisible(true);
 
     }//GEN-LAST:event_btnEditarPerfilActionPerformed
 
     private void cerrar() {
         this.dispose();
-        conector.dispose();
+        vMain.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bloqueado;
     private javax.swing.JButton btnBloquear;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCerrarSesion;
@@ -858,6 +904,7 @@ public class Perfil extends javax.swing.JDialog {
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JPanel franjaMenu;
+    private javax.swing.JLabel lblBloqueado;
     private javax.swing.JLabel lblIcono;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblLogoLetras;

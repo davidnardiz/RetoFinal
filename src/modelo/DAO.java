@@ -74,7 +74,9 @@ public interface DAO {
 
     public List<Usuario> listarDesbloqueados(Usuario usuario) throws ErrVariados, ErrSelect;
 
-    public boolean comprobarMejos(Usuario nosotros, Usuario el) throws ErrVariados, ErrSelect;
+    public boolean comprobarMejos(String nosotros, String el) throws ErrVariados, ErrSelect;
+
+    public boolean comprobarBloqueado(String nosotros, String el) throws ErrVariados, ErrSelect;
 
     // Alters
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
@@ -87,6 +89,8 @@ public interface DAO {
     public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrDelete;
 
     public void eliminarPublicacion(String id_publicacion) throws ErrVariados, ErrDelete;
+
+    public void eliminarUsuario(String usuario) throws ErrVariados, ErrDelete;
 
     public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 

@@ -27,25 +27,23 @@ public class Subir extends javax.swing.JDialog {
 
     private DAO dao;
     private Usuario usu;
-    private Conector conector;
+    private VMain vMain;
 
     private String imagen = null;
 
     private Subir_Foto ventanaFoto;
     private Subir_Reel ventanaReel;
     private Subir_Historia ventanaHistoria;
-    private ParaTi paraTi;
+
     private Publicacion publiEditar;
 
     private boolean editar = false;
 
-    public Subir(Conector conector1, ParaTi paraTi, boolean modal, DAO dao, Usuario usu, Publicacion publiEditar) {
-        super(paraTi, modal);
-
-        this.paraTi = paraTi;
+    public Subir(VMain vMain, boolean modal, DAO dao, Usuario usu, Publicacion publiEditar) {
+        super(vMain, modal);
+        this.vMain = vMain;
         this.dao = dao;
         this.usu = usu;
-        this.conector = conector1;
         this.publiEditar = publiEditar;
 
         initComponents();
@@ -635,32 +633,33 @@ public class Subir extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(conector, paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(conector, paraTi, true, dao, usu, null);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(conector, paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(conector, paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
@@ -682,7 +681,7 @@ public class Subir extends javax.swing.JDialog {
 
     private void cerrar() {
         this.dispose();
-        conector.dispose();
+        vMain.dispose();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
