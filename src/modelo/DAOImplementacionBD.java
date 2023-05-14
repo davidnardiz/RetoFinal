@@ -55,8 +55,8 @@ public class DAOImplementacionBD implements DAO {
     final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
     final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
 
-    final private String LISTAR_ID_DISPONIBLES = "SELECT * FROM publicacion WHERE usuario in (SELECT seguido FROM sigue WHERE seguidor = ?) and usuario not in (SELECT usuario FROM bloqueados WHERE usuario_bloqueado = ?)";
-    final private String COMPROBAR_MEJOS = "SELECT * FROM  mejorAmigo WHERE mejorAmigo = ? and usuario = ? ";
+    //final private String LISTAR_ID_DISPONIBLES = "SELECT * FROM publicacion WHERE usuario in (SELECT seguido FROM sigue WHERE seguidor = ?) and usuario not in (SELECT usuario FROM bloqueados WHERE usuario_bloqueado = ?)";
+    final private String COMPROBAR_MEJOS = "SELECT * FROM  mejorAmigo WHERE mejor_amigo = ? and usuario = ? ";
     final private String COMPROBAR_BLOQUEADO = "SELECT * FROM bloqueados WHERE usuario_bloqueado = ? and usuario = ? ";
 
     // BUSCAR
@@ -111,6 +111,8 @@ public class DAOImplementacionBD implements DAO {
     final private String QUITAR_LIKE = "call QuitarLike(?, ?)";
     final private String BLOQUEAR_USUARIO = "call bloquear(?, ?)";
     final private String DESBLOQUEAR_USUARIO = "call desbloquear(?, ?)";
+
+    final private String COMPROBAR_PUBLICACION = "SELECT MostrarPublicacion(?, ?)";
 
     public void abrirConexion() throws ErrVariados {
 
@@ -289,22 +291,33 @@ public class DAOImplementacionBD implements DAO {
     @Override
     public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect {
         List<Publicacion> publicaciones = new ArrayList<>();
-        boolean guardar;
         this.abrirConexion();
 
         try {
-            stmt = con.prepareStatement(LISTAR_ID_DISPONIBLES);
-            stmt.setString(1, usuario);
-            stmt.setString(2, usuario);
-
+            stmt = con.prepareStatement(LISTAR_ID);
+            System.out.println("Listar --> " + stmt);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Publicacion publi = new Publicacion();
-                publi = this.getPublicacion(publi, rs);
-                publicaciones.add(publi);
+                stmt = con.prepareStatement(COMPROBAR_PUBLICACION);
+                stmt.setString(1, rs.getString("id_publicacion"));
+                stmt.setString(2, usuario);
+
+                System.out.println("Comprobar --> " + stmt);
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    if (rs2.getBoolean(1)) {
+                        Publicacion publi = new Publicacion();
+                        publi.setId_publicacion(rs.getString("id_publicacion"));
+                        publicaciones.add(publi);
+                    }
+                }
+
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new ErrSelect("Publicacion");
         }
 
@@ -828,37 +841,46 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect {
+    public List<Publicacion> listarPublicacionesUsuario(String usuarioPerifl, String nosotros, String tipo) throws ErrVariados, ErrSelect {
         List<Publicacion> publicaciones = new ArrayList<>();
         Publicacion publi = null;
         this.abrirConexion();
 
         try {
             stmt = con.prepareStatement(LISTAR_PUBLICACIONES_USUARIO);
-            stmt.setString(1, usuario);
+            stmt.setString(1, usuarioPerifl);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String tipoPubli = tipo.substring(0, 1);
+                stmt = con.prepareStatement(COMPROBAR_PUBLICACION);
+                stmt.setString(1, rs.getString("id_publicacion"));
+                stmt.setString(2, nosotros);
+                ResultSet rs2 = stmt.executeQuery();
 
-                if (tipoPubli.equals(rs.getString("id_publicacion").substring(0, 1))) {
+                if (rs2.next()) {
+                    if (rs2.getBoolean(1)) {
 
-                    switch (tipoPubli) {
-                        case "F":
-                            publi = new Foto();
-                            break;
-                        case "R":
-                            publi = new Reel();
-                            break;
-                        case "H":
-                            publi = new Historia();
-                            break;
+                        String tipoPubli = tipo.substring(0, 1);
+
+                        if (tipoPubli.equals(rs.getString("id_publicacion").substring(0, 1))) {
+
+                            switch (tipoPubli) {
+                                case "F":
+                                    publi = new Foto();
+                                    break;
+                                case "R":
+                                    publi = new Reel();
+                                    break;
+                                case "H":
+                                    publi = new Historia();
+                                    break;
+                            }
+                            publi = this.getPublicacion(publi, rs);
+                            publicaciones.add(publi);
+                        }
                     }
-                    publi = this.getPublicacion(publi, rs);
-                    publicaciones.add(publi);
                 }
             }
-
         } catch (SQLException e) {
             throw new ErrSelect("Publicacion");
         }
@@ -1010,16 +1032,17 @@ public class DAOImplementacionBD implements DAO {
     public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrVariados, ErrSelect {
         this.abrirConexion();
         ResultSet rs;
-        Usuario us = new Usuario();
+        Usuario us = null;
         try {
             stmt = con.prepareStatement(INICIAR_SESION);
 
             stmt.setString(1, usuario);
             stmt.setString(2, contrasenia);
-
+            System.out.println(stmt);
             rs = stmt.executeQuery();
 
             if (rs.next()) {
+                us = new Usuario();
                 us = this.getUsuario(us, rs);
             }
 
@@ -1253,5 +1276,4 @@ public class DAOImplementacionBD implements DAO {
     public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
 }

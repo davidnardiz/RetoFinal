@@ -32,7 +32,7 @@ public interface DAO {
 
     public List<Publicacion> listarPublicaciones() throws ErrVariados, ErrSelect;
 
-    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect;
+    public List<Publicacion> listarPublicacionesUsuario(String usuarioPerfil, String nosotros, String tipo) throws ErrVariados, ErrSelect;
 
     public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect;
 
@@ -78,7 +78,7 @@ public interface DAO {
 
     public boolean comprobarBloqueado(String nosotros, String el) throws ErrVariados, ErrSelect;
 
-    // Alters
+    // Updates
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
 
     public void editarPublicacion(Publicacion publi) throws ErrVariados, ErrAlter;

@@ -15,8 +15,6 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
@@ -181,24 +179,25 @@ public class Inicio extends javax.swing.JLayeredPane {
         if (bien) {
             try {
                 us = dao.iniciarSesion(txtUsuarioReg.getText(), txtContraseniaReg.getText());
+
+                if (us != null) {
+                    txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
+                    txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
+                    conector.setOpacity(0);
+
+                    ParaTi parati = new ParaTi(conector, true, dao, us);
+                    parati.setVisible(true);
+
+                } else {
+                    VentanaMensaje ve = new VentanaMensaje("Error", "El usuario y la contraseña no coinciden");
+                    txtContraseniaReg.setBackground(new Color(208, 56, 24));
+                }
+
             } catch (ErrVariados ex) {
                 ex.mostrarError();
             } catch (ErrSelect ex) {
                 ex.mostrarError();
             }
-
-            if (us != null) {
-                txtUsuarioReg.setBackground(new Color(0, 0, 0, 0));
-                txtContraseniaReg.setBackground(new Color(0, 0, 0, 0));
-                conector.setOpacity(0);
-                ParaTi parati = new ParaTi(conector, true, dao, us);
-                parati.setVisible(true);
-
-            } else {
-                VentanaMensaje ve = new VentanaMensaje("Error", "El usuario y la contraseña no coinciden");
-                txtContraseniaReg.setBackground(new Color(208, 56, 24));
-            }
-
         } else {
             VentanaMensaje ve = new VentanaMensaje("Error", error);
         }

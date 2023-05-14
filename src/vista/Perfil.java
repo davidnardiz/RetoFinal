@@ -81,7 +81,7 @@ public class Perfil extends javax.swing.JDialog {
                 lblUsuario.setText(usuarioPerfil.getUsuario());
 
                 lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-                publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+                publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
 
                 cargarTabla(publicacionesList);
 
@@ -705,7 +705,7 @@ public class Perfil extends javax.swing.JDialog {
 
     private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
         try {
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
             cargarTabla(publicacionesList);
 
         } catch (ErrVariados ex) {
@@ -717,7 +717,7 @@ public class Perfil extends javax.swing.JDialog {
 
     private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
         try {
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Reel");
             cargarTabla(publicacionesList);
 
         } catch (ErrVariados ex) {
@@ -729,7 +729,7 @@ public class Perfil extends javax.swing.JDialog {
 
     private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
         try {
-            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Historia");
             cargarTabla(publicacionesList);
 
         } catch (ErrVariados ex) {

@@ -15,6 +15,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import modelo.DAO;
 import utilidades.Utilidades;
@@ -27,6 +29,7 @@ public class ParaTi extends javax.swing.JDialog {
     private Publicacion publi;
     private Usuario usuPubli;
     private List<String> hanSalido = new ArrayList<>();
+    private List<Publicacion> publicacionesDisponibles = new ArrayList<>();
 
     public ParaTi(VMain conector, boolean modal, DAO dao, Usuario usu) {
         super(conector, modal);
@@ -44,6 +47,14 @@ public class ParaTi extends javax.swing.JDialog {
         if (usu.isVerificado()) {
             rdbtnSiguiendo.setVisible(true);
             rdbtnTodas.setVisible(true);
+        }
+
+        try {
+            publicacionesDisponibles = dao.listarPublicacionesParaTi(usu.getUsuario());
+        } catch (ErrVariados ex) {
+            Logger.getLogger(ParaTi.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ErrSelect ex) {
+            Logger.getLogger(ParaTi.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         siguienteFoto();
@@ -67,62 +78,72 @@ public class ParaTi extends javax.swing.JDialog {
                 id = generarPublicacionAleatoriaReducida();
             }
 
-            publi = dao.buscarPublicacionXId(id);
-            usuPubli = dao.buscarUsuario(publi.getUsuario());
+            if (!id.equalsIgnoreCase("")) {
+                publi = dao.buscarPublicacionXId(id);
+                usuPubli = dao.buscarUsuario(publi.getUsuario());
 
-            if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
-                btnLike.setSelected(true);
-            } else {
-                btnLike.setSelected(false);
-            }
+                if (publi instanceof Historia && ((Historia) publi).isMejores_amigos()) {
+                    if (!dao.comprobarMejos(usu.getUsuario(), publi.getUsuario())) {
+                        this.siguienteFoto();
+                    }
+                }
 
-            lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
-            imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
+                lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuPubli.getIcono())));
+                imagen.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/publicaciones/" + publi.getImagen())));
 
-            lblDescripcion.setVisible(true);
-            lblVerificado.setVisible(false);
-            getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
-            lblUsuario.setVisible(true);
-            lblHistoria.setVisible(false);
-            btnEtiquetado.setVisible(false);
-            lblUsuario.setText(publi.getUsuario());
-            lblMegusta.setText(publi.getNumLikes() + "");
+                if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
+                    btnLike.setSelected(true);
+                } else {
+                    btnLike.setSelected(false);
+                }
 
-            if (usuPubli.isVerificado()) {
-                lblVerificado.setVisible(true);
-                getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(239, 110, 170, 22));
+                lblDescripcion.setVisible(true);
+                lblVerificado.setVisible(false);
+                getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
+                lblUsuario.setVisible(true);
+                lblHistoria.setVisible(false);
+                btnEtiquetado.setVisible(false);
+                lblUsuario.setText(publi.getUsuario());
+                lblMegusta.setText(publi.getNumLikes() + "");
 
-            }
-
-            if (publi instanceof Foto) {
-                lblDescripcion.setText(((Foto) publi).getDescripcion());
-
-                if (((Foto) publi).getEtiquetado() != null) {
-                    btnEtiquetado.setVisible(true);
+                if (usuPubli.isVerificado()) {
+                    lblVerificado.setVisible(true);
+                    getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(239, 110, 170, 22));
 
                 }
 
-            } else if (publi instanceof Reel) {
-                lblDescripcion.setText(((Reel) publi).getDescripcion());
+                if (publi instanceof Foto) {
+                    lblDescripcion.setText(((Foto) publi).getDescripcion());
 
-            } else {
-                lblHistoria.setVisible(true);
-                lblDescripcion.setVisible(false);
+                    if (((Foto) publi).getEtiquetado() != null) {
+                        btnEtiquetado.setVisible(true);
 
-                if (((Historia) publi).isMejores_amigos()) {
-                    lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esMejos.png")));
+                    }
+
+                } else if (publi instanceof Reel) {
+                    lblDescripcion.setText(((Reel) publi).getDescripcion());
 
                 } else {
-                    lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
+                    lblHistoria.setVisible(true);
+                    lblDescripcion.setVisible(false);
+
+                    if (((Historia) publi).isMejores_amigos()) {
+                        lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esMejos.png")));
+
+                    } else {
+                        lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
+                    }
                 }
             }
-
         } catch (ErrVariados ex) {
             ex.mostrarError();
+            ex.printStackTrace();
         } catch (ErrSelect ex) {
             ex.mostrarError();
+            ex.printStackTrace();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
+            ex.printStackTrace();
             er.mostrarError();
         }
 
@@ -133,35 +154,26 @@ public class ParaTi extends javax.swing.JDialog {
         int numRandom;
         boolean salir;
 
-        try {
-            List<Publicacion> id = dao.listarPublicaciones();
+        if (hanSalido.size() == publicacionesDisponibles.size()) {
+            hanSalido.clear();
+        }
 
-            if (hanSalido.size() == id.size()) {
-                hanSalido.clear();
+        do {
+            salir = true;
+            numRandom = Utilidades.numeros_aleatorios(0, publicacionesDisponibles.size() - 1);
+
+            for (String i : hanSalido) {
+                if (i.equalsIgnoreCase(publicacionesDisponibles.get(numRandom).getId_publicacion())) {
+                    salir = false;
+                }
             }
 
-            do {
-                salir = true;
-                numRandom = Utilidades.numeros_aleatorios(0, id.size() - 1);
+        } while (!salir);
 
-                for (String i : hanSalido) {
-                    if (i.equalsIgnoreCase(id.get(numRandom).getId_publicacion())) {
-                        salir = false;
-                    }
-                }
+        publiActual = publicacionesDisponibles.get(numRandom).getId_publicacion();
+        hanSalido.add(publiActual);
 
-            } while (!salir);
-
-            publiActual = id.get(numRandom).getId_publicacion();
-            hanSalido.add(publiActual);
-
-        } catch (ErrVariados ex) {
-            ex.mostrarError();
-        } catch (ErrSelect ex) {
-            ex.mostrarError();
-        } finally {
-            return publiActual;
-        }
+        return publiActual;
 
     }
 
@@ -170,41 +182,36 @@ public class ParaTi extends javax.swing.JDialog {
         int numRandom;
         boolean salir;
 
-        try {
-            List<Publicacion> id = dao.listarPublicacionesParaTi(usu.getUsuario());
-
-            System.out.println("Llamo al listar");
-            if (id.size() == 0) {
-                VentanaMensaje ve = new VentanaMensaje("Disculpe", "Las personas a las que sigues no han publicado nada");
-            }
-
-            if (hanSalido.size() == id.size()) {
-                hanSalido.clear();
-            }
-
-            do {
-                salir = true;
-                numRandom = Utilidades.numeros_aleatorios(0, id.size() - 1);
-
-                for (String i : hanSalido) {
-                    if (i.equalsIgnoreCase(id.get(numRandom).getId_publicacion())) {
-                        salir = false;
-                    }
-                }
-
-            } while (!salir);
-
-            publiActual = id.get(numRandom).getId_publicacion();
-            hanSalido.add(publiActual);
-
-        } catch (ErrVariados ex) {
-            ex.mostrarError();
-        } catch (ErrSelect ex) {
-            ex.mostrarError();
-        } finally {
-            return publiActual;
+        if (publicacionesDisponibles.size() == 0) {
+            VentanaMensaje ve = new VentanaMensaje("Disculpe", "Las personas a las que sigues no han publicado nada");
+            lblHistoria.setVisible(false);
+            btnLike.setVisible(false);
+            btnGuardar.setVisible(false);
+            btnEtiquetado.setVisible(false);
+            lblVerificado.setVisible(false);
+            return "";
         }
 
+        if (hanSalido.size() == publicacionesDisponibles.size()) {
+            hanSalido.clear();
+        }
+
+        do {
+            salir = true;
+            numRandom = Utilidades.numeros_aleatorios(0, publicacionesDisponibles.size() - 1);
+
+            for (String i : hanSalido) {
+                if (i.equalsIgnoreCase(publicacionesDisponibles.get(numRandom).getId_publicacion())) {
+                    salir = false;
+                }
+            }
+
+        } while (!salir);
+
+        publiActual = publicacionesDisponibles.get(numRandom).getId_publicacion();
+        hanSalido.add(publiActual);
+
+        return publiActual;
     }
 
     private void darLike() {
@@ -562,6 +569,7 @@ public class ParaTi extends javax.swing.JDialog {
         rdbtnSiguiendo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbtnTodasActionPerformed(evt);
+                rdbtnSiguiendoActionPerformed(evt);
             }
         });
         getContentPane().add(rdbtnSiguiendo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 110, -1, -1));
@@ -635,13 +643,32 @@ public class ParaTi extends javax.swing.JDialog {
     }//GEN-LAST:event_buscarEtiquetado
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
         guardar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void rdbtnTodasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnTodasActionPerformed
-        hanSalido.clear();
+        try {
+            publicacionesDisponibles = dao.listarPublicaciones();
+            hanSalido.clear();
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_rdbtnTodasActionPerformed
+
+    private void rdbtnSiguiendoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnSiguiendoActionPerformed
+        try {
+            publicacionesDisponibles = dao.listarPublicacionesParaTi(usu.getUsuario());
+            hanSalido.clear();
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+    }//GEN-LAST:event_rdbtnSiguiendoActionPerformed
 
     private void cerrar() {
         this.dispose();
