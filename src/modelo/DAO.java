@@ -1,6 +1,6 @@
 package modelo;
 
-import java.time.LocalDate;
+import clases.Articulo;
 import java.util.List;
 
 import clases.Cancion;
@@ -8,51 +8,69 @@ import clases.Mensaje;
 import clases.Publicacion;
 import clases.TipoHistoria;
 import clases.Usuario;
+import java.time.LocalDate;
 
 public interface DAO {
 
-	// Inserts
-	public void publicar(Publicacion publi);
-	
-	public void insertarLike(String usuario, String publicacion);
-	
-	
-	public void insertarMensaje(Mensaje men, String usuario, String usuario2);
+    // Inserts
+    public void publicar(Publicacion publi);
 
-	// Selects
-	public Publicacion buscarPublicacionXId(String id);
-	
-	public Usuario buscarUsuario(String usuario);
-	
-	public List<Usuario> listarUsuario();
-	
-	public List<Usuario> listarUsuarioXUsuario(String usuario);
+    public void insertarLike(String usuario, String publicacion);
 
-	public int numPublicaciones();
-	
-	public int numPublicacionesHerencia(String tipo);
+    public void insertarMensaje(Mensaje men);
 
-	public List<Cancion> listarCanciones();
+    public void insertarArticulo(Articulo art);
 
-	public List<TipoHistoria> listarTipoHistorias();
+    // Selects
+    public Publicacion buscarPublicacionXId(String id);
 
-	public String calcularId(String string);
-	
-	public String calcularIdMensaje(String string);
+    public List<Publicacion> listarPublicaciones();
 
-	public Cancion buscarCancionXTitulo(String titulo);
+    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
 
-	public String tipoHistoria(String tipo);
-	
-	public boolean buscarConver(String usuario);
+    public String calcularId(String tipo);
 
-	public boolean comprobarLike(String usuario, String publicacion);
-	
-	public List<Mensaje> sacarIdMensajes(String usuario1, String usuario2);
-	
+    public Usuario buscarUsuario(String usuario);
 
-	// Alters
+    public List<Usuario> listarUsuario();
 
-	// Deletes
-	public void quirarLike(String usuario, String publicacion);
+    public List<Usuario> listarUsuarioXUsuario(String usuario);
+
+    public List<Usuario> listarUsuariosVerificados(String usuario);
+
+    public List<Usuario> listarUsuariosXSeguidores(String usuario);
+
+    public int numPublicacionesUsuario(String usuario);
+
+    public List<Cancion> listarCanciones();
+
+    public List<TipoHistoria> listarTipoHistorias();
+
+    public Cancion buscarCancionXTitulo(String titulo);
+
+    public String tipoHistoria(String tipo);
+
+    public boolean comprobarLike(String usuario, String publicacion);
+
+    public List<Mensaje> sacarMensajes(String usuario1, String usuario2);
+
+    public String calcularIdMensaje(String string);
+
+    public List<String> sacarConversaciones(String usuario);
+
+    public List<Articulo> sacarTodosLosArticulos();
+
+    public String calcularIdArticulo(String string);
+
+    public int obtenerValoracion(Articulo ar);
+
+    // Alters
+    public void modificarArt(Articulo art);
+
+    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id);
+
+    // Deletes
+    public void quirarLike(String usuario, String publicacion);
+
+    public void borrarArticulo(String id);
 }

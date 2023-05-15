@@ -10,7 +10,7 @@ public class Reel extends Publicacion{
 	/********** METODOS **********/
 	@Override
 	public String toString() {
-		return "Reel [id_publicacion=" + id_publicacion + ", descripcion=" + descripcion + ", duracion=" + duracion
+		return super.toString() + "Reel [id_publicacion=" + id_publicacion + ", descripcion=" + descripcion + ", duracion=" + duracion
 				+ ", reproducciones=" + reproducciones + "]";
 	}
 	
