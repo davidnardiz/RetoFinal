@@ -50,6 +50,7 @@
           <Border info="null"/>
         </Property>
         <Property name="borderPainted" type="boolean" value="false"/>
+        <Property name="contentAreaFilled" type="boolean" value="false"/>
         <Property name="focusPainted" type="boolean" value="false"/>
         <Property name="focusable" type="boolean" value="false"/>
         <Property name="hideActionText" type="boolean" value="true"/>
@@ -64,7 +65,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="408" y="635" width="-1" height="-1"/>
+          <AbsoluteConstraints x="460" y="640" width="40" height="40"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -454,7 +455,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="460" y="640" width="-1" height="-1"/>
+          <AbsoluteConstraints x="410" y="640" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>

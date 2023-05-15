@@ -27,12 +27,17 @@ public interface DAO {
 
     public void guardarPublicación(String usuario, String id_publicacion) throws ErrVariados, ErrInsert;
 
+    public void aniadirAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrInsert;
+
     // Selects
     public Publicacion buscarPublicacionXId(String id) throws ErrVariados, ErrSelect;
 
     public List<Publicacion> listarPublicaciones() throws ErrVariados, ErrSelect;
 
-    public List<Publicacion> listarPublicacionesUsuario(String usuarioPerfil, String nosotros, String tipo) throws ErrVariados, ErrSelect;
+    // public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect;
+    public List<Publicacion> listarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrSelect;
+
+    public List<Publicacion> listarPublicacionesEtiquetadas(String usuario) throws ErrVariados, ErrSelect;
 
     public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect;
 
@@ -43,6 +48,8 @@ public interface DAO {
     public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrVariados, ErrSelect;
 
     public List<Usuario> listarUsuario() throws ErrVariados, ErrSelect;
+
+    public List<Publicacion> listarPublicacionesUsuario(String usuarioPerifl, String nosotros, String tipo) throws ErrVariados, ErrSelect;
 
     public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrVariados, ErrSelect;
 
@@ -78,6 +85,12 @@ public interface DAO {
 
     public boolean comprobarBloqueado(String nosotros, String el) throws ErrVariados, ErrSelect;
 
+    public List<Usuario> listarMejoresAmigos(Usuario nosotros) throws ErrVariados, ErrSelect;
+
+    public List<Usuario> listarNoMejoresAmigos(Usuario nosotros) throws ErrVariados, ErrSelect;
+
+    public boolean comprobarGuardado(String usuario, String publicacion) throws ErrVariados, ErrSelect;
+
     // Updates
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
 
@@ -95,5 +108,9 @@ public interface DAO {
     public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 
     public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete;
+
+    public void vaciarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrDelete;
+
+    public void quitarAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 
 }

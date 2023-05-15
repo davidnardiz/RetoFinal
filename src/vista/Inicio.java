@@ -104,7 +104,8 @@ public class Inicio extends javax.swing.JLayeredPane {
             }
         });
         register.add(cmd, "w 40%, h 40");
-
+        
+        
     }
 
     private void initLogin() {
@@ -153,6 +154,7 @@ public class Inicio extends javax.swing.JLayeredPane {
 
         });
         login.add(cmd, "w 40%, h 40");
+        
     }
 
     public void iniciarSesion() {
@@ -276,11 +278,11 @@ public class Inicio extends javax.swing.JLayeredPane {
         login.setLayout(loginLayout);
         loginLayout.setHorizontalGroup(
             loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 327, Short.MAX_VALUE)
+            .addGap(0, 989, Short.MAX_VALUE)
         );
         loginLayout.setVerticalGroup(
             loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 546, Short.MAX_VALUE)
         );
 
         add(login, "card3");
@@ -291,11 +293,11 @@ public class Inicio extends javax.swing.JLayeredPane {
         register.setLayout(registerLayout);
         registerLayout.setHorizontalGroup(
             registerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 327, Short.MAX_VALUE)
+            .addGap(0, 989, Short.MAX_VALUE)
         );
         registerLayout.setVerticalGroup(
             registerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 546, Short.MAX_VALUE)
         );
 
         add(register, "card2");

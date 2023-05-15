@@ -10,10 +10,6 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-/**
- *
- * @author RAVEN
- */
 public class Button extends JButton {
 
     private boolean mousePress;

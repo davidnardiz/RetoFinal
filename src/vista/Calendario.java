@@ -44,17 +44,14 @@ public class Calendario extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        calendario = new com.toedter.calendar.JCalendar();
         btnEnviar = new javax.swing.JButton();
+        calendario = new com.toedter.calendar.JCalendar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(59, 61, 63));
         setPreferredSize(new java.awt.Dimension(410, 280));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        calendario.setBackground(getBackground());
-        getContentPane().add(calendario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 190));
 
         btnEnviar.setBackground(new java.awt.Color(227, 227, 227));
         btnEnviar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -66,6 +63,9 @@ public class Calendario extends javax.swing.JDialog {
             }
         });
         getContentPane().add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, 130, 40));
+
+        calendario.setBackground(getBackground());
+        getContentPane().add(calendario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 200));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

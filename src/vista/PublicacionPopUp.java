@@ -10,6 +10,8 @@ import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.DAO;
@@ -21,10 +23,12 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private Publicacion publi;
     private Perfil cerrarPerfil;
     private VMain vMain;
+    private boolean guardado;
 
     public PublicacionPopUp(VMain vMain, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
         super(vMain, modal);
         try {
+
             this.vMain = vMain;
             this.dao = dao;
             this.usu = usu;
@@ -53,7 +57,7 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 this.setSize(510, 760);
             }
 
-            if (usu.isVerificado()) {
+            if (usuarioPerfil.isVerificado()) {
                 lblVerificado.setVisible(true);
             }
 
@@ -76,13 +80,17 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 }
             }
 
+            guardado = dao.comprobarGuardado(usu.getUsuario(), publi.getId_publicacion());
+            if (guardado) {
+                btnGuardar.setSelected(true);
+            } else {
+                btnGuardar.setSelected(false);
+            }
+
         } catch (ErrVariados ex) {
             ex.mostrarError();
         } catch (ErrSelect ex) {
             ex.mostrarError();
-        } catch (NullPointerException ex) {
-            ErrVariados er = new ErrVariados("Imagen");
-            er.mostrarError();
         }
     }
 
@@ -101,10 +109,12 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         lblDescripcion = new javax.swing.JLabel();
         btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
         setPreferredSize(new java.awt.Dimension(485, 700));
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -164,7 +174,7 @@ public class PublicacionPopUp extends javax.swing.JDialog {
                 btnEtiquetadoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 590, -1, -1));
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 580, -1, -1));
         btnEtiquetado.setVisible(false);
 
         lblDescripcion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -200,6 +210,20 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         });
         getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 670, 120, 40));
         btnEditar.setVisible(false);
+
+        btnGuardar.setBackground(getBackground());
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/guardadd.png"))); // NOI18N
+        btnGuardar.setBorder(null);
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setContentAreaFilled(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/guardd2.png"))); // NOI18N
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 570, 46, 46));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -263,10 +287,31 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnEtiquetadoActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        guardar();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void guardar() {
+        try {
+            if (btnGuardar.isSelected()) {
+                dao.guardarPublicación(usu.getUsuario(), publi.getId_publicacion());
+            } else {
+                dao.desguardarPublicacion(usu.getUsuario(), publi.getId_publicacion());
+            }
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrInsert ex) {
+            ex.mostrarError();
+        } catch (ErrDelete ex) {
+            ex.mostrarError();
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEtiquetado;
+    private javax.swing.JToggleButton btnGuardar;
     private javax.swing.JToggleButton btnLike;
     private javax.swing.JLabel imagen;
     private javax.swing.JLabel lblDescripcion;

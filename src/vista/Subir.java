@@ -84,13 +84,14 @@ public class Subir extends javax.swing.JDialog {
         String id;
         try {
             if (rdbtnFoto.isSelected()) {
-
                 publi = new Foto();
-
                 id = dao.calcularId("F");
 
                 if (ventanaFoto.cbCancion.getSelectedIndex() != -1) {
-                    publi.setId_cancion(dao.buscarCancionXTitulo(ventanaFoto.cbCancion.getSelectedItem().toString()).getId_cancion());
+                    int n = (ventanaFoto.cbCancion.getSelectedItem().toString()).indexOf('-');
+                    String tit = ventanaFoto.cbCancion.getSelectedItem().toString().substring(0, n - 1);
+                    publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
+
                 }
 
                 if (ventanaFoto.cbEtiquetado.getSelectedIndex() != -1) {
@@ -106,11 +107,12 @@ public class Subir extends javax.swing.JDialog {
 
             } else if (rdbtnReel.isSelected()) {
                 publi = new Reel();
-
                 id = dao.calcularId("R");
 
                 if (ventanaReel.cbCancion.getSelectedIndex() != -1) {
-                    publi.setId_cancion(dao.buscarCancionXTitulo(ventanaReel.cbCancion.getSelectedItem().toString()).getId_cancion());
+                    int n = (ventanaReel.cbCancion.getSelectedItem().toString()).indexOf('-');
+                    String tit = ventanaReel.cbCancion.getSelectedItem().toString().substring(0, n - 1);
+                    publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
                 }
 
                 if (!ventanaReel.txtUbicacion.getText().isBlank()) {
@@ -122,11 +124,12 @@ public class Subir extends javax.swing.JDialog {
 
             } else {
                 publi = new Historia();
-
                 id = dao.calcularId("H");
 
                 if (ventanaHistoria.cbCancion.getSelectedIndex() != -1) {
-                    publi.setId_cancion(dao.buscarCancionXTitulo(ventanaHistoria.cbCancion.getSelectedItem().toString()).getId_cancion());
+                    int n = (ventanaHistoria.cbCancion.getSelectedItem().toString()).indexOf('-');
+                    String tit = ventanaHistoria.cbCancion.getSelectedItem().toString().substring(0, n - 1);
+                    publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
                 }
 
                 if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() != -1) {
@@ -160,9 +163,9 @@ public class Subir extends javax.swing.JDialog {
                 dao.editarPublicacion(publi);
                 VentanaMensaje ve = new VentanaMensaje("Modificada correctamente", "Los datos de la imagen se han guardado correctamente en la base de datos");
             }
-            limpiar();
-            //this.dispose();
-            // paraTi.setVisible(true);
+            this.dispose();
+            ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
+            paraTi.setVisible(true);
 
         } catch (ErrVariados ex) {
             ex.mostrarError();
@@ -284,7 +287,7 @@ public class Subir extends javax.swing.JDialog {
             }
         }
         if (!mensaje.equalsIgnoreCase("")) {
-            VentanaError ve = new VentanaError(mensaje);
+            VentanaMensaje ve = new VentanaMensaje("Cuidado", mensaje);
 
         } else {
             subirPublicacion();

@@ -30,13 +30,13 @@ public class Perfil extends javax.swing.JDialog {
     private DAO dao;
     private Usuario usuarioPerfil;
     private Usuario usu;
+    private Publicacion publi;
     private VMain vMain;
     private List<Publicacion> publicacionesList;
 
     public Perfil(VMain vMain, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
         super(vMain, modal);
         try {
-            this.setModal(modal);
             this.dao = dao;
             this.usu = nosotros;
             this.usuarioPerfil = usuarioPerfil;
@@ -63,6 +63,8 @@ public class Perfil extends javax.swing.JDialog {
                 franjaMenu.setVisible(false);
 
             } else {
+                mostrarPublicacion();
+
                 if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
                     btnMenu.setVisible(false);
                     btnEditarPerfil.setVisible(false);
@@ -93,7 +95,6 @@ public class Perfil extends javax.swing.JDialog {
             ex.mostrarError();
         } catch (NullPointerException ex) {
             ErrVariados er = new ErrVariados("Imagen");
-            er.mostrarError();
         }
 
         this.addWindowListener(new WindowAdapter() {
@@ -142,7 +143,7 @@ public class Perfil extends javax.swing.JDialog {
 
     private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
-        Publicacion publi = null;
+        publi = null;
 
         for (Publicacion i : publicacionesList) {
             if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
@@ -156,6 +157,32 @@ public class Perfil extends javax.swing.JDialog {
 
     }
 
+    private void mostrarPublicacion() {
+        try {
+
+            if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario()) || usu.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+                noSigue.setVisible(false);
+                lblSigue.setVisible(false);
+
+                rdbtnFoto.setVisible(true);
+                rdbtnReel.setVisible(true);
+                rdbtnHistoria.setVisible(true);
+            } else {
+                noSigue.setVisible(true);
+                lblSigue.setVisible(true);
+
+                rdbtnFoto.setVisible(false);
+                rdbtnReel.setVisible(false);
+                rdbtnHistoria.setVisible(false);
+            }
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+    }
+
     @SuppressWarnings("unchecked")
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -164,6 +191,8 @@ public class Perfil extends javax.swing.JDialog {
         tipoPublicacion = new javax.swing.ButtonGroup();
         bloqueado = new javax.swing.JPanel();
         lblBloqueado = new javax.swing.JLabel();
+        noSigue = new javax.swing.JPanel();
+        lblSigue = new javax.swing.JLabel();
         franjaMenu = new javax.swing.JPanel();
         equis = new javax.swing.JButton();
         btnBloquear = new javax.swing.JButton();
@@ -238,6 +267,31 @@ public class Perfil extends javax.swing.JDialog {
 
         getContentPane().add(bloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 630, 640));
         bloqueado.setVisible(false);
+
+        noSigue.setBackground(getBackground());
+
+        lblSigue.setFont(new java.awt.Font("SansSerif", 0, 48)); // NOI18N
+        lblSigue.setForeground(new java.awt.Color(255, 255, 255));
+        lblSigue.setText("No sigues a este usuario");
+
+        javax.swing.GroupLayout noSigueLayout = new javax.swing.GroupLayout(noSigue);
+        noSigue.setLayout(noSigueLayout);
+        noSigueLayout.setHorizontalGroup(
+            noSigueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(noSigueLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(lblSigue)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+        noSigueLayout.setVerticalGroup(
+            noSigueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(noSigueLayout.createSequentialGroup()
+                .addGap(161, 161, 161)
+                .addComponent(lblSigue)
+                .addContainerGap(187, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(noSigue, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 610, 410));
 
         franjaMenu.setBackground(new java.awt.Color(35, 36, 37));
         franjaMenu.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -742,10 +796,12 @@ public class Perfil extends javax.swing.JDialog {
     private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
         try {
             if (btnSeguir.isSelected()) {
-
                 dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
                 btnSeguir.setText("Siguiendo");
                 lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
+
+                publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
+                cargarTabla(publicacionesList);
 
             } else {
                 dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
@@ -753,11 +809,15 @@ public class Perfil extends javax.swing.JDialog {
                 lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
             }
 
+            mostrarPublicacion();
+
         } catch (ErrVariados ex) {
             ex.mostrarError();
         } catch (ErrInsert ex) {
             ex.mostrarError();
         } catch (ErrDelete ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
             ex.mostrarError();
         }
     }//GEN-LAST:event_seguir
@@ -786,6 +846,7 @@ public class Perfil extends javax.swing.JDialog {
         equis.setBorder(null);
         //btnBloquear.setVisible(true);
         btnSubir.setEnabled(true);
+        btnSeguir.setVisible(false);
         rdbtnReel.setEnabled(true);
         rdbtnFoto.setEnabled(true);
         rdbtnHistoria.setVisible(true);
@@ -821,6 +882,7 @@ public class Perfil extends javax.swing.JDialog {
         btnCerrarSesion.setBorder(null);
         btnMejoresAmigos.setBorder(null);
 
+        /*
         Point img1L = franjaMenu.getLocationOnScreen();
         int targetX = img1L.x;
         int targetY = img1L.y;
@@ -838,14 +900,19 @@ public class Perfil extends javax.swing.JDialog {
 
             }
         });
+         */
     }//GEN-LAST:event_btnMenuMouseClicked
 
     private void btnPublisGuardadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublisGuardadasActionPerformed
         // TODO add your handling code here:
+        PublicacionesGuardadas vent = new PublicacionesGuardadas(vMain, true, dao, publi, usu, usuarioPerfil, this);
+        vent.setVisible(true);
     }//GEN-LAST:event_btnPublisGuardadasActionPerformed
 
     private void btnEtiquetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetasActionPerformed
         // TODO add your handling code here:
+        PublicacionesEtiquetadas vent = new PublicacionesEtiquetadas(vMain, true, dao, publi, usu, usuarioPerfil, this);
+        vent.setVisible(true);
     }//GEN-LAST:event_btnEtiquetasActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -863,6 +930,8 @@ public class Perfil extends javax.swing.JDialog {
 
     private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
         // TODO add your handling code here:
+        MejoresAmigos vent = new MejoresAmigos(vMain, this, true, dao, usu);
+        vent.setVisible(true);
     }//GEN-LAST:event_btnMejoresAmigosActionPerformed
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
@@ -914,8 +983,10 @@ public class Perfil extends javax.swing.JDialog {
     private javax.swing.JLabel lblSeguidoresText;
     private javax.swing.JLabel lblSeguidos;
     private javax.swing.JLabel lblSeguidosText;
+    private javax.swing.JLabel lblSigue;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVerificado;
+    private javax.swing.JPanel noSigue;
     private javax.swing.JRadioButton rdbtnFoto;
     private javax.swing.JRadioButton rdbtnHistoria;
     private javax.swing.JRadioButton rdbtnReel;

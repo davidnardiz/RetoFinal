@@ -5,24 +5,28 @@ import clases.Usuario;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.DAO;
 
 public class Subir_Foto extends javax.swing.JPanel {
 
     private Subir subir;
+    private DAO dao;
+    private Usuario usu;
 
     public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
         try {
             initComponents();
-
             this.subir = subir;
+            this.dao = dao;
+            this.usu = usu;
 
             List<Cancion> canciones = dao.listarCanciones();
             for (Cancion i : canciones) {
-                cbCancion.addItem(i.getTitulo());
+                cbCancion.addItem(i.getTitulo() + " - " + i.getArtista());
             }
             cbCancion.setSelectedIndex(-1);
-
             List<Usuario> etiquetados = dao.listarUsuario();
             for (Usuario i : etiquetados) {
                 cbEtiquetado.addItem(i.getUsuario());

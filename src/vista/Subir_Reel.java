@@ -10,16 +10,20 @@ import modelo.DAO;
 public class Subir_Reel extends javax.swing.JPanel {
 
     private Subir subir;
+    private DAO dao;
+    private Usuario usu;
 
     public Subir_Reel(Subir subir, boolean par, DAO dao, Usuario usu) {
+        initComponents();
+
+        this.dao = dao;
+        this.usu = usu;
+        this.subir = subir;
+
         try {
-            initComponents();
-
-            this.subir = subir;
-
             List<Cancion> canciones = dao.listarCanciones();
             for (Cancion i : canciones) {
-                cbCancion.addItem(i.getTitulo());
+                cbCancion.addItem(i.getTitulo() + " - " + i.getArtista());
             }
             cbCancion.setSelectedIndex(-1);
 

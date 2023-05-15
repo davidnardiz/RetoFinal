@@ -10,7 +10,5 @@ public class Instagram {
 		DAO dao = new DAOImplementacionBD();
 		VMain main = new VMain(dao);
                 main.setVisible(true);
-
 	}
-
 }

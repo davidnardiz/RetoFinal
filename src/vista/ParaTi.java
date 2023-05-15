@@ -52,9 +52,9 @@ public class ParaTi extends javax.swing.JDialog {
         try {
             publicacionesDisponibles = dao.listarPublicacionesParaTi(usu.getUsuario());
         } catch (ErrVariados ex) {
-            Logger.getLogger(ParaTi.class.getName()).log(Level.SEVERE, null, ex);
+            ex.mostrarError();
         } catch (ErrSelect ex) {
-            Logger.getLogger(ParaTi.class.getName()).log(Level.SEVERE, null, ex);
+            ex.mostrarError();
         }
 
         siguienteFoto();
@@ -95,6 +95,12 @@ public class ParaTi extends javax.swing.JDialog {
                     btnLike.setSelected(true);
                 } else {
                     btnLike.setSelected(false);
+                }
+
+                if (dao.comprobarGuardado(usu.getUsuario(), publi.getId_publicacion())) {
+                    btnGuardar.setSelected(true);
+                } else {
+                    btnGuardar.setSelected(false);
                 }
 
                 lblDescripcion.setVisible(true);
@@ -294,6 +300,7 @@ public class ParaTi extends javax.swing.JDialog {
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/guardadd.png"))); // NOI18N
         btnGuardar.setBorder(null);
         btnGuardar.setBorderPainted(false);
+        btnGuardar.setContentAreaFilled(false);
         btnGuardar.setFocusPainted(false);
         btnGuardar.setFocusable(false);
         btnGuardar.setHideActionText(true);
@@ -305,7 +312,7 @@ public class ParaTi extends javax.swing.JDialog {
                 btnGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(408, 635, -1, -1));
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 640, 40, 40));
 
         franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
         franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -525,7 +532,7 @@ public class ParaTi extends javax.swing.JDialog {
                 buscarEtiquetado(evt);
             }
         });
-        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 640, -1, -1));
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 640, -1, -1));
 
         lblMegusta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         lblMegusta.setForeground(new java.awt.Color(255, 255, 255));

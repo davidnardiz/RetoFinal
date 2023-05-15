@@ -5,7 +5,6 @@ import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
-import excepciones.VentanaError;
 import java.awt.Color;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,8 +19,8 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     private Usuario nosotros;
     private int cant = 0;
 
-    public BloquearDesbloquear(VMain conector, JDialog parent, boolean modal, DAO dao, Usuario usu) {
-        super(parent, modal);
+    public BloquearDesbloquear(VMain vMain, Perfil aThis, boolean modal, DAO dao, Usuario usu) {
+        super(vMain, modal);
         this.dao = dao;
         this.nosotros = usu;
         getContentPane().setBackground(new Color(49, 51, 53));
@@ -34,6 +33,44 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         bloqueados.setBorder(null);
 
         bloquear();
+
+    }
+
+    private void bloquear() {
+        try {
+            bloqueados.removeAllItems();
+            btnBloqDesbloq.setText("Bloquear");
+            List<Usuario> etiquetados = dao.listarDesbloqueados(nosotros);
+            for (Usuario i : etiquetados) {
+                if (i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())) {
+
+                } else {
+                    bloqueados.addItem(i.getUsuario());
+                }
+
+            }
+            bloqueados.setSelectedIndex(-1);
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+    }
+
+    private void desbloquear() {
+        try {
+            bloqueados.removeAllItems();
+            btnBloqDesbloq.setText("Desbloquear");
+            List<Usuario> etiquetados = dao.listarBloqueados(nosotros);
+            for (Usuario i : etiquetados) {
+                bloqueados.addItem(i.getUsuario());
+            }
+            bloqueados.setSelectedIndex(-1);
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -106,6 +143,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         bloqueados.setToolTipText("");
 
         btnBloqDesbloq.setText("Bloquear");
+        btnBloqDesbloq.setBorder(null);
         btnBloqDesbloq.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBloqDesbloqActionPerformed(evt);
@@ -124,8 +162,8 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bloqueados, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(bloquear)
-                        .addGap(115, 115, 115)
+                        .addComponent(bloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(99, 99, 99)
                         .addComponent(desbloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
@@ -154,38 +192,29 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     private void bloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bloquearActionPerformed
         // TODO add your handling code here:
         bloquear();
-
     }//GEN-LAST:event_bloquearActionPerformed
 
     private void desbloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desbloquearActionPerformed
-        try {
-            bloqueados.removeAllItems();
-            btnBloqDesbloq.setText("Desbloquear");
-            List<Usuario> etiquetados = dao.listarBloqueados(nosotros);
-            for (Usuario i : etiquetados) {
-                bloqueados.addItem(i.getUsuario());
-            }
-            bloqueados.setSelectedIndex(-1);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados(ex.getMessage());
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect(ex.getMessage());
-        }
+        // TODO add your handling code here:
+        desbloquear();
     }//GEN-LAST:event_desbloquearActionPerformed
 
     private void btnBloqDesbloqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloqDesbloqActionPerformed
+        // TODO add your handling code here:
         try {
             if (bloquear.isSelected()) {
                 dao.bloquearUsuario(nosotros, bloqueados.getSelectedItem().toString());
+                bloquear();
             } else {
                 dao.desbloquearUsuario(nosotros, bloqueados.getSelectedItem().toString());
+                desbloquear();
             }
         } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados(ex.getMessage());
+            ex.mostrarError();
         } catch (ErrInsert ex) {
-            ErrInsert er = new ErrInsert(ex.getMessage());
+            ex.mostrarError();
         } catch (ErrDelete ex) {
-            ErrDelete er = new ErrDelete(ex.getMessage());
+            ex.mostrarError();
         }
     }//GEN-LAST:event_btnBloqDesbloqActionPerformed
 
@@ -199,26 +228,5 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblLogoLetras;
     // End of variables declaration//GEN-END:variables
-
-    private void bloquear() {
-        try {
-            bloqueados.removeAllItems();
-            btnBloqDesbloq.setText("Bloquear");
-            List<Usuario> etiquetados = dao.listarDesbloqueados(nosotros);
-            for (Usuario i : etiquetados) {
-                if (i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())) {
-
-                } else {
-                    bloqueados.addItem(i.getUsuario());
-                }
-
-            }
-            bloqueados.setSelectedIndex(-1);
-        } catch (ErrVariados ex) {
-            ErrVariados er = new ErrVariados(ex.getMessage());
-        } catch (ErrSelect ex) {
-            ErrSelect er = new ErrSelect(ex.getMessage());
-        }
-    }
 
 }
