@@ -10,7 +10,5 @@ public class Instagram {
 		DAO dao = new DAOImplementacionBD();
 		Conector main = new Conector(dao);
                 main.setVisible(true);
-
 	}
-
 }

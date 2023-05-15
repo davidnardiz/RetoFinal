@@ -39,12 +39,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="bloqueados" min="-2" pref="287" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="bloquear" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
+                      <Component id="bloquear" min="-2" pref="87" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
                       <Component id="desbloquear" min="-2" pref="100" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="btnBloqDesbloq" alignment="0" min="-2" pref="129" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnBloqDesbloq" min="-2" pref="129" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -170,6 +174,9 @@
     <Component class="javax.swing.JButton" name="btnBloqDesbloq">
       <Properties>
         <Property name="text" type="java.lang.String" value="Bloquear"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="null"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBloqDesbloqActionPerformed"/>

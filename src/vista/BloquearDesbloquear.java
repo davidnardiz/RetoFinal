@@ -27,6 +27,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         bloqueados.setBorder(null);
         
         bloquear();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -99,6 +100,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         bloqueados.setToolTipText("");
 
         btnBloqDesbloq.setText("Bloquear");
+        btnBloqDesbloq.setBorder(null);
         btnBloqDesbloq.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBloqDesbloqActionPerformed(evt);
@@ -117,8 +119,8 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bloqueados, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(bloquear)
-                        .addGap(115, 115, 115)
+                        .addComponent(bloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(99, 99, 99)
                         .addComponent(desbloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
@@ -147,29 +149,23 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     private void bloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bloquearActionPerformed
         // TODO add your handling code here:
         bloquear();
-        
-
-
     }//GEN-LAST:event_bloquearActionPerformed
 
     private void desbloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desbloquearActionPerformed
         // TODO add your handling code here:
-        bloqueados.removeAllItems();
-        btnBloqDesbloq.setText("Desbloquear");
-        List<Usuario> etiquetados = dao.listarBloqueados(nosotros);
-        for (Usuario i : etiquetados) {
-            bloqueados.addItem(i.getUsuario());
-        }
-        bloqueados.setSelectedIndex(-1);
+        desbloquear();
     }//GEN-LAST:event_desbloquearActionPerformed
 
     private void btnBloqDesbloqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloqDesbloqActionPerformed
         // TODO add your handling code here:
-        if(bloquear.isSelected()){
+        if (bloquear.isSelected()) {
             dao.bloquearUsuario(nosotros, bloqueados.getSelectedItem().toString());
-        } else{
+            bloquear();
+        } else {
             dao.desbloquearUsuario(nosotros, bloqueados.getSelectedItem().toString());
+            desbloquear();
         }
+        
     }//GEN-LAST:event_btnBloqDesbloqActionPerformed
 
 
@@ -189,15 +185,24 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         btnBloqDesbloq.setText("Bloquear");
         List<Usuario> etiquetados = dao.listarDesbloqueados(nosotros);
         for (Usuario i : etiquetados) {
-            if(i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())){
-                
-            } else{
+            if (i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())) {
+
+            } else {
                 bloqueados.addItem(i.getUsuario());
             }
-            
+
         }
         bloqueados.setSelectedIndex(-1);
     }
 
-    
+    private void desbloquear() {
+        bloqueados.removeAllItems();
+        btnBloqDesbloq.setText("Desbloquear");
+        List<Usuario> etiquetados = dao.listarBloqueados(nosotros);
+        for (Usuario i : etiquetados) {
+            bloqueados.addItem(i.getUsuario());
+        }
+        bloqueados.setSelectedIndex(-1);
+    }
+
 }

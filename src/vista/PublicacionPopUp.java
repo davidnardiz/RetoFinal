@@ -6,6 +6,7 @@ import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
 import java.awt.Color;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.DAO;
@@ -18,6 +19,8 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private Publicacion publi;
     private Perfil cerrarPerfil;
     private Conector conector;
+    private List<Publicacion> publicaciones;
+    private boolean guardado;
 
     public PublicacionPopUp(Conector conector1, ParaTi parent, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
         super(parent, modal);
@@ -70,6 +73,12 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         if (dao.comprobarLike(usu.getUsuario(), publi.getId_publicacion())) {
             btnLike.setSelected(true);
         }
+        guardado = dao.comprobarGuardado(usu.getUsuario(), publi.getId_publicacion());
+        if(guardado){
+            btnGuardar.setSelected(true);
+        }else{
+            btnGuardar.setSelected(false);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -85,6 +94,7 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnLike = new javax.swing.JToggleButton();
         btnEtiquetado = new javax.swing.JButton();
         lblDescripcion = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -113,8 +123,6 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         getContentPane().add(lblHistoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, -3, 100, 100));
         lblHistoria.setVisible(false);
 
-        lblMegusta.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        lblMegusta.setForeground(new java.awt.Color(255, 255, 255));
         lblMegusta.setPreferredSize(new java.awt.Dimension(209, 40));
         getContentPane().add(lblMegusta, new org.netbeans.lib.awtextra.AbsoluteConstraints(136, 576, -1, -1));
 
@@ -122,8 +130,6 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnLike.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/btnLike(false).png"))); // NOI18N
         btnLike.setBorder(null);
         btnLike.setBorderPainted(false);
-        btnLike.setContentAreaFilled(false);
-        btnLike.setFocusPainted(false);
         btnLike.setFocusable(false);
         btnLike.setPreferredSize(new java.awt.Dimension(46, 46));
         btnLike.setRolloverEnabled(false);
@@ -142,17 +148,28 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnEtiquetado.setFocusPainted(false);
         btnEtiquetado.setFocusable(false);
         btnEtiquetado.setRolloverEnabled(false);
-        btnEtiquetado.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnEtiquetadoMouseClicked(evt);
-            }
-        });
-        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 580, -1, -1));
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 590, -1, -1));
         btnEtiquetado.setVisible(false);
 
         lblDescripcion.setPreferredSize(new java.awt.Dimension(410, 27));
         getContentPane().add(lblDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 623, -1, -1));
         lblDescripcion.setVisible(false);
+
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/guardadd.png"))); // NOI18N
+        btnGuardar.setBorder(null);
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setFocusable(false);
+        btnGuardar.setHideActionText(true);
+        btnGuardar.setRequestFocusEnabled(false);
+        btnGuardar.setRolloverEnabled(false);
+        btnGuardar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/guardd2.png"))); // NOI18N
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 590, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -179,8 +196,22 @@ public class PublicacionPopUp extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnEtiquetadoMouseClicked
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        guardar();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void guardar() {
+        if (btnGuardar.isSelected()) {
+            dao.guardarPublicación(usu.getUsuario(), publi.getId_publicacion());
+        } else {
+            dao.eliminarPublicacion(usu.getUsuario(), publi.getId_publicacion());
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEtiquetado;
+    private javax.swing.JToggleButton btnGuardar;
     private javax.swing.JToggleButton btnLike;
     private javax.swing.JLabel imagen;
     private javax.swing.JLabel lblDescripcion;

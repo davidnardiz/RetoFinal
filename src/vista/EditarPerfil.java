@@ -27,12 +27,11 @@ public class EditarPerfil extends javax.swing.JDialog {
 
     public EditarPerfil(Conector con, ParaTi paraTi, boolean modal, DAO dao, Usuario usu, Usuario usuarioPerfil) {
         super(con, modal);
+        this.dao = dao;
+        this.conector = con;
         this.nosotros = usu;
-        this.dao=dao;
-        this.conector=con;
-        this.us=usu;
-        this.usuarioPerfil=usuarioPerfil;
-        this.paraTi=paraTi;
+        this.usuarioPerfil = usuarioPerfil;
+        this.paraTi = paraTi;
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
         setLocationRelativeTo(null);
@@ -162,29 +161,38 @@ public class EditarPerfil extends javax.swing.JDialog {
 
     private void btnEnviarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarDatosActionPerformed
         editarDatos();
+        
     }//GEN-LAST:event_btnEnviarDatosActionPerformed
 
     private void fotoPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoPerfilMouseClicked
-       ruta=Utilidades.seleccionarIcono(this);
-       fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" +ruta)));
+        ruta = Utilidades.seleccionarIcono(this);
+        if(ruta != null){
+            fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + ruta)));
+        }
     }//GEN-LAST:event_fotoPerfilMouseClicked
 
     private void cerrar() {
         this.dispose();
-        Perfil per = new Perfil(conector, paraTi, true, dao, us, usuarioPerfil);
+        Perfil per = new Perfil(conector, paraTi, true, dao, nosotros, nosotros);
         per.setVisible(true);
     }
 
     private void editarDatos() {
         Usuario us = new Usuario();
         us.setUsuario(usuario.getText());
-        us.setIcono(ruta);
+        if (ruta == null) {
+            us.setIcono(nosotros.getIcono());
+        } else {
+            us.setIcono(ruta);
+        }
+
         us.setContrasenia(contrasenia.getText());
         us.setCorreo(correo.getText());
         us.setTelefono(Integer.parseInt(telefono.getText()));
         dao.editarPerfil(us);
-       
-        
+        nosotros=dao.buscarUsuario(us.getUsuario());
+        System.out.println(nosotros.toString());
+        cerrar();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

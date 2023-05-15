@@ -3,18 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/PanelLoginAndRegister.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/Subir.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/Buscar.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/PublicacionPopUp.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/EditarPerfil.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/ParaTi.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/controlador/Instagram.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/modelo/DAOImplementacionBD.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/modelo/DAO.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/Tienda.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/BloquearDesbloquear.java</file>
-            <file>file:/C:/Users/1dam/Desktop/CLONE%2026-04-2023/CLONE%2025-04/RetoFinal/src/vista/Perfil.java</file>
+            <file>file:/C:/Users/David/Desktop/David/RetoFinal/src/vista/PublicacionesGuardadas.java</file>
+            <file>file:/C:/Users/David/Desktop/David/RetoFinal/src/vista/Perfil.java</file>
+            <file>file:/C:/Users/David/Desktop/David/RetoFinal/src/vista/PublicacionesEtiquetadas.java</file>
+            <file>file:/C:/Users/David/Desktop/David/RetoFinal/src/vista/ParaTi.java</file>
+            <file>file:/C:/Users/David/Desktop/David/RetoFinal/src/vista/PublicacionPopUp.java</file>
         </group>
     </open-files>
 </project-private>

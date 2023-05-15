@@ -66,7 +66,9 @@ public class Subir extends javax.swing.JDialog {
             id = dao.calcularId("F");
 
             if (ventanaFoto.cbCancion.getSelectedIndex() != -1) {
-                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaFoto.cbCancion.getSelectedItem().toString()).getId_cancion());
+                int n = (ventanaFoto.cbCancion.getSelectedItem().toString()).indexOf('-');
+                String tit = ventanaFoto.cbCancion.getSelectedItem().toString().substring(0, n-1);
+                publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
             }
 
             if (ventanaFoto.cbEtiquetado.getSelectedIndex() != -1) {
@@ -83,7 +85,9 @@ public class Subir extends javax.swing.JDialog {
             id = dao.calcularId("R");
 
             if (ventanaReel.cbCancion.getSelectedIndex() != -1) {
-                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaReel.cbCancion.getSelectedItem().toString()).getId_cancion());
+                int n = (ventanaReel.cbCancion.getSelectedItem().toString()).indexOf('-');
+                String tit = ventanaReel.cbCancion.getSelectedItem().toString().substring(0, n-1);
+                publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
             }
 
             publi.setUbicacion(ventanaReel.txtUbicacion.getText());
@@ -96,6 +100,8 @@ public class Subir extends javax.swing.JDialog {
             id = dao.calcularId("H");
 
             if (ventanaHistoria.cbCancion.getSelectedIndex() != -1) {
+                int n = (ventanaHistoria.cbCancion.getSelectedItem().toString()).indexOf('-');
+                String tit = ventanaHistoria.cbCancion.getSelectedItem().toString().substring(0, n-1);
                 publi.setId_cancion(dao.buscarCancionXTitulo(ventanaHistoria.cbCancion.getSelectedItem().toString()).getId_cancion());
             }
 

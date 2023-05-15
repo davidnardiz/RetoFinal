@@ -23,6 +23,7 @@ public class ParaTi extends javax.swing.JDialog {
     private Publicacion publi;
     private Usuario usuPubli;
     private List<String> hanSalido = new ArrayList<>();
+    private boolean guardado;
 
     public ParaTi(Conector conector, JLayeredPane parent, boolean modal, DAO dao, Usuario usu) {
         this.setModal(modal);
@@ -36,8 +37,8 @@ public class ParaTi extends javax.swing.JDialog {
         initComponents();
 
         setLocationRelativeTo(null);
-
         siguienteFoto();
+        
     }
 
     private void siguienteFoto() throws NullPointerException {
@@ -63,6 +64,12 @@ public class ParaTi extends javax.swing.JDialog {
             btnLike.setSelected(false);
         }
 
+        if (dao.comprobarGuardado(usu.getUsuario(), publi.getId_publicacion())) {
+            btnGuardar.setSelected(true);
+        } else {
+            btnGuardar.setSelected(false);
+        }
+        
         lblDescripcion.setVisible(true);
         lblVerificado.setVisible(false);
         getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
@@ -100,6 +107,8 @@ public class ParaTi extends javax.swing.JDialog {
                 lblHistoria.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/pantalla/esHistoria.png")));
             }
         }
+        
+        
 
     }
 
@@ -191,7 +200,7 @@ public class ParaTi extends javax.swing.JDialog {
                 btnGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(408, 635, -1, -1));
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 640, -1, -1));
 
         franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
         franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -411,7 +420,7 @@ public class ParaTi extends javax.swing.JDialog {
                 buscarEtiquetado(evt);
             }
         });
-        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 640, -1, -1));
+        getContentPane().add(btnEtiquetado, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 640, -1, -1));
 
         lblMegusta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         lblMegusta.setForeground(new java.awt.Color(255, 255, 255));
@@ -469,6 +478,8 @@ public class ParaTi extends javax.swing.JDialog {
             System.out.println(usuPubli.toString());
 
         }
+        btnGuardar.setSelected(false);
+        guardar();
 
     }//GEN-LAST:event_imagenClickada
 
@@ -524,6 +535,7 @@ public class ParaTi extends javax.swing.JDialog {
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVerificado;
     // End of variables declaration//GEN-END:variables
+
 
     
 }

@@ -25,7 +25,8 @@ public class Perfil extends javax.swing.JDialog {
     private Usuario usu;
     private Conector conector;
     private List<Publicacion> publicacionesList;
-
+    private Publicacion publi;
+    
     public Perfil(Conector conector, ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
         super(parent, modal);
         this.setModal(modal);
@@ -117,7 +118,7 @@ public class Perfil extends javax.swing.JDialog {
 
     private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
-        Publicacion publi = null;
+        publi = null;
 
         for (Publicacion i : publicacionesList) {
             if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
@@ -760,10 +761,14 @@ public class Perfil extends javax.swing.JDialog {
 
     private void btnPublisGuardadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublisGuardadasActionPerformed
         // TODO add your handling code here:
+        PublicacionesGuardadas vent = new PublicacionesGuardadas(conector, paraTi, true, dao, publi, usu, usuarioPerfil, this);
+        vent.setVisible(true);
     }//GEN-LAST:event_btnPublisGuardadasActionPerformed
 
     private void btnEtiquetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetasActionPerformed
         // TODO add your handling code here:
+        PublicacionesEtiquetadas vent = new PublicacionesEtiquetadas(conector, paraTi, true, dao, publi, usu, usuarioPerfil, this);
+        vent.setVisible(true);
     }//GEN-LAST:event_btnEtiquetasActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -781,6 +786,8 @@ public class Perfil extends javax.swing.JDialog {
 
     private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
         // TODO add your handling code here:
+        MejoresAmigos vent = new MejoresAmigos(conector, this, true, dao, usu);
+        vent.setVisible(true);
     }//GEN-LAST:event_btnMejoresAmigosActionPerformed
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed

@@ -28,6 +28,10 @@ public interface DAO {
     public List<Publicacion> listarPublicaciones();
 
     public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo);
+    
+    public List<Publicacion> listarPublicacionesGuardadas(String usuario);
+    
+    public List<Publicacion> listarPublicacionesEtiquetadas(String usuario);
 
     public String calcularId(String tipo);
 
@@ -55,6 +59,8 @@ public interface DAO {
 
     public boolean comprobarLike(String usuario, String publicacion);
     
+    public boolean comprobarGuardado(String usuario, String publicacion);
+    
     public boolean verSeguimiento(String nosotros, String usuarioPerfil);
     
     public List<Usuario> listarBloqueados(Usuario usuario);
@@ -72,4 +78,14 @@ public interface DAO {
     public void eliminarPublicacion(String usuario, String id_publicacion);
 
     public void desbloquearUsuario(Usuario nosotros, String usu);
+
+    public void vaciarPublicacionesGuardadas(String usuario);
+
+    public List<Usuario> listarMejoresAmigos(Usuario nosotros);
+
+    public List<Usuario> listarNoMejoresAmigos(Usuario nosotros);
+
+    public void aniadirAmigo(Usuario nosotros, String usu);
+
+    public void quitarAmigo(Usuario nosotros, String usu);
 }

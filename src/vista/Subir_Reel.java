@@ -20,7 +20,7 @@ public class Subir_Reel extends javax.swing.JPanel {
 
         List<Cancion> canciones = dao.listarCanciones();
         for (Cancion i : canciones) {
-            cbCancion.addItem(i.getTitulo());
+            cbCancion.addItem(i.getTitulo() +" - "+ i.getArtista());
         }
         cbCancion.setSelectedIndex(-1);
 
