@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -23,6 +24,8 @@ import panelMensaje.DefaultOption;
 import panelMensaje.GlassPanePopup;
 import panelMensaje.ModernScrollBarUI;
 import panelMensaje.Notifications;
+import tienda.FiltrarPanel;
+
 import tienda.panelContenido;
 
 public class Tienda extends javax.swing.JDialog {
@@ -34,6 +37,7 @@ public class Tienda extends javax.swing.JDialog {
     private boolean borrar;
     private boolean modificar;
     private List<Articulo> ar;
+    private FiltrarPanel filtrarPanel = new FiltrarPanel(this);
 
     public Tienda(ParaTi parent, boolean modal, DAO dao, Usuario usu) {
         super(parent, modal);
@@ -61,7 +65,7 @@ public class Tienda extends javax.swing.JDialog {
         sb.setPreferredSize(new Dimension(8, 8));
         sb.setUI(new ModernScrollBarUI());
         scroll.setBackground(new Color(49, 51, 53));
-        cargarElementos();
+        cargarElementos(false);
         panel.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[][]"));
         panel.setBackground(new Color(49, 51, 53));
         panelOpciones.setBackground(new Color(49, 51, 53));
@@ -120,6 +124,7 @@ public class Tienda extends javax.swing.JDialog {
         lblSubir = new javax.swing.JLabel();
         panelDestino = new javax.swing.JPanel();
         opciones2 = new javax.swing.JLabel();
+        filtrar = new javax.swing.JLabel();
 
         javax.swing.GroupLayout panelCarritoCompraLayout = new javax.swing.GroupLayout(panelCarritoCompra);
         panelCarritoCompra.setLayout(panelCarritoCompraLayout);
@@ -342,13 +347,11 @@ public class Tienda extends javax.swing.JDialog {
             .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addGap(4, 4, 4)
                 .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(8, 8, 8))
+                    .addComponent(lblBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblModificar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lblModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelOpcionesLayout.setVerticalGroup(
             panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -384,6 +387,14 @@ public class Tienda extends javax.swing.JDialog {
             }
         });
         getContentPane().add(opciones2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 630, 53, 50));
+
+        filtrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/filtrar.jpg"))); // NOI18N
+        filtrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                filtrarMouseClicked(evt);
+            }
+        });
+        getContentPane().add(filtrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, -1, 50));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -509,7 +520,7 @@ public class Tienda extends javax.swing.JDialog {
     private void carritoCompraLlenoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_carritoCompraLlenoMouseClicked
 
         boolean tien = true;
-        GlassPanePopup.showPopup(new Notifications(usu, dao, tien, ar, this), new DefaultOption() {
+        GlassPanePopup.showPopup(new Notifications(usu, dao, tien, ar, this, false, filtrarPanel), new DefaultOption() {
 
             @Override
             public float opacity() {
@@ -534,6 +545,33 @@ public class Tienda extends javax.swing.JDialog {
         });
     }//GEN-LAST:event_carritoCompraLlenoMouseClicked
 
+    private void filtrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtrarMouseClicked
+
+        GlassPanePopup.showPopup(new Notifications(usu, dao, false, ar, this, true, filtrarPanel), new DefaultOption() {
+
+            @Override
+            public float opacity() {
+                return 0;
+            }
+
+            @Override
+            public LayoutCallback getLayoutCallBack(Component parent) {
+                return new DefaultLayoutCallBack(parent) {
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()) {
+                            cw.setBounds(265, 122, 380, 500);
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+
+                };
+            }
+
+        });
+    }//GEN-LAST:event_filtrarMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCuenta;
@@ -542,6 +580,7 @@ public class Tienda extends javax.swing.JDialog {
     private javax.swing.JButton btnTienda;
     private javax.swing.JLabel carritoCompra1;
     private javax.swing.JLabel carritoCompraLleno;
+    private javax.swing.JLabel filtrar;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JLabel lblBorrar;
@@ -558,27 +597,54 @@ public class Tienda extends javax.swing.JDialog {
     private javax.swing.JScrollPane scroll;
     // End of variables declaration//GEN-END:variables
 
-    public void cargarElementos() {
+    public void cargarElementos(boolean filtrar) {
         panel.removeAll();
-        List<Articulo> articulos = dao.sacarTodosLosArticulos();
+        if (filtrar) {
+            int max = filtrarPanel.obtenerMax();
+            int min = filtrarPanel.obtenerMin();
+            int opc = filtrarPanel.obtenerOpc();
 
-        for (Articulo art : articulos) {
-            int cont = 0;
-            String usuV = art.getVendedor();
-            Usuario otroUsu = dao.buscarUsuario(usuV);
-            Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-            Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+            List<Articulo> articulos = dao.sacarArituclosPorPrecio(min, max, opc);
 
-            for (Articulo a : ar) {
-                if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
-                    cont++;
-                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true));
+            for (Articulo art : articulos) {
+                int cont = 0;
+                String usuV = art.getVendedor();
+                Usuario otroUsu = dao.buscarUsuario(usuV);
+                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+
+                for (Articulo a : ar) {
+                    if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
+                        cont++;
+                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                    }
                 }
-            }
-            if (cont == 0) {
-                panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false));
-            }
+                if (cont == 0) {
+                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
+                }
 
+            }
+        } else {
+            List<Articulo> articulos = dao.sacarTodosLosArticulos();
+
+            for (Articulo art : articulos) {
+                int cont = 0;
+                String usuV = art.getVendedor();
+                Usuario otroUsu = dao.buscarUsuario(usuV);
+                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+
+                for (Articulo a : ar) {
+                    if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
+                        cont++;
+                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                    }
+                }
+                if (cont == 0) {
+                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
+                }
+
+            }
         }
 
         ///

@@ -10,6 +10,8 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import modelo.DAO;
+import panelMensaje.Message;
+import vista.AniadirProducto;
 import vista.Tienda;
 
 /**
@@ -32,12 +34,14 @@ public class panelContenido2 extends javax.swing.JPanel {
     private String descrip;
     private String prec;
     private String peso;
+    private AniadirProducto produc;
 
-    public panelContenido2(Icon icon, Icon image, String nombreP, String prec, String descrip, DAO dao, Tienda tien, boolean borrarB, String id, boolean modificar, String peso) {
+    public panelContenido2(Icon icon, Icon image, String nombreP, String prec, String descrip, DAO dao, Tienda tien, boolean borrarB, String id, boolean modificar, String peso, AniadirProducto produc) {
         initComponents();
         setBackground(new Color(49, 51, 53));
         pic.setIcon(icon);
         this.dao = dao;
+        this.produc = produc;
         this.descrip = descrip;
         this.prec = prec;
         this.peso = peso;
@@ -126,7 +130,8 @@ public class panelContenido2 extends javax.swing.JPanel {
             art.setPrecio(Float.parseFloat(precioModificar.getText()));
             art.setPeso(Float.parseFloat(pesoModificar.getText()));
             dao.modificarArt(art);
-            System.out.println("cambiado!!!!!");
+            produc.dispose();
+            tien.cargarElementos(false);
         }
 
     }//GEN-LAST:event_lblModificarMouseClicked

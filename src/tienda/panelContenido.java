@@ -7,21 +7,13 @@ package tienda;
 import clases.Articulo;
 import clases.Usuario;
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import modelo.DAO;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
-import vista.ParaTi;
+import vista.AniadirProducto;
 import vista.Tienda;
 
 /**
@@ -44,12 +36,14 @@ public class panelContenido extends javax.swing.JPanel {
     private Articulo art;
     public List<Articulo> artCarrito;
     public boolean mostrar;
+    private AniadirProducto produc;
 
-    public panelContenido(Icon icon, Icon image, DAO dao, Tienda tien, boolean borrarB, boolean modificar, Usuario usu, Articulo art, boolean mostrar) {
+    public panelContenido(Icon icon, Icon image, DAO dao, Tienda tien, boolean borrarB, boolean modificar, Usuario usu, Articulo art, boolean mostrar, AniadirProducto produc) {
         initComponents();
         setBackground(new Color(49, 51, 53));
         pic.setIcon(icon);
         this.artCarrito = artCarrito;
+        this.produc = produc;
         this.art = art;
         this.dao = dao;
         this.usu = usu;
@@ -215,10 +209,13 @@ public class panelContenido extends javax.swing.JPanel {
 
         List<Articulo> a = tien.getAr();
         a.add(ar);
+
     }//GEN-LAST:event_comprarMouseClicked
 
     private void borrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrarMouseClicked
         dao.borrarArticulo(art.getId_articulo());
+        tien.cargarElementos(false);
+        produc.dispose();
     }//GEN-LAST:event_borrarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

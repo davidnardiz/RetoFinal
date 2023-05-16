@@ -64,6 +64,8 @@ public interface DAO {
 
     public int obtenerValoracion(Articulo ar);
 
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc);
+
     // Alters
     public void modificarArt(Articulo art);
 

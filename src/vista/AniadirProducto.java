@@ -8,14 +8,25 @@ import clases.Articulo;
 import clases.Mensaje;
 import clases.Usuario;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollBar;
 import modelo.DAO;
+import net.miginfocom.layout.ComponentWrapper;
+import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
+import panelMensaje.DefaultLayoutCallBack;
+import panelMensaje.DefaultOption;
+import panelMensaje.GlassPanePopup;
+import panelMensaje.Message;
+import panelMensaje.ModernScrollBarUI;
+import panelMensaje.Notifications;
 import tienda.panelContenido;
 import tienda.panelContenido2;
 import utilidades.Utilidades;
@@ -40,25 +51,40 @@ public class AniadirProducto extends javax.swing.JDialog {
         super(tien, modal);
         this.dao = dao;
         this.usu = usu;
-
+        this.tien = tien;
         initComponents();
         getContentPane().setBackground(new Color(49, 51, 53));
+        JScrollBar sb = scroll.getVerticalScrollBar();
+        sb.setOpaque(false);
+        sb.setForeground(new Color(33, 140, 206));
+        sb.setPreferredSize(new Dimension(8, 8));
+        sb.setUI(new ModernScrollBarUI());
+        sb.setBackground(new Color(49, 51, 53));
+
+        JScrollBar sb2 = scroll2.getVerticalScrollBar();
+        sb2.setOpaque(false);
+        sb2.setForeground(new Color(33, 140, 206));
+        sb2.setPreferredSize(new Dimension(8, 8));
+        sb2.setUI(new ModernScrollBarUI());
+        sb2.setBackground(new Color(49, 51, 53));
+
         correcto.setVisible(false);
         pestañaAñadir.setBackground(new Color(49, 51, 53));
         pestañaBorrar.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[][]"));
         pestañaBorrar.setBackground(new Color(49, 51, 53));
 
-        pestañaModificar.setLayout(new MigLayout("inset 0, fillx, wrap 1", "fill", "[]"));
+        pestañaModificar.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[] []"));
         pestañaModificar.setBackground(new Color(49, 51, 53));
 
+        GlassPanePopup.install(tien, tien);
         cargarElementos();
         if (añadir) {
-            pestañas.setSelectedIndex(1);
-            pestañas.setEnabledAt(0, false);
-            pestañas.setEnabledAt(2, false);
-        } else if (borrar) {
             pestañas.setSelectedIndex(0);
             pestañas.setEnabledAt(1, false);
+            pestañas.setEnabledAt(2, false);
+        } else if (borrar) {
+            pestañas.setSelectedIndex(1);
+            pestañas.setEnabledAt(0, false);
             pestañas.setEnabledAt(2, false);
         } else if (modificar) {
             pestañas.setSelectedIndex(2);
@@ -72,6 +98,7 @@ public class AniadirProducto extends javax.swing.JDialog {
 
             }
         });
+
     }
 
     /**
@@ -87,7 +114,6 @@ public class AniadirProducto extends javax.swing.JDialog {
         lblLogo = new javax.swing.JLabel();
         lblLogoLetras = new javax.swing.JLabel();
         pestañas = new javax.swing.JTabbedPane();
-        pestañaBorrar = new javax.swing.JPanel();
         pestañaAñadir = new javax.swing.JPanel();
         subir = new javax.swing.JButton();
         Descripcion = new tienda.AgregarTexto();
@@ -97,6 +123,9 @@ public class AniadirProducto extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         aniadirFoto = new javax.swing.JButton();
         correcto = new javax.swing.JLabel();
+        scroll = new javax.swing.JScrollPane();
+        pestañaBorrar = new javax.swing.JPanel();
+        scroll2 = new javax.swing.JScrollPane();
         pestañaModificar = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -130,19 +159,6 @@ public class AniadirProducto extends javax.swing.JDialog {
         );
 
         pestañas.setToolTipText("");
-
-        javax.swing.GroupLayout pestañaBorrarLayout = new javax.swing.GroupLayout(pestañaBorrar);
-        pestañaBorrar.setLayout(pestañaBorrarLayout);
-        pestañaBorrarLayout.setHorizontalGroup(
-            pestañaBorrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 668, Short.MAX_VALUE)
-        );
-        pestañaBorrarLayout.setVerticalGroup(
-            pestañaBorrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 465, Short.MAX_VALUE)
-        );
-
-        pestañas.addTab("Borrar", pestañaBorrar);
 
         pestañaAñadir.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -191,6 +207,21 @@ public class AniadirProducto extends javax.swing.JDialog {
 
         pestañas.addTab("Añadir", pestañaAñadir);
 
+        javax.swing.GroupLayout pestañaBorrarLayout = new javax.swing.GroupLayout(pestañaBorrar);
+        pestañaBorrar.setLayout(pestañaBorrarLayout);
+        pestañaBorrarLayout.setHorizontalGroup(
+            pestañaBorrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 668, Short.MAX_VALUE)
+        );
+        pestañaBorrarLayout.setVerticalGroup(
+            pestañaBorrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 465, Short.MAX_VALUE)
+        );
+
+        scroll.setViewportView(pestañaBorrar);
+
+        pestañas.addTab("Borrar", scroll);
+
         javax.swing.GroupLayout pestañaModificarLayout = new javax.swing.GroupLayout(pestañaModificar);
         pestañaModificar.setLayout(pestañaModificarLayout);
         pestañaModificarLayout.setHorizontalGroup(
@@ -202,7 +233,9 @@ public class AniadirProducto extends javax.swing.JDialog {
             .addGap(0, 465, Short.MAX_VALUE)
         );
 
-        pestañas.addTab("Modificar", pestañaModificar);
+        scroll2.setViewportView(pestañaModificar);
+
+        pestañas.addTab("Modificar", scroll2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -265,6 +298,7 @@ public class AniadirProducto extends javax.swing.JDialog {
         dao.insertarArticulo(art);
 
         this.dispose();
+        tien.cargarElementos(false);
     }//GEN-LAST:event_subirMouseClicked
 
     /**
@@ -285,6 +319,8 @@ public class AniadirProducto extends javax.swing.JDialog {
     private javax.swing.JPanel pestañaBorrar;
     private javax.swing.JPanel pestañaModificar;
     private javax.swing.JTabbedPane pestañas;
+    private javax.swing.JScrollPane scroll;
+    private javax.swing.JScrollPane scroll2;
     private javax.swing.JButton subir;
     // End of variables declaration//GEN-END:variables
 
@@ -301,11 +337,37 @@ public class AniadirProducto extends javax.swing.JDialog {
                 Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
                 Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
 
-                pestañaBorrar.add(new panelContenido(icon, icon2, dao, tien, true, false, usu, art, true));
+                pestañaBorrar.add(new panelContenido(icon, icon2, dao, tien, true, false, usu, art, true, this));
 
-                pestañaModificar.add(new panelContenido2(icon, icon2, art.getVendedor(), precio, art.getDescripcion(), dao, tien, false, art.getId_articulo(), true, peso));
+                pestañaModificar.add(new panelContenido2(icon, icon2, art.getVendedor(), precio, art.getDescripcion(), dao, tien, false, art.getId_articulo(), true, peso, this));
 
             }
         }
+    }
+
+    public void popUpMensaje(Message mensaje) {
+        GlassPanePopup.showPopup(mensaje, new DefaultOption() {
+
+            @Override
+            public float opacity() {
+                return 0;
+            }
+
+            @Override
+            public LayoutCallback getLayoutCallBack(Component parent) {
+                return new DefaultLayoutCallBack(parent) {
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()) {
+                            cw.setBounds(215, 70, 380, 500);
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+
+                };
+            }
+
+        });
     }
 }

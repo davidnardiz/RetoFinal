@@ -51,6 +51,8 @@ public class DAOImplementacionBD implements DAO {
     final private String SACAR_PRODUCTOS = "SELECT * FROM articulo where lugar_entrega is null";
     final private String ULTIMO_ARTICULO = "SELECT id_articulo FROM articulo WHERE SUBSTRING(id_articulo, 1, 1) = ? ORDER BY id_articulo desc LIMIT 1;";
     final private String SACAR_MEDIA_VALORACION = "SELECT AVG(valoracion) AS media_valoracion from articulo where vendedor = ? and valoracion is not null ";
+    final private String SACAR_ARTICULO_ORDENADO = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio";
+    final private String SACAR_ARTICULO_ORDENADO_DESCENDETE = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio DESC ";
     // PARA TI
     final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
     final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
@@ -974,6 +976,66 @@ public class DAOImplementacionBD implements DAO {
         this.cerrarConexion();
         return valoracion;
 
+    }
+
+    @Override
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) {
+        List<Articulo> articulos = new ArrayList<>();
+        this.abrirConexion();
+
+        try {
+            if (opc == 0) {
+                int maxValor = Integer.MAX_VALUE;
+                stmt = con.prepareStatement(SACAR_ARTICULO_ORDENADO_DESCENDETE);
+                stmt.setInt(1, min);
+                if (max == 999) {
+                    stmt.setInt(2, maxValor);
+                } else {
+                    stmt.setInt(2, max);
+                }
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Articulo art = new Articulo();
+                    LocalDate fecha = rs.getDate("fecha_subida").toLocalDate();
+
+                    art.setId_articulo(rs.getString("id_articulo"));
+                    art.setDescripcion(rs.getString("descripcion"));
+                    art.setPrecio(rs.getFloat("precio"));
+                    art.setPeso(rs.getFloat("peso"));
+                    art.setFechaSubida(fecha);
+                    art.setImagen(rs.getString("imagen"));
+                    art.setLugarEntrega(rs.getString("lugar_entrega"));
+                    art.setVendedor(rs.getString("vendedor"));
+                    articulos.add(art);
+                }
+            } else {
+                stmt = con.prepareStatement(SACAR_ARTICULO_ORDENADO);
+                stmt.setInt(1, min);
+                stmt.setInt(2, max);
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Articulo art = new Articulo();
+                    LocalDate fecha = rs.getDate("fecha_subida").toLocalDate();
+
+                    art.setId_articulo(rs.getString("id_articulo"));
+                    art.setDescripcion(rs.getString("descripcion"));
+                    art.setPrecio(rs.getFloat("precio"));
+                    art.setPeso(rs.getFloat("peso"));
+                    art.setFechaSubida(fecha);
+                    art.setImagen(rs.getString("imagen"));
+                    art.setLugarEntrega(rs.getString("lugar_entrega"));
+                    art.setVendedor(rs.getString("vendedor"));
+                    articulos.add(art);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return articulos;
     }
 
 }

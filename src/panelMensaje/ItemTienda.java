@@ -160,7 +160,7 @@ public class ItemTienda extends javax.swing.JPanel {
         boolean tienB = true;
         GlassPanePopup.closePopupAll();
         // GlassPanePopup.closePopup();
-        GlassPanePopup.showPopup(new Notifications(usu, dao, tienB, art, tien), new DefaultOption() {
+        GlassPanePopup.showPopup(new Notifications(usu, dao, tienB, art, tien, true, null), new DefaultOption() {
 
             @Override
             public float opacity() {
@@ -189,7 +189,7 @@ public class ItemTienda extends javax.swing.JPanel {
             JLabel carrito1 = tien.getCarritoCompraLleno();
             carrito1.setVisible(false);
         }
-        tien.cargarElementos();
+        tien.cargarElementos(false);
 
         if (compra != null) {
             compra.dispose();

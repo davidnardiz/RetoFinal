@@ -20,6 +20,7 @@ import panelMensaje.DefaultLayoutCallBack;
 import panelMensaje.DefaultOption;
 import panelMensaje.GlassPanePopup;
 import panelMensaje.Notifications;
+import panelMensaje.NotificationsChat;
 import utilidades.Utilidades;
 
 public class ParaTi extends javax.swing.JDialog {
@@ -436,7 +437,7 @@ public class ParaTi extends javax.swing.JDialog {
         for (String men : conversaciones) {
             System.out.println(men);
         }
-        GlassPanePopup.showPopup(new Notifications(usu, dao, false, null, null), new DefaultOption() {
+        GlassPanePopup.showPopup(new NotificationsChat(usu, dao, false, null, null, true), new DefaultOption() {
             @Override
             public float opacity() {
                 return 0;

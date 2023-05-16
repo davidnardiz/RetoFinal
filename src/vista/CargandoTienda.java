@@ -28,7 +28,7 @@ public class CargandoTienda extends javax.swing.JDialog {
                         Thread.sleep(200);
                         if (i == 100) {
                             dispose();
-                            tien.cargarElementos();
+                            tien.cargarElementos(false);
                             tien.setVisible(true);
                         }
                     } catch (InterruptedException ex) {

@@ -15,8 +15,8 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import modelo.DAO;
-import prueba.ChatBox;
-import prueba.ChatEvent;
+import chat.ChatBox;
+import chat.ChatEvent;
 
 /**
  *
@@ -53,7 +53,7 @@ public class pruebaChat extends javax.swing.JDialog {
                 String nombre = usu.getUsuario();
                 String fecha = df.format(new Date());
                 String mensaje = chatArea.getText().trim();
-                chatArea.addChatBox(new prueba.ModelMessage(icon, nombre, fecha, mensaje), ChatBox.BoxType.RIGHT);
+                chatArea.addChatBox(new chat.ModelMessage(icon, nombre, fecha, mensaje), ChatBox.BoxType.RIGHT);
                 chatArea.clearTextAndGrabFocus();
 
                 Mensaje men = new Mensaje();
@@ -103,8 +103,8 @@ public class pruebaChat extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-        background1 = new prueba.Background();
-        chatArea = new prueba.ChatArea();
+        background1 = new chat.Background();
+        chatArea = new chat.ChatArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -302,13 +302,13 @@ public class pruebaChat extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private prueba.Background background1;
+    private chat.Background background1;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-    private prueba.ChatArea chatArea;
+    private chat.ChatArea chatArea;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JLabel lblLogo;
@@ -324,14 +324,14 @@ public class pruebaChat extends javax.swing.JDialog {
                 Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + usu.getIcono()));
                 String fecha = conver.getFechaEnvio().toString();
 
-                chatArea.addChatBox(new prueba.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.RIGHT);
+                chatArea.addChatBox(new chat.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.RIGHT);
             } else if (conver.getUsuario1().equalsIgnoreCase(usuario2)) {
                 Usuario otroUsu = dao.buscarUsuario(usuario2);
 
                 Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
                 String fecha = conver.getFechaEnvio().toString();
 
-                chatArea.addChatBox(new prueba.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.LEFT);
+                chatArea.addChatBox(new chat.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.LEFT);
             }
         }
     }

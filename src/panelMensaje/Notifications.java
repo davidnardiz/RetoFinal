@@ -18,10 +18,12 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.EmptyBorder;
 import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
+import tienda.FiltrarPanel;
 import vista.Buscar;
 import vista.Comprar;
 import vista.ParaTi;
@@ -42,13 +44,18 @@ public class Notifications extends javax.swing.JPanel {
     private boolean tienda;
     private List<Articulo> ar;
     private Tienda tien;
+    private boolean filtrar;
 
-    public Notifications(Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien) {
+    private FiltrarPanel filtrarPanel;
+
+    public Notifications(Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien, boolean filtrar, FiltrarPanel filtrarPanel) {
         this.usu = usu;
         this.dao = dao;
         this.tienda = tienda;
+        this.filtrarPanel = filtrarPanel;
         this.ar = ar;
         this.tien = tien;
+        this.filtrar = filtrar;
 
         initComponents();
 
@@ -72,25 +79,34 @@ public class Notifications extends javax.swing.JPanel {
             lblConver.setVisible(false);
             btnConversacion.setVisible(false);
         }
-        if (tienda) {
+        if (tienda && !filtrar) {
             btnConversacion.setVisible(false);
             lblConver.setVisible(false);
             lblTitulo.setVisible(false);
+            filtra.setVisible(false);
+        } else if (filtrar) {
+            lblTitulo.setText("Filtrar por:");
+            filtra.setVisible(true);
         } else {
             btnComprar.setVisible(false);
+            filtra.setVisible(false);
         }
     }
 
     private void loadNoti(List<String> conversaciones) {
 
-        if (tienda) {
+        if (tienda && !filtrar) {
+
             String rutaProyecto = System.getProperty("user.dir");
             for (Articulo art : ar) {
                 Icon icon2 = new ImageIcon(rutaProyecto + "\\src\\imagenes\\tienda\\" + art.getImagen());
                 panel.add(new ItemTienda(icon2, art, dao, usu, tienda, tien, null));
             }
-        } else {
+        } else if (filtrar) {
+            btnComprar.setVisible(false);
 
+            panel.add(filtrarPanel);
+        } else {
             String rutaProyecto = System.getProperty("user.dir");
 
             LocalDate fechaHoy = LocalDate.now();
@@ -139,6 +155,7 @@ public class Notifications extends javax.swing.JPanel {
         lblConver = new javax.swing.JLabel();
         btnConversacion = new javax.swing.JButton();
         btnComprar = new javax.swing.JButton();
+        filtra = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 10, 10, 10));
@@ -174,6 +191,13 @@ public class Notifications extends javax.swing.JPanel {
             }
         });
 
+        filtra.setText("Filtrar");
+        filtra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                filtraMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -185,6 +209,8 @@ public class Notifications extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(filtra)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnComprar, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
@@ -195,7 +221,9 @@ public class Notifications extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnComprar))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnComprar)
+                    .addComponent(filtra)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -213,9 +241,16 @@ public class Notifications extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnComprarMouseClicked
 
+    private void filtraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtraMouseClicked
+        GlassPanePopup.closePopupAll();
+
+        tien.cargarElementos(true);
+    }//GEN-LAST:event_filtraMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnConversacion;
+    private javax.swing.JButton filtra;
     private javax.swing.JLabel lblConver;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panel;

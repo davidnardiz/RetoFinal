@@ -5,13 +5,16 @@
         <group>
             <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/panelContenido.java</file>
             <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/Tienda.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/modelo/DAOImplementacionBdTienda.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Message.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/panelContenido2.java</file>
             <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/AniadirProducto.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/GlassPanePopup.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Popup.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/RippleEffect.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/ParaTi.java</file>
             <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/clases/Articulo.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/Comprar.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/ItemTienda.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/CargandoTienda.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/StarRating.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Notifications.java</file>
+            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/NotificationsChat.java</file>
         </group>
     </open-files>
 </project-private>

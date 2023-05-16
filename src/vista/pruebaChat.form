@@ -247,7 +247,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="prueba.Background" name="background1">
+    <Container class="chat.Background" name="background1">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="0" y="80" width="631" height="-1"/>
@@ -267,7 +267,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="prueba.ChatArea" name="chatArea">
+        <Component class="chat.ChatArea" name="chatArea">
         </Component>
       </SubComponents>
     </Container>

@@ -2,6 +2,8 @@ package tienda;
 
 import java.awt.Color;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class SliderGradient extends JSlider {
 
@@ -45,4 +47,5 @@ public class SliderGradient extends JSlider {
     public SliderGradient() {
         setUI(new SliderGradientUI(this));
     }
+
 }

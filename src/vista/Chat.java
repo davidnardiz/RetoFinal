@@ -8,7 +8,7 @@ import clases.Usuario;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import modelo.DAO;
-import prueba.ChatEvent;
+import chat.ChatEvent;
 
 /**
  *
@@ -62,7 +62,7 @@ public class Chat extends javax.swing.JDialog {
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-        chatArea = new prueba.ChatArea();
+        chatArea = new chat.ChatArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -253,7 +253,7 @@ public class Chat extends javax.swing.JDialog {
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-    private prueba.ChatArea chatArea;
+    private chat.ChatArea chatArea;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
     private javax.swing.JLabel lblLogo;

@@ -34,6 +34,8 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="filtra" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="btnComprar" min="-2" pref="168" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -46,7 +48,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="scroll" pref="240" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btnComprar" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnComprar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="filtra" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -118,6 +123,14 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnComprarMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="filtra">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Filtrar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="filtraMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>
