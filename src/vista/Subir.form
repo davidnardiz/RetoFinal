@@ -8,6 +8,12 @@
     </Property>
     <Property name="modal" type="boolean" value="true"/>
     <Property name="name" type="java.lang.String" value="paraTi" noResource="true"/>
+<<<<<<< HEAD
+=======
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[648, 864]"/>
+    </Property>
+>>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -100,6 +106,12 @@
               <Dimension value="[50, 16]"/>
             </Property>
           </Properties>
+<<<<<<< HEAD
+=======
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
+          </AccessibilityProperties>
+>>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         </Component>
       </SubComponents>
     </Container>

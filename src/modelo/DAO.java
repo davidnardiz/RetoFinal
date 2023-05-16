@@ -1,8 +1,10 @@
 package modelo;
 
+import clases.Articulo;
 import java.util.List;
 
 import clases.Cancion;
+import clases.Mensaje;
 import clases.Publicacion;
 import clases.TipoHistoria;
 import clases.Usuario;
@@ -112,4 +114,36 @@ public interface DAO {
 
     public void quitarAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 
+    
+    //Inserts
+
+    public void insertarMensaje(Mensaje men);
+
+    public void insertarArticulo(Articulo art);
+
+    // Selects
+    
+
+    public List<Mensaje> sacarMensajes(String usuario1, String usuario2);
+
+    public String calcularIdMensaje(String string);
+
+    public List<String> sacarConversaciones(String usuario);
+
+    public List<Articulo> sacarTodosLosArticulos();
+
+    public String calcularIdArticulo(String string);
+
+    public int obtenerValoracion(Articulo ar);
+
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc);
+
+    // Alters
+    public void modificarArt(Articulo art);
+
+    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id);
+
+    // Deletes
+    
+    public void borrarArticulo(String id);
 }

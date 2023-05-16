@@ -1,5 +1,6 @@
 package modelo;
 
+import clases.Articulo;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.Properties;
 import clases.Cancion;
 import clases.Foto;
 import clases.Historia;
+import clases.Mensaje;
 import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
@@ -33,7 +35,7 @@ public class DAOImplementacionBD implements DAO {
     private Connection con = null;
     private PreparedStatement stmt;
 
-    // Sentencias SQL
+// Sentencias SQL
     // Inserts
     final private String REGISTRAR = "INSERT INTO usuario VALUES (?, ?, ?, ?, ?, ?, 'iconoPredeterminado.png', ?, ?, ?, ?)";
     final private String PUBLICAR = "INSERT INTO publicacion VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -45,6 +47,11 @@ public class DAOImplementacionBD implements DAO {
     final private String INSERTAR_AMIGO = "INSERT INTO mejoramigo VALUES(?, ?)";
     final private String GUARDAR_PUBLICACION = "INSERT INTO guardados VALUES(?, ?)";
 
+    final private String INSERTAR_MENSAJE = "INSERT INTO mensaje VALUES(?, ?, ?)";
+    final private String INSERTAR_CONVERSA = "INSERT INTO conversa VALUES(?, ?, ?)";
+
+    final private String INSERTAR_ARTICULO = "INSERT INTO articulo VALUES (?,?,?,?,?,?,?,?,?,?)";
+
 // Selects
     // PARA TI
     final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
@@ -54,8 +61,6 @@ public class DAOImplementacionBD implements DAO {
     final private String BUSCAR_FOTO_ID = "SELECT * FROM foto WHERE id_publicacion = ?";
     final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
     final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
-
-    //final private String LISTAR_ID_DISPONIBLES = "SELECT * FROM publicacion WHERE usuario in (SELECT seguido FROM sigue WHERE seguidor = ?) and usuario not in (SELECT usuario FROM bloqueados WHERE usuario_bloqueado = ?)";
     final private String COMPROBAR_MEJOS = "SELECT * FROM  mejorAmigo WHERE mejor_amigo = ? and usuario = ? ";
     final private String COMPROBAR_BLOQUEADO = "SELECT * FROM bloqueados WHERE usuario_bloqueado = ? and usuario = ? ";
 
@@ -83,28 +88,49 @@ public class DAOImplementacionBD implements DAO {
     final private String BUSCAR_TIPO_TIPOHISTORIA = "SELECT tipo FROM tipoHistoria WHERE cod_tipo= ?";
     final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
 
+    // PERFIL
+    final private String NUM_PUBLICACIONES_USUARIO = "SELECT count(*) FROM publicacion WHERE usuario = ?";
+    final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
+    final private String VER_SEGUIMIENTO = "SELECT * FROM sigue WHERE seguidor = ? and seguido = ?";
+    final private String BORRAR_PUBS_GUARDADAS = "DELETE FROM guardados WHERE usuario = ?";
+
+    //Tienda
+    final private String SACAR_PRODUCTOS = "SELECT * FROM articulo where lugar_entrega is null";
+    final private String ULTIMO_ARTICULO = "SELECT id_articulo FROM articulo WHERE SUBSTRING(id_articulo, 1, 1) = ? ORDER BY id_articulo desc LIMIT 1;";
+    final private String SACAR_MEDIA_VALORACION = "SELECT AVG(valoracion) AS media_valoracion from articulo where vendedor = ? and valoracion is not null ";
+    final private String SACAR_ARTICULO_ORDENADO = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio";
+    final private String SACAR_ARTICULO_ORDENADO_DESCENDETE = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio DESC ";
+
+    //CONVERSASCIONES
+        final private String ULTIMO_MENSAJE = "SELECT id_mensaje FROM conversa WHERE SUBSTRING(id_mensaje, 1, 1) = ? ORDER BY id_mensaje desc LIMIT 1;";
+        final private String comprobarConver = "SELECT * FROM conversa where usuario = ? and usuario2 = ?";
+        final private String SACAR_CONVERSACION = "SELECT men.mensaje, men.fecha_envio, conver.usuario, conver.usuario2 from conversa conver inner join mensaje men "
+                + "on conver.id_mensaje = men.id_mensaje "
+                + "where(conver.usuario = ? and conver.usuario2 = ?) or (conver.usuario = ? and conver.usuario2 = ?) "
+                + "order by men.fecha_envio ASC ";
+        final private String SACAR_TODAS_LAS_CONVERSACIONES = "SELECT DISTINCT CASE WHEN USUARIO = ? THEN usuario2 "
+                + "ELSE usuario "
+                + "END AS OTRO_USUARIO "
+                + "FROM conversa WHERE ? IN(usuario, usuario2)";
+   
+// Update
+    final private String EDITAR_PERFIL = "UPDATE usuario set contrasenia = ?, icono = ?, correo = ?, telefono = ? WHERE usuario = ?";
+    final private String MODIFICAR_ARTICULO = "UPDATE articulo set descripcion = ?, precio = ?, peso = ? where id_articulo = ?";
+    final private String COMPRAR_ARTICULO = "UPDATE articulo set fecha_compra = ?, lugar_entrega = ?, valoracion = ? where id_articulo = ?";
     final private String MODIFICAR_PUBLICACION = "UPDATE publicacion SET imagen = ?, ubicacion = ?, id_cancion = ? WHERE id_publicacion = ?";
     final private String MODIFICAR_FOTO = "UPDATE foto SET descripcion = ?, resolucion = ?, etiquetado = ? WHERE id_publicacion = ?";
     final private String MODIFICAR_REEL = "UPDATE reel SET duracion = ?, descripcion = ? WHERE id_publicacion = ?";
     final private String MODIFICAR_HISTORIA = "UPDATE historia SET mejores_amigos = ?, cod_tipo = ? WHERE id_publicacion = ?";
 
-    // PERFIL
-    final private String NUM_PUBLICACIONES_USUARIO = "SELECT count(*) FROM publicacion WHERE usuario = ?";
-    final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
-    final private String VER_SEGUIMIENTO = "SELECT * FROM sigue WHERE seguidor = ? and seguido = ?";
-
-    final private String BORRAR_PUBS_GUARDADAS = "DELETE FROM guardados WHERE usuario = ?";
-
-    // Update
-    final private String EDITAR_PERFIL = "UPDATE usuario set contrasenia = ?, icono = ?, correo = ?, telefono = ? WHERE usuario = ?";
-
+    
 // Deletes
     final private String ELIMINAR_PUBLICACION = "DELETE FROM publicacion WHERE id_publicacion = ?";
     final private String ELIMINAR_USUARIO = "DELETE FROM usuario WHERE usuario = ?";
-
     final private String QUITAR_AMIGO = "DELETE FROM mejoramigo WHERE usuario = ? and mejor_amigo = ?";
     final private String QUITAR_PUBLICACION = "DELETE FROM guardados WHERE usuario = ? and id_publicacion = ?";
     final private String DESBLOQUEAR_USUARIO = "DELETE FROM bloqueados WHERE usuario = ? and usuario_bloqueado = ?";
+    final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
+    final private String BORRAR_ARTCIULO = "DELETE FROM articulo WHERE id_articulo = ?";
 
 //Procedimientos
     final private String SEGUIR = "call Seguir (?, ?)";
@@ -114,6 +140,8 @@ public class DAOImplementacionBD implements DAO {
     final private String BLOQUEAR_USUARIO = "call bloquear(?, ?)";
 
     final private String COMPROBAR_PUBLICACION = "SELECT MostrarPublicacion(?, ?)";
+
+    
 
     public void abrirConexion() throws ErrVariados {
 
@@ -633,7 +661,6 @@ public class DAOImplementacionBD implements DAO {
         try {
             stmt = con.prepareStatement(BUSCAR_CANCION_X_TITULO);
             stmt.setString(1, titulo);
-
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -819,12 +846,6 @@ public class DAOImplementacionBD implements DAO {
         return like;
     }
 
-    /*
-    @Override
-    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-     */
     @Override
     public List<Publicacion> listarPublicacionesUsuario(String usuarioPerifl, String nosotros, String tipo) throws ErrVariados, ErrSelect {
         List<Publicacion> publicaciones = new ArrayList<>();
@@ -1429,4 +1450,321 @@ public class DAOImplementacionBD implements DAO {
         this.cerrarConexion();
     }
 
+    @Override
+    public void insertarMensaje(Mensaje men) {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(INSERTAR_MENSAJE);
+            stmt.setString(1, men.getIdMensaje());
+            stmt.setDate(2, Date.valueOf(men.getFechaEnvio()));
+            stmt.setString(3, men.getMensaje());
+
+            if (stmt.executeUpdate() == 1) {
+                stmt = con.prepareStatement(INSERTAR_CONVERSA);
+                stmt.setString(1, men.getUsuario1());
+                stmt.setString(2, men.getUsuario2());
+                stmt.setString(3, men.getIdMensaje());
+                stmt.execute();
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+    }
+
+    @Override
+    public List<Mensaje> sacarMensajes(String usuario1, String usuario2) {
+        List<Mensaje> mensajes = new ArrayList<>();
+
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(SACAR_CONVERSACION);
+            stmt.setString(1, usuario1);
+            stmt.setString(2, usuario2);
+            stmt.setString(3, usuario2);
+            stmt.setString(4, usuario1);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                Mensaje men = new Mensaje();
+
+                LocalDate fecha = rs.getDate("fecha_envio").toLocalDate();
+                men.setUsuario1(rs.getString("usuario"));
+                men.setUsuario2(rs.getString("usuario2"));
+                men.setMensaje(rs.getString("mensaje"));
+                men.setFechaEnvio(fecha);
+                mensajes.add(men);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return mensajes;
+    }
+
+    @Override
+    public String calcularIdMensaje(String string) {
+        String cod = "";
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ULTIMO_MENSAJE);
+            stmt.setString(1, string);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cod = rs.getString("id_mensaje");
+            } else {
+                cod = "00000";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return cod;
+    }
+
+    @Override
+    public List<String> sacarConversaciones(String usuario) {
+        List<String> mensajes = new ArrayList<>();
+
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(SACAR_TODAS_LAS_CONVERSACIONES);
+            stmt.setString(1, usuario);
+            stmt.setString(2, usuario);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                mensajes.add(rs.getString("OTRO_USUARIO"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return mensajes;
+
+    }
+
+    @Override
+    public List<Articulo> sacarTodosLosArticulos() {
+        List<Articulo> articulos = new ArrayList<>();
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(SACAR_PRODUCTOS);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Articulo art = new Articulo();
+                LocalDate fecha = rs.getDate("fecha_subida").toLocalDate();
+
+                art.setId_articulo(rs.getString("id_articulo"));
+                art.setDescripcion(rs.getString("descripcion"));
+                art.setPrecio(rs.getFloat("precio"));
+                art.setPeso(rs.getFloat("peso"));
+                art.setFechaSubida(fecha);
+                art.setImagen(rs.getString("imagen"));
+                art.setLugarEntrega(rs.getString("lugar_entrega"));
+                art.setVendedor(rs.getString("vendedor"));
+                articulos.add(art);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return articulos;
+    }
+
+    @Override
+    public void insertarArticulo(Articulo art) {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(INSERTAR_ARTICULO);
+            stmt.setString(1, art.getId_articulo());
+            stmt.setString(2, art.getImagen());
+            stmt.setString(3, art.getDescripcion());
+            stmt.setFloat(4, art.getPrecio());
+            stmt.setFloat(5, art.getPeso());
+            stmt.setDate(6, Date.valueOf(art.getFechaSubida()));
+            stmt.setDate(7, null);
+            stmt.setString(8, art.getLugarEntrega());
+            stmt.setString(9, art.getVendedor());
+            stmt.setNull(10, java.sql.Types.INTEGER);
+            stmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String calcularIdArticulo(String string) {
+        String cod = "";
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ULTIMO_ARTICULO);
+            stmt.setString(1, string);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cod = rs.getString("id_articulo");
+            } else {
+                cod = "00000";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return cod;
+    }
+
+    @Override
+    public void borrarArticulo(String id) {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BORRAR_ARTCIULO);
+            stmt.setString(1, id);
+
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void modificarArt(Articulo art) {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(MODIFICAR_ARTICULO);
+            stmt.setString(1, art.getDescripcion());
+            stmt.setFloat(2, art.getPrecio());
+            stmt.setFloat(3, art.getPeso());
+            stmt.setString(4, art.getId_articulo());
+
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        this.cerrarConexion();
+
+    }
+
+    @Override
+    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(COMPRAR_ARTICULO);
+            stmt.setDate(1, Date.valueOf(fecha));
+            stmt.setString(2, lugarEntrega);
+            stmt.setInt(3, valoracion);
+            stmt.setString(4, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public int obtenerValoracion(Articulo ar) {
+        int valoracion = 0;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(SACAR_MEDIA_VALORACION);
+            stmt.setString(1, ar.getVendedor());
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                valoracion = rs.getInt("media_valoracion");
+            } else {
+                valoracion = 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.cerrarConexion();
+        return valoracion;
+
+    }
+
+    @Override
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) {
+        List<Articulo> articulos = new ArrayList<>();
+        this.abrirConexion();
+
+        try {
+            if (opc == 0) {
+                int maxValor = Integer.MAX_VALUE;
+                stmt = con.prepareStatement(SACAR_ARTICULO_ORDENADO_DESCENDETE);
+                stmt.setInt(1, min);
+                if (max == 999) {
+                    stmt.setInt(2, maxValor);
+                } else {
+                    stmt.setInt(2, max);
+                }
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Articulo art = new Articulo();
+                    LocalDate fecha = rs.getDate("fecha_subida").toLocalDate();
+
+                    art.setId_articulo(rs.getString("id_articulo"));
+                    art.setDescripcion(rs.getString("descripcion"));
+                    art.setPrecio(rs.getFloat("precio"));
+                    art.setPeso(rs.getFloat("peso"));
+                    art.setFechaSubida(fecha);
+                    art.setImagen(rs.getString("imagen"));
+                    art.setLugarEntrega(rs.getString("lugar_entrega"));
+                    art.setVendedor(rs.getString("vendedor"));
+                    articulos.add(art);
+                }
+            } else {
+                stmt = con.prepareStatement(SACAR_ARTICULO_ORDENADO);
+                stmt.setInt(1, min);
+                stmt.setInt(2, max);
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Articulo art = new Articulo();
+                    LocalDate fecha = rs.getDate("fecha_subida").toLocalDate();
+
+                    art.setId_articulo(rs.getString("id_articulo"));
+                    art.setDescripcion(rs.getString("descripcion"));
+                    art.setPrecio(rs.getFloat("precio"));
+                    art.setPeso(rs.getFloat("peso"));
+                    art.setFechaSubida(fecha);
+                    art.setImagen(rs.getString("imagen"));
+                    art.setLugarEntrega(rs.getString("lugar_entrega"));
+                    art.setVendedor(rs.getString("vendedor"));
+                    articulos.add(art);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return articulos;
+    }
+
+}
 }
