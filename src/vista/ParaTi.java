@@ -1,5 +1,6 @@
 package vista;
 
+import clases.Cancion;
 import clases.Foto;
 import clases.Historia;
 import clases.Publicacion;
@@ -15,8 +16,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import modelo.DAO;
 import utilidades.Utilidades;
@@ -103,6 +102,11 @@ public class ParaTi extends javax.swing.JDialog {
                     btnGuardar.setSelected(false);
                 }
 
+                if (publi.getId_cancion() != null) {
+                    btnCancion.setVisible(true);
+                } else {
+                    btnCancion.setVisible(false);
+                }
                 lblDescripcion.setVisible(true);
                 lblVerificado.setVisible(false);
                 getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 110, 170, 22));
@@ -287,6 +291,7 @@ public class ParaTi extends javax.swing.JDialog {
         lblHistoria = new javax.swing.JLabel();
         rdbtnTodas = new javax.swing.JRadioButton();
         rdbtnSiguiendo = new javax.swing.JRadioButton();
+        btnCancion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
@@ -582,6 +587,17 @@ public class ParaTi extends javax.swing.JDialog {
         getContentPane().add(rdbtnSiguiendo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 110, -1, -1));
         rdbtnSiguiendo.setVisible(false);
 
+        btnCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cancion.png"))); // NOI18N
+        btnCancion.setBorder(null);
+        btnCancion.setBorderPainted(false);
+        btnCancion.setContentAreaFilled(false);
+        btnCancion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancionActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnCancion, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 30, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -677,6 +693,19 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_rdbtnSiguiendoActionPerformed
 
+    private void btnCancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancionActionPerformed
+        try {
+            Cancion can = dao.buscarCancionXId(publi.getId_cancion());
+            Canciones canciones = new Canciones(vMain, true, can);
+            canciones.setVisible(true);
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.printStackTrace();
+            ex.mostrarError();
+        }
+    }//GEN-LAST:event_btnCancionActionPerformed
+
     private void cerrar() {
         this.dispose();
         vMain.dispose();
@@ -684,6 +713,7 @@ public class ParaTi extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCancion;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnEtiquetado;
     private javax.swing.JToggleButton btnGuardar;

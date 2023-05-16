@@ -19,7 +19,7 @@ public class Calendario extends javax.swing.JDialog {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("FlatLaft Dark".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -49,7 +49,8 @@ public class Calendario extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(59, 61, 63));
-        setPreferredSize(new java.awt.Dimension(410, 280));
+        setMinimumSize(new java.awt.Dimension(0, 0));
+        setPreferredSize(new java.awt.Dimension(435, 295));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -62,10 +63,11 @@ public class Calendario extends javax.swing.JDialog {
                 btnEnviarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, 130, 40));
+        getContentPane().add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 130, 40));
 
         calendario.setBackground(getBackground());
-        getContentPane().add(calendario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 200));
+        calendario.setForeground(new java.awt.Color(60, 60, 60));
+        getContentPane().add(calendario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 200));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

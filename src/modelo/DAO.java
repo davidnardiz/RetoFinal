@@ -34,7 +34,6 @@ public interface DAO {
 
     public List<Publicacion> listarPublicaciones() throws ErrVariados, ErrSelect;
 
-    // public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) throws ErrVariados, ErrSelect;
     public List<Publicacion> listarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrSelect;
 
     public List<Publicacion> listarPublicacionesEtiquetadas(String usuario) throws ErrVariados, ErrSelect;

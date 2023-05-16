@@ -670,7 +670,7 @@ public class DAOImplementacionBD implements DAO {
 
                 can.setId_cancion(rs.getString("id_cancion"));
                 can.setTitulo(rs.getString("titulo"));
-                can.setArtista(rs.getString("artista"));
+                can.setArtista(rs.getString("artistas"));
                 can.setDuracion(rs.getFloat("duracion"));
                 can.setCod_genero(rs.getString("cod_genero"));
             }

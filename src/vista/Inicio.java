@@ -74,17 +74,17 @@ public class Inicio extends javax.swing.JLayeredPane {
         register.add(txtContrasenia, "w 60%");
 
         txtTelefono = new MyTextField();
-        txtTelefono.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/tf.png")));
+        txtTelefono.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/telefono.png")));
         txtTelefono.setHint("Teléfono");
         register.add(txtTelefono, "w 60%");
 
         txtDni = new MyTextField();
-        txtDni.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/dni2.png")));
+        txtDni.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/dni.png")));
         txtDni.setHint("Dni");
         register.add(txtDni, "w 60%");
 
         txtFecha = new MyTextField();
-        txtFecha.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/tf.png")));
+        txtFecha.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/Calendario.png")));
         txtFecha.setHint("Fecha de nacimiento");
         register.add(txtFecha, "w 60%");
         txtFecha.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -104,8 +104,7 @@ public class Inicio extends javax.swing.JLayeredPane {
             }
         });
         register.add(cmd, "w 40%, h 40");
-        
-        
+
     }
 
     private void initLogin() {
@@ -154,7 +153,7 @@ public class Inicio extends javax.swing.JLayeredPane {
 
         });
         login.add(cmd, "w 40%, h 40");
-        
+
     }
 
     public void iniciarSesion() {

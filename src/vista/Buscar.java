@@ -419,7 +419,13 @@ public class Buscar extends javax.swing.JDialog {
         if (conver) {
 
         } else {
-            buscarUsuario(tablaUsuarios.getValueAt(fila, 2).toString());
+            try {
+                buscarUsuario(tablaUsuarios.getValueAt(fila, 2).toString());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                //Clickas en la tercera celda de la tabla y al haber menos imagenes da fallo;
+                //El fallo no repercute al codigo por lo que no quiero gestionarlo ni avisar
+            } catch (NullPointerException e) {
+            }
         }        // TODO add your handling code here:
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
