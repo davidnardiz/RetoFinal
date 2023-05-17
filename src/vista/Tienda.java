@@ -1,13 +1,9 @@
 package vista;
 
-<<<<<<< HEAD
-import clases.Usuario;
-import java.awt.Color;
-import javax.swing.ImageIcon;
-import modelo.DAO;
-=======
 import clases.Articulo;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -15,6 +11,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -33,36 +31,25 @@ import panelMensaje.Notifications;
 import tienda.FiltrarPanel;
 
 import tienda.panelContenido;
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
 public class Tienda extends javax.swing.JDialog {
 
     private DAO dao;
     private Usuario usu;
-<<<<<<< HEAD
     private VMain vMain;
-
-    public Tienda(VMain vMain, boolean modal, DAO dao, Usuario usu) {
-        super(vMain, modal);
-        this.setModal(modal);
-        this.dao = dao;
-        this.usu = usu;
-        this.vMain = vMain;
-=======
-    private ParaTi paraTi;
     private boolean añadir;
     private boolean borrar;
     private boolean modificar;
     private List<Articulo> ar;
     private FiltrarPanel filtrarPanel = new FiltrarPanel(this);
 
-    public Tienda(ParaTi parent, boolean modal, DAO dao, Usuario usu) {
+    public Tienda(VMain parent, boolean modal, DAO dao, Usuario usu) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
         this.ar = ar;
-        this.paraTi = parent;
+        this.vMain = parent;
         boolean añadir;
         boolean borrar;
         boolean modificar;
@@ -70,16 +57,12 @@ public class Tienda extends javax.swing.JDialog {
         ar = new ArrayList<>();
 
         GlassPanePopup.install(this, this);
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
         setTitle("Tienda");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
 
-<<<<<<< HEAD
-        setLocationRelativeTo(null);
-=======
         JScrollBar sb = scroll.getVerticalScrollBar();
         sb.setOpaque(false);
         sb.setForeground(new Color(33, 140, 206));
@@ -113,7 +96,6 @@ public class Tienda extends javax.swing.JDialog {
 
     public JLabel getCarritoCompraLleno() {
         return carritoCompraLleno;
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
     }
 
     /**
@@ -125,26 +107,18 @@ public class Tienda extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-<<<<<<< HEAD
-        franjaArriba = new javax.swing.JPanel();
-        lblLogo = new javax.swing.JLabel();
-        lblLogoLetras = new javax.swing.JLabel();
-=======
         panelCarritoCompra = new javax.swing.JPanel();
         franjaArriba = new javax.swing.JPanel();
         lblLogo = new javax.swing.JLabel();
         lblLogoLetras = new javax.swing.JLabel();
         carritoCompraLleno = new javax.swing.JLabel();
         carritoCompra1 = new javax.swing.JLabel();
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         franajAbajo = new javax.swing.JPanel();
         btnParaTi = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         btnSubir = new javax.swing.JButton();
         btnTienda = new javax.swing.JButton();
         btnCuenta = new javax.swing.JButton();
-<<<<<<< HEAD
-=======
         scroll = new javax.swing.JScrollPane();
         panel = new javax.swing.JPanel();
         opciones1 = new javax.swing.JLabel();
@@ -166,21 +140,11 @@ public class Tienda extends javax.swing.JDialog {
             panelCarritoCompraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 381, Short.MAX_VALUE)
         );
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
         setModal(true);
         setName("paraTi"); // NOI18N
-<<<<<<< HEAD
-        setPreferredSize(new java.awt.Dimension(648, 864));
-        setResizable(false);
-
-        franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
-        franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
-
-        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/logoPequeño.png"))); // NOI18N
-=======
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -190,35 +154,10 @@ public class Tienda extends javax.swing.JDialog {
 
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/logoPequeño.png"))); // NOI18N
         franjaArriba.add(lblLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(76, 6, -1, -1));
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
         lblLogoLetras.setForeground(getBackground());
         lblLogoLetras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/letrasInstagram.png"))); // NOI18N
         lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
-<<<<<<< HEAD
-
-        javax.swing.GroupLayout franjaArribaLayout = new javax.swing.GroupLayout(franjaArriba);
-        franjaArriba.setLayout(franjaArribaLayout);
-        franjaArribaLayout.setHorizontalGroup(
-            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaArribaLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(lblLogo)
-                .addGap(18, 18, 18)
-                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(358, Short.MAX_VALUE))
-        );
-        franjaArribaLayout.setVerticalGroup(
-            franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(franjaArribaLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(lblLogo)
-                .addContainerGap(15, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaArribaLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-=======
         franjaArriba.add(lblLogoLetras, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 6, 185, 65));
 
         carritoCompraLleno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/carrito-de-supermercado-removebg-preview (1).jpg"))); // NOI18N
@@ -233,7 +172,6 @@ public class Tienda extends javax.swing.JDialog {
         franjaArriba.add(carritoCompra1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 57, 51));
 
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 645, -1));
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
 
@@ -342,11 +280,7 @@ public class Tienda extends javax.swing.JDialog {
                 .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(66, 66, 66)
                 .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-<<<<<<< HEAD
-                .addContainerGap(72, Short.MAX_VALUE))
-=======
                 .addContainerGap(69, Short.MAX_VALUE))
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         );
         franajAbajoLayout.setVerticalGroup(
             franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -361,23 +295,6 @@ public class Tienda extends javax.swing.JDialog {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-<<<<<<< HEAD
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(franjaArriba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(franajAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(franjaArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 673, Short.MAX_VALUE)
-                .addComponent(franajAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-=======
         getContentPane().add(franajAbajo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 717, -1, -1));
 
         scroll.setBorder(null);
@@ -483,63 +400,41 @@ public class Tienda extends javax.swing.JDialog {
         });
         getContentPane().add(filtrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, -1, 50));
 
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
-<<<<<<< HEAD
         ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
-=======
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-<<<<<<< HEAD
         Buscar buscar = new Buscar(vMain, true, dao, usu, false);
-=======
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-<<<<<<< HEAD
         Subir subir = new Subir(vMain, true, dao, usu, null);
-=======
-        Subir subir = new Subir(paraTi, true, dao, usu);
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-<<<<<<< HEAD
         Tienda tienda = new Tienda(vMain, true, dao, usu);
-=======
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-<<<<<<< HEAD
         Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
-=======
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-<<<<<<< HEAD
-=======
     private void opciones1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opciones1MouseClicked
 
         panelOpciones.setVisible(true);
@@ -682,20 +577,12 @@ public class Tienda extends javax.swing.JDialog {
         });
     }//GEN-LAST:event_filtrarMouseClicked
 
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnParaTi;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
-<<<<<<< HEAD
-    private javax.swing.JPanel franajAbajo;
-    private javax.swing.JPanel franjaArriba;
-    private javax.swing.JLabel lblLogo;
-    private javax.swing.JLabel lblLogoLetras;
-    // End of variables declaration//GEN-END:variables
-=======
     private javax.swing.JLabel carritoCompra1;
     private javax.swing.JLabel carritoCompraLleno;
     private javax.swing.JLabel filtrar;
@@ -717,56 +604,62 @@ public class Tienda extends javax.swing.JDialog {
 
     public void cargarElementos(boolean filtrar) {
         panel.removeAll();
-        if (filtrar) {
-            int max = filtrarPanel.obtenerMax();
-            int min = filtrarPanel.obtenerMin();
-            int opc = filtrarPanel.obtenerOpc();
+        try {
+            if (filtrar) {
 
-            List<Articulo> articulos = dao.sacarArituclosPorPrecio(min, max, opc);
+                int max = filtrarPanel.obtenerMax();
+                int min = filtrarPanel.obtenerMin();
+                int opc = filtrarPanel.obtenerOpc();
 
-            for (Articulo art : articulos) {
-                int cont = 0;
-                String usuV = art.getVendedor();
-                Usuario otroUsu = dao.buscarUsuario(usuV);
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+                List<Articulo> articulos = dao.sacarArituclosPorPrecio(min, max, opc);
 
-                for (Articulo a : ar) {
-                    if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
-                        cont++;
-                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                for (Articulo art : articulos) {
+                    int cont = 0;
+                    String usuV = art.getVendedor();
+                    Usuario otroUsu = dao.buscarUsuario(usuV);
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+
+                    for (Articulo a : ar) {
+                        if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
+                            cont++;
+                            panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                        }
                     }
-                }
-                if (cont == 0) {
-                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
-                }
-
-            }
-        } else {
-            List<Articulo> articulos = dao.sacarTodosLosArticulos();
-
-            for (Articulo art : articulos) {
-                int cont = 0;
-                String usuV = art.getVendedor();
-                Usuario otroUsu = dao.buscarUsuario(usuV);
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
-
-                for (Articulo a : ar) {
-                    if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
-                        cont++;
-                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                    if (cont == 0) {
+                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
                     }
-                }
-                if (cont == 0) {
-                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
+
                 }
 
+            } else {
+                List<Articulo> articulos = dao.sacarTodosLosArticulos();
+
+                for (Articulo art : articulos) {
+                    int cont = 0;
+                    String usuV = art.getVendedor();
+                    Usuario otroUsu = dao.buscarUsuario(usuV);
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+
+                    for (Articulo a : ar) {
+                        if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
+                            cont++;
+                            panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                        }
+                    }
+                    if (cont == 0) {
+                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
+                    }
+
+                }
             }
+
+            ///
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-
-        ///
     }
-
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 }

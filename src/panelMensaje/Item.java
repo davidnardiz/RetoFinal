@@ -5,20 +5,17 @@ import java.awt.Color;
 import javax.swing.Icon;
 import modelo.DAO;
 import vista.ParaTi;
+import vista.VMain;
 import vista.pruebaChat;
 
-/**
- *
- * @author RAVEN
- */
 public class Item extends javax.swing.JPanel {
 
-    private ParaTi paraTi;
+    private VMain vMain;
     private String name;
     private DAO dao;
     private Usuario usu;
     private boolean tienda;
-    
+
     public Item(Icon icon, String name, String des, String time, DAO dao, Usuario usu, boolean tienda) {
         initComponents();
         pic.setIcon(icon);
@@ -30,7 +27,7 @@ public class Item extends javax.swing.JPanel {
         this.name = name;
         this.usu = usu;
 
-        if(!tienda){
+        if (!tienda) {
             borrar.setVisible(false);
         }
     }
@@ -114,11 +111,11 @@ public class Item extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-      
+
     }//GEN-LAST:event_formMouseClicked
 
     private void picMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_picMouseClicked
-         pruebaChat chat = new pruebaChat(paraTi, true, dao, usu, name);
+        pruebaChat chat = new pruebaChat(vMain, true, dao, usu, name);
         chat.setVisible(true);
     }//GEN-LAST:event_picMouseClicked
 

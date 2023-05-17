@@ -1,12 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Articulo;
 import clases.Mensaje;
 import clases.Usuario;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -14,6 +13,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
@@ -31,15 +32,8 @@ import tienda.panelContenido;
 import tienda.panelContenido2;
 import utilidades.Utilidades;
 
-/**
- *
- * @author 1dam
- */
 public class AniadirProducto extends javax.swing.JDialog {
 
-    /**
-     * Creates new form AniadirProducto
-     */
     private Tienda tien;
     private DAO dao;
     private Usuario usu;
@@ -47,7 +41,6 @@ public class AniadirProducto extends javax.swing.JDialog {
     private boolean añadir;
 
     public AniadirProducto(Tienda tien, boolean modal, DAO dao, Usuario usu, boolean añadir, boolean borrar, boolean modificar) {
-
         super(tien, modal);
         this.dao = dao;
         this.usu = usu;
@@ -277,28 +270,37 @@ public class AniadirProducto extends javax.swing.JDialog {
 
     private void subirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_subirMouseClicked
 
-        Articulo art = new Articulo();
-        String codigo;
-        String ultimoCodigo = "";
-        int numCod = 0;
-        ultimoCodigo = dao.calcularIdArticulo("A");
-        numCod = Integer.parseInt(ultimoCodigo.substring(2));
-        numCod++;
-        codigo = "A-" + String.format("%03d", numCod);
+        try {
+            Articulo art = new Articulo();
+            String codigo;
+            String ultimoCodigo = "";
+            int numCod = 0;
+            ultimoCodigo = dao.calcularIdArticulo("A");
+            numCod = Integer.parseInt(ultimoCodigo.substring(2));
+            numCod++;
+            codigo = "A-" + String.format("%03d", numCod);
 
-        art.setId_articulo(codigo);
-        art.setDescripcion(Descripcion.getText());
-        art.setPrecio(Float.parseFloat(Precio.getText()));
-        art.setPeso(Integer.parseInt(peso.getText()));
-        art.setImagen(imagen);
-        art.setVendedor(usu.getUsuario());
-        art.setFechaSubida(LocalDate.now());
-        art.setFechaCompra(null);
-        art.setValoracion(0);
-        dao.insertarArticulo(art);
+            art.setId_articulo(codigo);
+            art.setDescripcion(Descripcion.getText());
+            art.setPrecio(Float.parseFloat(Precio.getText()));
+            art.setPeso(Integer.parseInt(peso.getText()));
+            art.setImagen(imagen);
+            art.setVendedor(usu.getUsuario());
+            art.setFechaSubida(LocalDate.now());
+            art.setFechaCompra(null);
+            art.setValoracion(0);
+            dao.insertarArticulo(art);
 
-        this.dispose();
-        tien.cargarElementos(false);
+            this.dispose();
+            tien.cargarElementos(false);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrInsert ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_subirMouseClicked
 
     /**
@@ -325,23 +327,29 @@ public class AniadirProducto extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void cargarElementos() {
-        List<Articulo> articulos = dao.sacarTodosLosArticulos();
+        try {
+            List<Articulo> articulos = dao.sacarTodosLosArticulos();
 
-        for (Articulo art : articulos) {
-            if (art.getVendedor().equalsIgnoreCase(usu.getUsuario())) {
-                String precio = String.valueOf(art.getPrecio());
-                String usuV = art.getVendedor();
-                String peso = String.valueOf(art.getPeso());
-                Usuario otroUsu = dao.buscarUsuario(usuV);
+            for (Articulo art : articulos) {
+                if (art.getVendedor().equalsIgnoreCase(usu.getUsuario())) {
+                    String precio = String.valueOf(art.getPrecio());
+                    String usuV = art.getVendedor();
+                    String peso = String.valueOf(art.getPeso());
+                    Usuario otroUsu = dao.buscarUsuario(usuV);
 
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
 
-                pestañaBorrar.add(new panelContenido(icon, icon2, dao, tien, true, false, usu, art, true, this));
+                    pestañaBorrar.add(new panelContenido(icon, icon2, dao, tien, true, false, usu, art, true, this));
 
-                pestañaModificar.add(new panelContenido2(icon, icon2, art.getVendedor(), precio, art.getDescripcion(), dao, tien, false, art.getId_articulo(), true, peso, this));
+                    pestañaModificar.add(new panelContenido2(icon, icon2, art.getVendedor(), precio, art.getDescripcion(), dao, tien, false, art.getId_articulo(), true, peso, this));
 
+                }
             }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
     }
 

@@ -3,25 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/arceu/Desktop/Reto/RetoFinal/src/vista/PublicacionesEtiquetadas.java</file>
-            <file>file:/C:/Users/arceu/Desktop/Reto/RetoFinal/src/vista/Canciones.java</file>
-            <file>file:/C:/Users/arceu/Desktop/Reto/RetoFinal/src/vista/ParaTi.java</file>
-            <file>file:/C:/Users/arceu/Desktop/Reto/RetoFinal/src/modelo/DAOImplementacionBD.java</file>
-=======
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/panelContenido.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/Tienda.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Message.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/panelContenido2.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/AniadirProducto.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/GlassPanePopup.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Popup.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/RippleEffect.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/ParaTi.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/clases/Articulo.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Notifications.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/NotificationsChat.java</file>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
+            <file>file:/C:/Users/arceu/Desktop/RetoJuntar/RetoFinal/src/vista/ParaTi.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoJuntar/RetoFinal/src/vista/Buscar.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoJuntar/RetoFinal/src/controlador/Instagram.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoJuntar/RetoFinal/src/vista/Perfil.java</file>
         </group>
     </open-files>
 </project-private>

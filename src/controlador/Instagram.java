@@ -1,37 +1,16 @@
 package controlador;
 
-<<<<<<< HEAD
 import modelo.DAO;
 import modelo.DAOImplementacionBD;
 import vista.VMain;
 
 public class Instagram {
 
-	public static void main(String[] args) {
-		DAO dao = new DAOImplementacionBD();
-		VMain main = new VMain(dao);
-                main.setVisible(true);
-	}
-=======
-import clases.Usuario;
-import modelo.DAO;
-import modelo.DAOImplementacionBD;
-import vista.ParaTi;
-import vista.Principal;
-import vista.pruebaChat;
-
-public class Instagram {
-
     public static void main(String[] args) {
         DAO dao = new DAOImplementacionBD();
-        Usuario usu = dao.buscarUsuario("xDoble_Jx");
+        VMain main = new VMain(dao);
+        main.setVisible(true);
 
-        // Principal prin = new Principal(dao);
-        ParaTi prin = new ParaTi(null, false, dao, usu);
-        prin.setVisible(true);
-        // pruebaChat pru = new pruebaChat(null, true, dao, usu);
-        //pru.setVisible(true);
     }
 
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 }

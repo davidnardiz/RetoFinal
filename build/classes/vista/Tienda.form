@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
-<<<<<<< HEAD
-=======
   <NonVisualComponents>
     <Container class="javax.swing.JPanel" name="panelCarritoCompra">
 
@@ -20,7 +18,6 @@
       </Layout>
     </Container>
   </NonVisualComponents>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -28,12 +25,6 @@
     </Property>
     <Property name="modal" type="boolean" value="true"/>
     <Property name="name" type="java.lang.String" value="paraTi" noResource="true"/>
-<<<<<<< HEAD
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[648, 864]"/>
-    </Property>
-=======
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -50,32 +41,11 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-<<<<<<< HEAD
-  </AuxValues>
-
-  <Layout>
-    <DimensionLayout dim="0">
-      <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="franjaArriba" max="32767" attributes="0"/>
-          <Component id="franajAbajo" alignment="0" max="32767" attributes="0"/>
-      </Group>
-    </DimensionLayout>
-    <DimensionLayout dim="1">
-      <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <Component id="franjaArriba" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="673" max="32767" attributes="0"/>
-              <Component id="franajAbajo" min="-2" max="-2" attributes="0"/>
-          </Group>
-      </Group>
-    </DimensionLayout>
-=======
     <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,3,49,0,0,2,-123"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
     <Property name="useNullLayout" type="boolean" value="false"/>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="franjaArriba">
@@ -87,34 +57,6 @@
           <Dimension value="[648, 80]"/>
         </Property>
       </Properties>
-<<<<<<< HEAD
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                  <Component id="lblLogo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="lblLogoLetras" min="-2" pref="185" max="-2" attributes="0"/>
-                  <EmptySpace pref="358" max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                  <Component id="lblLogo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  <Component id="lblLogoLetras" min="-2" pref="65" max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-=======
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="0" y="0" width="645" height="-1"/>
@@ -123,7 +65,6 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
         <Property name="useNullLayout" type="boolean" value="false"/>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblLogo">
@@ -132,14 +73,11 @@
               <Image iconType="3" name="/imagenes/pantalla/logoPeque&#xf1;o.png"/>
             </Property>
           </Properties>
-<<<<<<< HEAD
-=======
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="76" y="6" width="-1" height="-1"/>
             </Constraint>
           </Constraints>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         </Component>
         <Component class="javax.swing.JLabel" name="lblLogoLetras">
           <Properties>
@@ -153,8 +91,6 @@
               <Dimension value="[50, 16]"/>
             </Property>
           </Properties>
-<<<<<<< HEAD
-=======
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="138" y="6" width="185" height="65"/>
@@ -187,7 +123,6 @@
               <AbsoluteConstraints x="550" y="10" width="57" height="51"/>
             </Constraint>
           </Constraints>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         </Component>
       </SubComponents>
     </Container>
@@ -197,14 +132,11 @@
           <Color blue="2f" green="2d" red="2b" type="rgb"/>
         </Property>
       </Properties>
-<<<<<<< HEAD
-=======
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="0" y="717" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
       <Layout>
         <DimensionLayout dim="0">
@@ -220,11 +152,7 @@
                   <Component id="btnTienda" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                   <Component id="btnCuenta" min="-2" max="-2" attributes="0"/>
-<<<<<<< HEAD
-                  <EmptySpace pref="72" max="32767" attributes="0"/>
-=======
                   <EmptySpace pref="69" max="32767" attributes="0"/>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
               </Group>
           </Group>
         </DimensionLayout>
@@ -402,8 +330,6 @@
         </Component>
       </SubComponents>
     </Container>
-<<<<<<< HEAD
-=======
     <Container class="javax.swing.JScrollPane" name="scroll">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -575,6 +501,5 @@
         </Constraint>
       </Constraints>
     </Component>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
   </SubComponents>
 </Form>

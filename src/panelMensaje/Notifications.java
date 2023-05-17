@@ -3,6 +3,8 @@ package panelMensaje;
 import clases.Articulo;
 import clases.Mensaje;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,30 +19,20 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollBar;
-import javax.swing.border.EmptyBorder;
 import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import tienda.FiltrarPanel;
 import vista.Buscar;
 import vista.Comprar;
-import vista.ParaTi;
 import vista.Tienda;
+import vista.VMain;
 
-/**
- *
- * @author RAVEN
- */
 public class Notifications extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Notifications
-     */
     public Usuario usu;
     public DAO dao;
-    private ParaTi paraTI;
+    private VMain vMain;
     private boolean tienda;
     private List<Articulo> ar;
     private Tienda tien;
@@ -49,47 +41,53 @@ public class Notifications extends javax.swing.JPanel {
     private FiltrarPanel filtrarPanel;
 
     public Notifications(Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien, boolean filtrar, FiltrarPanel filtrarPanel) {
-        this.usu = usu;
-        this.dao = dao;
-        this.tienda = tienda;
-        this.filtrarPanel = filtrarPanel;
-        this.ar = ar;
-        this.tien = tien;
-        this.filtrar = filtrar;
+        try {
+            this.usu = usu;
+            this.dao = dao;
+            this.tienda = tienda;
+            this.filtrarPanel = filtrarPanel;
+            this.ar = ar;
+            this.tien = tien;
+            this.filtrar = filtrar;
 
-        initComponents();
+            initComponents();
 
-        scroll.setBackground(new Color(49, 51, 53));
-        setOpaque(false);
-        JScrollBar sb = scroll.getVerticalScrollBar();
-        sb.setOpaque(false);
-        sb.setForeground(new Color(33, 140, 206));
-        sb.setPreferredSize(new Dimension(8, 8));
-        sb.setUI(new ModernScrollBarUI());
-        scroll.getViewport().setOpaque(false);
-        scroll.setViewportBorder(null);
-        panel.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
-        btnComprar.setBackground(Color.WHITE);
-        btnComprar.setContentAreaFilled(false);
-        panel.setBackground(new Color(49, 51, 53));
-        List<String> conversaciones = dao.sacarConversaciones(usu.getUsuario());
+            scroll.setBackground(new Color(49, 51, 53));
+            setOpaque(false);
+            JScrollBar sb = scroll.getVerticalScrollBar();
+            sb.setOpaque(false);
+            sb.setForeground(new Color(33, 140, 206));
+            sb.setPreferredSize(new Dimension(8, 8));
+            sb.setUI(new ModernScrollBarUI());
+            scroll.getViewport().setOpaque(false);
+            scroll.setViewportBorder(null);
+            panel.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
+            btnComprar.setBackground(Color.WHITE);
+            btnComprar.setContentAreaFilled(false);
+            panel.setBackground(new Color(49, 51, 53));
+            List<String> conversaciones = dao.sacarConversaciones(usu.getUsuario());
 
-        loadNoti(conversaciones);
-        if (conversaciones.size() >= 1) {
-            lblConver.setVisible(false);
-            btnConversacion.setVisible(false);
-        }
-        if (tienda && !filtrar) {
-            btnConversacion.setVisible(false);
-            lblConver.setVisible(false);
-            lblTitulo.setVisible(false);
-            filtra.setVisible(false);
-        } else if (filtrar) {
-            lblTitulo.setText("Filtrar por:");
-            filtra.setVisible(true);
-        } else {
-            btnComprar.setVisible(false);
-            filtra.setVisible(false);
+            loadNoti(conversaciones);
+            if (conversaciones.size() >= 1) {
+                lblConver.setVisible(false);
+                btnConversacion.setVisible(false);
+            }
+            if (tienda && !filtrar) {
+                btnConversacion.setVisible(false);
+                lblConver.setVisible(false);
+                lblTitulo.setVisible(false);
+                filtra.setVisible(false);
+            } else if (filtrar) {
+                lblTitulo.setText("Filtrar por:");
+                filtra.setVisible(true);
+            } else {
+                btnComprar.setVisible(false);
+                filtra.setVisible(false);
+            }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
     }
 
@@ -112,15 +110,21 @@ public class Notifications extends javax.swing.JPanel {
             LocalDate fechaHoy = LocalDate.now();
 
             for (String con : conversaciones) {
-                Usuario otroUsu = dao.buscarUsuario(con);
-                List<Mensaje> mensajes = dao.sacarMensajes(usu.getUsuario(), con);
-                String ultimoMensaje = mensajes.get(mensajes.size() - 1).getMensaje();
-                int n = (int) ChronoUnit.DAYS.between(mensajes.get(mensajes.size() - 1).getFechaEnvio(), fechaHoy);
-                System.out.println(n);
-                if (n == 0) {
-                    panel.add(new Item(new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + otroUsu.getIcono()), con, ultimoMensaje, "Hoy", dao, usu, tienda));
-                } else {
-                    panel.add(new Item(new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + otroUsu.getIcono()), con, ultimoMensaje, "Hace " + n + " dias", dao, usu, tienda));
+                try {
+                    Usuario otroUsu = dao.buscarUsuario(con);
+                    List<Mensaje> mensajes = dao.sacarMensajes(usu.getUsuario(), con);
+                    String ultimoMensaje = mensajes.get(mensajes.size() - 1).getMensaje();
+                    int n = (int) ChronoUnit.DAYS.between(mensajes.get(mensajes.size() - 1).getFechaEnvio(), fechaHoy);
+                    System.out.println(n);
+                    if (n == 0) {
+                        panel.add(new Item(new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + otroUsu.getIcono()), con, ultimoMensaje, "Hoy", dao, usu, tienda));
+                    } else {
+                        panel.add(new Item(new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + otroUsu.getIcono()), con, ultimoMensaje, "Hace " + n + " dias", dao, usu, tienda));
+                    }
+                } catch (ErrVariados ex) {
+                    ex.mostrarError();
+                } catch (ErrSelect ex) {
+                    ex.mostrarError();
                 }
 
             }
@@ -228,7 +232,7 @@ public class Notifications extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConversacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConversacionActionPerformed
-        Buscar buscar = new Buscar(paraTI, true, dao, usu, true);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, true);
         this.setVisible(false);
         buscar.setVisible(true);
     }//GEN-LAST:event_btnConversacionActionPerformed

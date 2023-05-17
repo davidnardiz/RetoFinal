@@ -17,6 +17,11 @@ import javax.swing.ImageIcon;
 import modelo.DAO;
 import chat.ChatBox;
 import chat.ChatEvent;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,16 +33,16 @@ public class pruebaChat extends javax.swing.JDialog {
      * Creates new form pruebaChat
      */
     private DAO dao;
-    private ParaTi paraTi;
+    private VMain vMain;
     private Usuario usu;
     private String name;
 
-    public pruebaChat(ParaTi parent, boolean modal, DAO dao, Usuario usu, String name) {
-        super(parent, modal);
+    public pruebaChat(VMain vMain, boolean modal, DAO dao, Usuario usu, String name) {
+        super(vMain, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
-        this.paraTi = parent;
+        this.vMain = vMain;
         initComponents();
         if (!this.isActive()) {
             super.setVisible(false);
@@ -49,29 +54,37 @@ public class pruebaChat extends javax.swing.JDialog {
         chatArea.addChatEvent(new ChatEvent() {
             @Override
             public void mousePressedSendButton(ActionEvent evt) {
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + usu.getIcono()));
-                String nombre = usu.getUsuario();
-                String fecha = df.format(new Date());
-                String mensaje = chatArea.getText().trim();
-                chatArea.addChatBox(new chat.ModelMessage(icon, nombre, fecha, mensaje), ChatBox.BoxType.RIGHT);
-                chatArea.clearTextAndGrabFocus();
+                try {
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + usu.getIcono()));
+                    String nombre = usu.getUsuario();
+                    String fecha = df.format(new Date());
+                    String mensaje = chatArea.getText().trim();
+                    chatArea.addChatBox(new chat.ModelMessage(icon, nombre, fecha, mensaje), ChatBox.BoxType.RIGHT);
+                    chatArea.clearTextAndGrabFocus();
 
-                Mensaje men = new Mensaje();
-                String codigo;
-                String ultimoCodigo = " ";
-                int numCod = 0;
+                    Mensaje men = new Mensaje();
+                    String codigo;
+                    String ultimoCodigo = " ";
+                    int numCod = 0;
 
-                ultimoCodigo = dao.calcularIdMensaje("M");
-                numCod = Integer.parseInt(ultimoCodigo.substring(2));
-                numCod++;
-                codigo = "M-" + String.format("%03d", numCod);
+                    ultimoCodigo = dao.calcularIdMensaje("M");
+                    numCod = Integer.parseInt(ultimoCodigo.substring(2));
+                    numCod++;
+                    codigo = "M-" + String.format("%03d", numCod);
 
-                men.setIdMensaje(codigo);
-                men.setFechaEnvio(LocalDate.now());
-                men.setMensaje(mensaje);
-                men.setUsuario1(usu.getUsuario());
-                men.setUsuario2(name);
-                dao.insertarMensaje(men);
+                    men.setIdMensaje(codigo);
+                    men.setFechaEnvio(LocalDate.now());
+                    men.setMensaje(mensaje);
+                    men.setUsuario1(usu.getUsuario());
+                    men.setUsuario2(name);
+                    dao.insertarMensaje(men);
+                } catch (ErrVariados ex) {
+                    ex.mostrarError();
+                } catch (ErrSelect ex) {
+                    ex.mostrarError();
+                } catch (ErrInsert ex) {
+                    ex.mostrarError();
+                }
 
             }
 
@@ -268,32 +281,33 @@ public class pruebaChat extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
@@ -316,23 +330,29 @@ public class pruebaChat extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void cargarMensajes(String usuario2) {
-        List<Mensaje> conversaciones = dao.sacarMensajes(usu.getUsuario(), usuario2);
+        try {
+            List<Mensaje> conversaciones = dao.sacarMensajes(usu.getUsuario(), usuario2);
 
-        for (Mensaje conver : conversaciones) {
-           
-            if (conver.getUsuario1().equalsIgnoreCase(usu.getUsuario())) {
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + usu.getIcono()));
-                String fecha = conver.getFechaEnvio().toString();
+            for (Mensaje conver : conversaciones) {
 
-                chatArea.addChatBox(new chat.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.RIGHT);
-            } else if (conver.getUsuario1().equalsIgnoreCase(usuario2)) {
-                Usuario otroUsu = dao.buscarUsuario(usuario2);
+                if (conver.getUsuario1().equalsIgnoreCase(usu.getUsuario())) {
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + usu.getIcono()));
+                    String fecha = conver.getFechaEnvio().toString();
 
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                String fecha = conver.getFechaEnvio().toString();
+                    chatArea.addChatBox(new chat.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.RIGHT);
+                } else if (conver.getUsuario1().equalsIgnoreCase(usuario2)) {
+                    Usuario otroUsu = dao.buscarUsuario(usuario2);
 
-                chatArea.addChatBox(new chat.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.LEFT);
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    String fecha = conver.getFechaEnvio().toString();
+
+                    chatArea.addChatBox(new chat.ModelMessage(icon, conver.getUsuario1(), fecha, conver.getMensaje()), ChatBox.BoxType.LEFT);
+                }
             }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
     }
 }

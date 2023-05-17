@@ -7,11 +7,8 @@ import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
@@ -362,17 +359,8 @@ public class Buscar extends javax.swing.JDialog {
         lblBuscadorText.setText("Buscador:");
         getContentPane().add(lblBuscadorText, new org.netbeans.lib.awtextra.AbsoluteConstraints(44, 109, -1, -1));
 
-        buscador.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                buscadorMouseClicked(evt);
-            }
-        });
-        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                buscadorKeyReleased(evt);
-            }
-        });
-        getContentPane().add(buscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 300, -1));
+        buscador.setText("textFieldSearchOption1");
+        getContentPane().add(buscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 100, 300, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -417,6 +405,10 @@ public class Buscar extends javax.swing.JDialog {
         int fila = tablaUsuarios.rowAtPoint(evt.getPoint());
 
         if (conver) {
+            String otroUsu = tablaUsuarios.getValueAt(fila, 2).toString();
+            pruebaChat chat = new pruebaChat(vMain, true, dao, usu, otroUsu);
+            this.dispose();
+            chat.setVisible(true);
 
         } else {
             try {

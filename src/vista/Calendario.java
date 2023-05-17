@@ -49,7 +49,6 @@ public class Calendario extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(59, 61, 63));
-        setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(435, 295));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -64,9 +63,6 @@ public class Calendario extends javax.swing.JDialog {
             }
         });
         getContentPane().add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 130, 40));
-
-        calendario.setBackground(getBackground());
-        calendario.setForeground(new java.awt.Color(60, 60, 60));
         getContentPane().add(calendario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 200));
 
         pack();

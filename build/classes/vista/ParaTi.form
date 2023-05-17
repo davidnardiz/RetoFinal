@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
-<<<<<<< HEAD
   <NonVisualComponents>
     <Component class="javax.swing.ButtonGroup" name="tipoParaTi">
     </Component>
   </NonVisualComponents>
-=======
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -15,12 +12,9 @@
     </Property>
     <Property name="modal" type="boolean" value="true"/>
     <Property name="name" type="java.lang.String" value="paraTi" noResource="true"/>
-<<<<<<< HEAD
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[648, 864]"/>
     </Property>
-=======
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -44,7 +38,6 @@
     <Property name="useNullLayout" type="boolean" value="false"/>
   </Layout>
   <SubComponents>
-<<<<<<< HEAD
     <Component class="javax.swing.JToggleButton" name="btnGuardar">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -76,8 +69,6 @@
         </Constraint>
       </Constraints>
     </Component>
-=======
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
     <Container class="javax.swing.JPanel" name="franjaArriba">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -238,12 +229,6 @@
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="rolloverEnabled" type="boolean" value="false"/>
           </Properties>
-<<<<<<< HEAD
-=======
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnParaTiActionPerformed"/>
-          </Events>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         </Component>
         <Component class="javax.swing.JButton" name="btnBuscar">
           <Properties>
@@ -351,11 +336,7 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-<<<<<<< HEAD
           <Color id="Default Cursor"/>
-=======
-          <Color id="Wait Cursor"/>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[475, 475]"/>
@@ -474,11 +455,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-<<<<<<< HEAD
           <AbsoluteConstraints x="410" y="640" width="-1" height="-1"/>
-=======
-          <AbsoluteConstraints x="448" y="645" width="-1" height="-1"/>
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         </Constraint>
       </Constraints>
     </Component>
@@ -531,7 +508,6 @@
         </Constraint>
       </Constraints>
     </Component>
-<<<<<<< HEAD
     <Component class="javax.swing.JRadioButton" name="rdbtnTodas">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -619,7 +595,5 @@
         </Constraint>
       </Constraints>
     </Component>
-=======
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
   </SubComponents>
 </Form>

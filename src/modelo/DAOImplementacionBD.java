@@ -102,17 +102,17 @@ public class DAOImplementacionBD implements DAO {
     final private String SACAR_ARTICULO_ORDENADO_DESCENDETE = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio DESC ";
 
     //CONVERSASCIONES
-        final private String ULTIMO_MENSAJE = "SELECT id_mensaje FROM conversa WHERE SUBSTRING(id_mensaje, 1, 1) = ? ORDER BY id_mensaje desc LIMIT 1;";
-        final private String comprobarConver = "SELECT * FROM conversa where usuario = ? and usuario2 = ?";
-        final private String SACAR_CONVERSACION = "SELECT men.mensaje, men.fecha_envio, conver.usuario, conver.usuario2 from conversa conver inner join mensaje men "
-                + "on conver.id_mensaje = men.id_mensaje "
-                + "where(conver.usuario = ? and conver.usuario2 = ?) or (conver.usuario = ? and conver.usuario2 = ?) "
-                + "order by men.fecha_envio ASC ";
-        final private String SACAR_TODAS_LAS_CONVERSACIONES = "SELECT DISTINCT CASE WHEN USUARIO = ? THEN usuario2 "
-                + "ELSE usuario "
-                + "END AS OTRO_USUARIO "
-                + "FROM conversa WHERE ? IN(usuario, usuario2)";
-   
+    final private String ULTIMO_MENSAJE = "SELECT id_mensaje FROM conversa WHERE SUBSTRING(id_mensaje, 1, 1) = ? ORDER BY id_mensaje desc LIMIT 1;";
+    final private String comprobarConver = "SELECT * FROM conversa where usuario = ? and usuario2 = ?";
+    final private String SACAR_CONVERSACION = "SELECT men.mensaje, men.fecha_envio, conver.usuario, conver.usuario2 from conversa conver inner join mensaje men "
+            + "on conver.id_mensaje = men.id_mensaje "
+            + "where(conver.usuario = ? and conver.usuario2 = ?) or (conver.usuario = ? and conver.usuario2 = ?) "
+            + "order by men.fecha_envio ASC ";
+    final private String SACAR_TODAS_LAS_CONVERSACIONES = "SELECT DISTINCT CASE WHEN USUARIO = ? THEN usuario2 "
+            + "ELSE usuario "
+            + "END AS OTRO_USUARIO "
+            + "FROM conversa WHERE ? IN(usuario, usuario2)";
+
 // Update
     final private String EDITAR_PERFIL = "UPDATE usuario set contrasenia = ?, icono = ?, correo = ?, telefono = ? WHERE usuario = ?";
     final private String MODIFICAR_ARTICULO = "UPDATE articulo set descripcion = ?, precio = ?, peso = ? where id_articulo = ?";
@@ -122,7 +122,6 @@ public class DAOImplementacionBD implements DAO {
     final private String MODIFICAR_REEL = "UPDATE reel SET duracion = ?, descripcion = ? WHERE id_publicacion = ?";
     final private String MODIFICAR_HISTORIA = "UPDATE historia SET mejores_amigos = ?, cod_tipo = ? WHERE id_publicacion = ?";
 
-    
 // Deletes
     final private String ELIMINAR_PUBLICACION = "DELETE FROM publicacion WHERE id_publicacion = ?";
     final private String ELIMINAR_USUARIO = "DELETE FROM usuario WHERE usuario = ?";
@@ -140,8 +139,6 @@ public class DAOImplementacionBD implements DAO {
     final private String BLOQUEAR_USUARIO = "call bloquear(?, ?)";
 
     final private String COMPROBAR_PUBLICACION = "SELECT MostrarPublicacion(?, ?)";
-
-    
 
     public void abrirConexion() throws ErrVariados {
 
@@ -1209,6 +1206,7 @@ public class DAOImplementacionBD implements DAO {
         }
     }
 
+    @Override
     public List<Publicacion> listarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrSelect {
         this.abrirConexion();
         List<Publicacion> publicaciones = new ArrayList();
@@ -1451,7 +1449,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public void insertarMensaje(Mensaje men) {
+    public void insertarMensaje(Mensaje men) throws ErrVariados, ErrInsert {
         this.abrirConexion();
 
         try {
@@ -1469,14 +1467,13 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-
-            e.printStackTrace();
+            throw new ErrInsert("Mensaje");
         }
         this.cerrarConexion();
     }
 
     @Override
-    public List<Mensaje> sacarMensajes(String usuario1, String usuario2) {
+    public List<Mensaje> sacarMensajes(String usuario1, String usuario2) throws ErrVariados, ErrSelect {
         List<Mensaje> mensajes = new ArrayList<>();
 
         this.abrirConexion();
@@ -1501,15 +1498,14 @@ public class DAOImplementacionBD implements DAO {
                 mensajes.add(men);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ErrSelect("Mensaje");
         }
         this.cerrarConexion();
         return mensajes;
     }
 
     @Override
-    public String calcularIdMensaje(String string) {
+    public String calcularIdMensaje(String string) throws ErrVariados, ErrSelect {
         String cod = "";
         this.abrirConexion();
 
@@ -1525,14 +1521,14 @@ public class DAOImplementacionBD implements DAO {
                 cod = "00000";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Mensaje");
         }
         this.cerrarConexion();
         return cod;
     }
 
     @Override
-    public List<String> sacarConversaciones(String usuario) {
+    public List<String> sacarConversaciones(String usuario) throws ErrVariados, ErrSelect {
         List<String> mensajes = new ArrayList<>();
 
         this.abrirConexion();
@@ -1546,7 +1542,7 @@ public class DAOImplementacionBD implements DAO {
                 mensajes.add(rs.getString("OTRO_USUARIO"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Conversacion");
         }
         this.cerrarConexion();
         return mensajes;
@@ -1554,7 +1550,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public List<Articulo> sacarTodosLosArticulos() {
+    public List<Articulo> sacarTodosLosArticulos() throws ErrVariados, ErrSelect {
         List<Articulo> articulos = new ArrayList<>();
         this.abrirConexion();
 
@@ -1576,14 +1572,14 @@ public class DAOImplementacionBD implements DAO {
                 articulos.add(art);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
 
         return articulos;
     }
 
     @Override
-    public void insertarArticulo(Articulo art) {
+    public void insertarArticulo(Articulo art) throws ErrVariados, ErrInsert {
         this.abrirConexion();
 
         try {
@@ -1601,12 +1597,12 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrInsert("Articulos");
         }
     }
 
     @Override
-    public String calcularIdArticulo(String string) {
+    public String calcularIdArticulo(String string) throws ErrVariados, ErrSelect {
         String cod = "";
         this.abrirConexion();
 
@@ -1622,14 +1618,14 @@ public class DAOImplementacionBD implements DAO {
                 cod = "00000";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
         this.cerrarConexion();
         return cod;
     }
 
     @Override
-    public void borrarArticulo(String id) {
+    public void borrarArticulo(String id) throws ErrVariados, ErrDelete {
         this.abrirConexion();
 
         try {
@@ -1638,14 +1634,14 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrDelete("Articulos");
         }
 
         this.cerrarConexion();
     }
 
     @Override
-    public void modificarArt(Articulo art) {
+    public void modificarArt(Articulo art) throws ErrVariados, ErrAlter {
         this.abrirConexion();
 
         try {
@@ -1657,7 +1653,7 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrAlter("Articulos");
         }
 
         this.cerrarConexion();
@@ -1665,7 +1661,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) {
+    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) throws ErrVariados, ErrAlter {
         this.abrirConexion();
 
         try {
@@ -1676,14 +1672,14 @@ public class DAOImplementacionBD implements DAO {
             stmt.setString(4, id);
             stmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrAlter("Articulos");
         }
 
         this.cerrarConexion();
     }
 
     @Override
-    public int obtenerValoracion(Articulo ar) {
+    public int obtenerValoracion(Articulo ar) throws ErrVariados, ErrSelect {
         int valoracion = 0;
         this.abrirConexion();
 
@@ -1699,7 +1695,7 @@ public class DAOImplementacionBD implements DAO {
                 valoracion = 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
         this.cerrarConexion();
         return valoracion;
@@ -1707,7 +1703,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) {
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) throws ErrVariados, ErrSelect {
         List<Articulo> articulos = new ArrayList<>();
         this.abrirConexion();
 
@@ -1760,11 +1756,9 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
 
         return articulos;
     }
-
-}
 }

@@ -13,6 +13,7 @@ import excepciones.ErrDelete;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
+import java.time.LocalDate;
 
 public interface DAO {
 
@@ -30,6 +31,10 @@ public interface DAO {
     public void guardarPublicación(String usuario, String id_publicacion) throws ErrVariados, ErrInsert;
 
     public void aniadirAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrInsert;
+
+    public void insertarMensaje(Mensaje men) throws ErrVariados, ErrInsert;
+
+    public void insertarArticulo(Articulo art) throws ErrVariados, ErrInsert;
 
     // Selects
     public Publicacion buscarPublicacionXId(String id) throws ErrVariados, ErrSelect;
@@ -92,10 +97,28 @@ public interface DAO {
 
     public boolean comprobarGuardado(String usuario, String publicacion) throws ErrVariados, ErrSelect;
 
+    public List<Mensaje> sacarMensajes(String usuario1, String usuario2) throws ErrVariados, ErrSelect;
+
+    public String calcularIdMensaje(String string) throws ErrVariados, ErrSelect;
+
+    public List<String> sacarConversaciones(String usuario) throws ErrVariados, ErrSelect;
+
+    public List<Articulo> sacarTodosLosArticulos() throws ErrVariados, ErrSelect;
+
+    public String calcularIdArticulo(String string) throws ErrVariados, ErrSelect;
+
+    public int obtenerValoracion(Articulo ar) throws ErrVariados, ErrSelect;
+
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) throws ErrVariados, ErrSelect;
+
     // Updates
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
 
     public void editarPublicacion(Publicacion publi) throws ErrVariados, ErrAlter;
+
+    public void modificarArt(Articulo art) throws ErrVariados, ErrAlter;
+
+    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) throws ErrVariados, ErrAlter;
 
     // Deletes
     public void quirarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete;
@@ -114,36 +137,6 @@ public interface DAO {
 
     public void quitarAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 
-    
-    //Inserts
+    public void borrarArticulo(String id) throws ErrVariados, ErrDelete;
 
-    public void insertarMensaje(Mensaje men);
-
-    public void insertarArticulo(Articulo art);
-
-    // Selects
-    
-
-    public List<Mensaje> sacarMensajes(String usuario1, String usuario2);
-
-    public String calcularIdMensaje(String string);
-
-    public List<String> sacarConversaciones(String usuario);
-
-    public List<Articulo> sacarTodosLosArticulos();
-
-    public String calcularIdArticulo(String string);
-
-    public int obtenerValoracion(Articulo ar);
-
-    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc);
-
-    // Alters
-    public void modificarArt(Articulo art);
-
-    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id);
-
-    // Deletes
-    
-    public void borrarArticulo(String id);
 }

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Random;
+
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import jnafilechooser.api.JnaFileChooser;
@@ -19,11 +20,7 @@ public class Utilidades {
         return new Random().nextInt((max - min) + 1) + min;
     }
 
-<<<<<<< HEAD
     public static String seleccionarImagen(JDialog ventana) {
-=======
-    public static String seleccionarImagen(JDialog ventana, int width, int height) {
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
         File imagen = null;
 
         String rutaProyecto = System.getProperty("user.dir");
@@ -43,19 +40,11 @@ public class Utilidades {
 
                     // Si la foto esta en vertical redimensionarla con unos valores
                     if (image.getHeight() > image.getWidth()) {
-<<<<<<< HEAD
                         nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 356, 475);
 
                         // Si no redimensionarla con otrs
                     } else {
                         nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 475, 356);
-=======
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, height, width);
-
-                        // Si no redimensionarla con otrs
-                    } else {
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, width, height);
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
                     }
 
                     // Ruta origina del archivo
@@ -80,19 +69,11 @@ public class Utilidades {
 
     }
 
-<<<<<<< HEAD
-    public static String seleccionarIcono(JDialog ventana) {
-        File imagen = null;
-
-        String rutaProyecto = System.getProperty("user.dir");
-        File rutaExplorador = new File(rutaProyecto + "/src/imagenes/iconos/");
-=======
     public static String seleccionarImagenTienda(JDialog ventana, int width, int height) {
         File imagen = null;
 
         String rutaProyecto = System.getProperty("user.dir");
         File rutaExplorador = new File(rutaProyecto + "/src/imagenes/tienda/");
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
         JnaFileChooser ch = new JnaFileChooser(rutaExplorador);
         boolean seleccionado = ch.showOpenDialog(ventana);
@@ -100,31 +81,13 @@ public class Utilidades {
         if (seleccionado) {
             imagen = ch.getSelectedFile();
 
-<<<<<<< HEAD
-            if (!imagen.getAbsolutePath().contains("\\RetoFinal\\src\\imagenes\\iconos")) {
-=======
             if (!imagen.getAbsolutePath().contains("\\RetoFinal\\src\\imagenes\\tienda")) {
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
 
                 try {
                     File nuevaFoto = new File(imagen.getAbsolutePath());
                     BufferedImage image = ImageIO.read(nuevaFoto);
 
                     // Si la foto esta en vertical redimensionarla con unos valores
-<<<<<<< HEAD
-                    nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 64, 64);
-
-                    // Ruta origina del archivo
-                    Path rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
-
-                    // Ruta donde vamos a pegar
-                    Path rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
-
-                    // Copia la imagen al nuevo destino
-                    Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
-                            StandardCopyOption.REPLACE_EXISTING);
-
-=======
                     if (image.getHeight() > image.getWidth()) {
                         nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 140, 250);
 
@@ -143,7 +106,6 @@ public class Utilidades {
                     Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
                             StandardCopyOption.REPLACE_EXISTING);
 
->>>>>>> 58571a11d8a13ecba610123df311daa514dab3e0
                     nuevaFoto.delete();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -156,56 +118,49 @@ public class Utilidades {
 
     }
 
-    /*
-    public static String exploradorArchivos(JDialog ventana) {
-        String fotoSeleccionada = "";
-        Path rutaAntigua;
-        Path rutaNueva = null;
-        // Crear el Explorador
-        JFileChooser fileChooser = new JFileChooser();
-        // Decir donde abrir
+    public static String seleccionarIcono(JDialog ventana) {
+        File imagen = null;
+
         String rutaProyecto = System.getProperty("user.dir");
-        File rutaExplorador = new File(rutaProyecto + "/src/imagenes/publicaciones/");
-        fileChooser.setCurrentDirectory(rutaExplorador);
-        // Decir que solo puede abrir fotos
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "jpg", "jpeg", "png", "gif");
-        fileChooser.setFileFilter(filter);
-        // Mostrar el cuadro de diálogo del selector de archivos
-        int result = fileChooser.showOpenDialog(ventana);
-        // Si se a elegido una foto
-        if (result == JFileChooser.APPROVE_OPTION) {
-            // Coger la ruta absoluta
-            fotoSeleccionada = fileChooser.getSelectedFile().getPath();
-            // Si no esta dentro de la carpeta imagenes la copiamos a esa carpeta
-            if (!fotoSeleccionada.contains("\\RetoFinal\\src\\imagenes\\publicaciones")) {
+        File rutaExplorador = new File(rutaProyecto + "/src/imagenes/iconos/");
+
+        JnaFileChooser ch = new JnaFileChooser(rutaExplorador);
+        boolean seleccionado = ch.showOpenDialog(ventana);
+
+        if (seleccionado) {
+            imagen = ch.getSelectedFile();
+
+            if (!imagen.getAbsolutePath().contains("\\RetoFinal\\src\\imagenes\\iconos")) {
+
                 try {
-                    File nuevaFoto = new File(fotoSeleccionada);
+                    File nuevaFoto = new File(imagen.getAbsolutePath());
                     BufferedImage image = ImageIO.read(nuevaFoto);
+
                     // Si la foto esta en vertical redimensionarla con unos valores
-                    if (image.getHeight() > image.getWidth()) {
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 356, 475);
-                        // Si no redimensionarla con otrs
-                    } else {
-                        nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 475, 356);
-                    }
+                    nuevaFoto = Utilidades.redimensionarImagenes(nuevaFoto, 64, 64);
+
                     // Ruta origina del archivo
-                    rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
+                    Path rutaAntigua = Path.of(nuevaFoto.getAbsolutePath());
+
                     // Ruta donde vamos a pegar
-                    rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
+                    Path rutaNueva = Path.of(rutaExplorador.getAbsolutePath());
+
                     // Copia la imagen al nuevo destino
                     Files.copy(rutaAntigua, rutaNueva.resolve(rutaAntigua.getFileName()),
                             StandardCopyOption.REPLACE_EXISTING);
+
                     nuevaFoto.delete();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            // En la bda unicamente guardamos el nombre del archivo
-            fotoSeleccionada = fileChooser.getSelectedFile().getName();
+
+            return imagen.getName();
         }
-        return fotoSeleccionada;
+        return null;
+
     }
-     */
+
     public static File redimensionarImagenes(File imagen, int width, int height) {
         BufferedImage inputImage;
         File outputFile = null;

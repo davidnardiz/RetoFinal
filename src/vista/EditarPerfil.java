@@ -15,10 +15,6 @@ import javax.swing.ImageIcon;
 import modelo.DAO;
 import utilidades.Utilidades;
 
-/**
- *
- * @author 1dam
- */
 public class EditarPerfil extends javax.swing.JDialog {
 
     private Usuario nosotros;

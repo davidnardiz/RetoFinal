@@ -6,9 +6,14 @@ package tienda;
 
 import clases.Articulo;
 import clases.Usuario;
+import excepciones.ErrDelete;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -16,15 +21,8 @@ import modelo.DAO;
 import vista.AniadirProducto;
 import vista.Tienda;
 
-/**
- *
- * @author 1dam
- */
 public class panelContenido extends javax.swing.JPanel {
 
-    /**
-     * Creates new form panelContenido
-     */
     private Timer timer;
 
     private JLabel carritoCompra;
@@ -39,58 +37,65 @@ public class panelContenido extends javax.swing.JPanel {
     private AniadirProducto produc;
 
     public panelContenido(Icon icon, Icon image, DAO dao, Tienda tien, boolean borrarB, boolean modificar, Usuario usu, Articulo art, boolean mostrar, AniadirProducto produc) {
-        initComponents();
-        setBackground(new Color(49, 51, 53));
-        pic.setIcon(icon);
-        this.artCarrito = artCarrito;
-        this.produc = produc;
-        this.art = art;
-        this.dao = dao;
-        this.usu = usu;
-        this.mostrar = mostrar;
-        this.borrarB = borrarB;
-        this.modificar = modificar;
-        imgArticulo1.setImage((Icon) image);
-        this.tien = tien;
-        vendedor.setText(art.getVendedor());
-        descripcion.setText(art.getDescripcion());
-        descripcion.setBackground(new Color(49, 51, 53));
-        precio.setText(Float.toString(art.getPrecio()));
+        try {
+            initComponents();
+            setBackground(new Color(49, 51, 53));
+            pic.setIcon(icon);
+            this.artCarrito = artCarrito;
+            this.produc = produc;
+            this.art = art;
+            this.dao = dao;
+            this.usu = usu;
+            this.mostrar = mostrar;
+            this.borrarB = borrarB;
+            this.modificar = modificar;
+            imgArticulo1.setImage((Icon) image);
+            this.tien = tien;
+            vendedor.setText(art.getVendedor());
+            descripcion.setText(art.getDescripcion());
+            descripcion.setBackground(new Color(49, 51, 53));
+            precio.setText(Float.toString(art.getPrecio()));
 
-        artCarrito = new ArrayList<>();
+            artCarrito = new ArrayList<>();
 
-        int valoracion = dao.obtenerValoracion(art);
-        starRatingNoEditable1.setStar(valoracion);
-        if (borrarB) {
-            System.out.println("asddfff");
-            comprar.setVisible(false);
-            agregado.setVisible(false);
-            borrar.setVisible(true);
-        } else if (modificar) {
-            System.out.println("pruebitaa");
-            comprar.setVisible(false);
-            borrar.setVisible(false);
-            agregado.setVisible(false);
+            int valoracion = dao.obtenerValoracion(art);
+            starRatingNoEditable1.setStar(valoracion);
+            if (borrarB) {
+                System.out.println("asddfff");
+                comprar.setVisible(false);
+                agregado.setVisible(false);
+                borrar.setVisible(true);
+            } else if (modificar) {
+                System.out.println("pruebitaa");
+                comprar.setVisible(false);
+                borrar.setVisible(false);
+                agregado.setVisible(false);
 
-        } else if (usu.getUsuario().equalsIgnoreCase(art.getVendedor())) {
-            borrar.setVisible(false);
-            agregado.setVisible(false);
-            comprar.setVisible(false);
-        } else {
-            borrar.setVisible(false);
-            agregado.setVisible(false);
+            } else if (usu.getUsuario().equalsIgnoreCase(art.getVendedor())) {
+                borrar.setVisible(false);
+                agregado.setVisible(false);
+                comprar.setVisible(false);
+            } else {
+                borrar.setVisible(false);
+                agregado.setVisible(false);
+            }
+
+            if (mostrar && !borrarB) {
+                comprar.setVisible(false);
+                agregado.setVisible(true);
+            } else if (!mostrar && !borrarB) {
+                comprar.setVisible(true);
+                agregado.setVisible(false);
+            }
+            vendedor.setForeground(Color.white);
+            descripcion.setForeground(Color.white);
+            precio.setForeground(Color.white);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-
-        if (mostrar && !borrarB) {
-            comprar.setVisible(false);
-            agregado.setVisible(true);
-        } else if (!mostrar && !borrarB) {
-            comprar.setVisible(true);
-            agregado.setVisible(false);
-        }
-        vendedor.setForeground(Color.white);
-        descripcion.setForeground(Color.white);
-        precio.setForeground(Color.white);
     }
 
     public void setAgregado(JLabel agregado) {
@@ -184,38 +189,50 @@ public class panelContenido extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void comprarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comprarMouseClicked
-        List<Articulo> articulos = dao.sacarTodosLosArticulos();
-        String rutaImg = " ";
+        try {
+            List<Articulo> articulos = dao.sacarTodosLosArticulos();
+            String rutaImg = " ";
 
-        for (Articulo art : articulos) {
-            if (art.getDescripcion().equalsIgnoreCase(descripcion.getText())) {
-                rutaImg = art.getImagen();
+            for (Articulo art : articulos) {
+                if (art.getDescripcion().equalsIgnoreCase(descripcion.getText())) {
+                    rutaImg = art.getImagen();
+                }
             }
+
+            comprar.setVisible(false);
+            agregado.setVisible(true);
+            //tien.efectoCarrito();
+            JLabel prueba = tien.getCarritoCompraLleno();
+            prueba.setVisible(true);
+
+            Articulo ar = new Articulo();
+            ar.setImagen(art.getImagen());
+            ar.setId_articulo(art.getId_articulo());
+            ar.setVendedor(art.getVendedor());
+            ar.setPrecio(art.getPrecio());
+            ar.setDescripcion(art.getDescripcion());
+            artCarrito.add(ar);
+
+            List<Articulo> a = tien.getAr();
+            a.add(ar);
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-
-        comprar.setVisible(false);
-        agregado.setVisible(true);
-        //tien.efectoCarrito();
-        JLabel prueba = tien.getCarritoCompraLleno();
-        prueba.setVisible(true);
-
-        Articulo ar = new Articulo();
-        ar.setImagen(art.getImagen());
-        ar.setId_articulo(art.getId_articulo());
-        ar.setVendedor(art.getVendedor());
-        ar.setPrecio(art.getPrecio());
-        ar.setDescripcion(art.getDescripcion());
-        artCarrito.add(ar);
-
-        List<Articulo> a = tien.getAr();
-        a.add(ar);
 
     }//GEN-LAST:event_comprarMouseClicked
 
     private void borrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_borrarMouseClicked
-        dao.borrarArticulo(art.getId_articulo());
-        tien.cargarElementos(false);
-        produc.dispose();
+        try {
+            dao.borrarArticulo(art.getId_articulo());
+            tien.cargarElementos(false);
+            produc.dispose();
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrDelete ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_borrarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,8 +1,8 @@
 package vista;
 
-import clases.Button;
-import clases.MyPasswordField;
-import clases.MyTextField;
+import utilidades.IniciarSesion.Button;
+import utilidades.IniciarSesion.MyPasswordField;
+import utilidades.IniciarSesion.MyTextField;
 import clases.Usuario;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
