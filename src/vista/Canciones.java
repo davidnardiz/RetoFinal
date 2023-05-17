@@ -2,25 +2,25 @@ package vista;
 
 import clases.Cancion;
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 
+/**
+ *
+ * @author arceu
+ */
 public class Canciones extends javax.swing.JDialog {
 
     private String audio;
     private int duracionSegundos;
     private Thread t;
 
+    /**
+     * Crea una ventana para ver las canciones
+     *
+     * @param parent Es la ventana desde la que se abre
+     * @param modal Es si es modal o no
+     * @param can Es la cancion que se va a mostrar
+     */
     public Canciones(java.awt.Frame parent, boolean modal, Cancion can) {
         super(parent, modal);
         initComponents();
@@ -40,6 +40,9 @@ public class Canciones extends javax.swing.JDialog {
         contador();
     }
 
+    /**
+     * Crea un contador que cambia el segundo en el que se reproduce
+     */
     public void contador() {
         t = new Thread(new Runnable() {
             @Override
@@ -160,6 +163,11 @@ public class Canciones extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Empieza o pausa el contador
+     *
+     * @param evt
+     */
     private void btnReproducirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReproducirActionPerformed
         if (btnReproducir.isSelected()) {
             t.stop();
@@ -169,6 +177,11 @@ public class Canciones extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnReproducirActionPerformed
 
+    /**
+     * Cambia un label para poder ver el valor del slider
+     *
+     * @param evt
+     */
     private void sDuracionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sDuracionStateChanged
         lblSegundos.setText(sDuracion.getValue() + "s");
     }//GEN-LAST:event_sDuracionStateChanged

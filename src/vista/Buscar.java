@@ -15,6 +15,10 @@ import modelo.DAO;
 import utilidades.Filtros_Buscador.SearchOptinEvent;
 import utilidades.Filtros_Buscador.SearchOption;
 
+/**
+ *
+ * @author arceu
+ */
 public class Buscar extends javax.swing.JDialog {
 
     private DAO dao;
@@ -25,6 +29,15 @@ public class Buscar extends javax.swing.JDialog {
 
     private boolean conver;
 
+    /**
+     * Genera la pantalla para mostrar usuarios
+     *
+     * @param vMain Es la pantalla padre
+     * @param modal Es si la pantalla es modal o si np
+     * @param dao Es la interfaz de la logica de negocio
+     * @param usu Es el usuario que controla la aplicacion
+     * @param par1 Es si vienes quieres abrir una conversacion
+     */
     public Buscar(VMain vMain, boolean modal, DAO dao, Usuario usu, boolean par1) {
         super(vMain, modal);
         this.setModal(modal);
@@ -76,6 +89,14 @@ public class Buscar extends javax.swing.JDialog {
         });
     }
 
+    /**
+     * Carga la tabla
+     *
+     * @param usuariosList Son los usuarios que quieres que aparezcan en la
+     * tabla
+     * @throws NullPointerException Pueden haber errores a la hora de cargar
+     * imagenes
+     */
     private void cargarTabla(List<Usuario> usuariosList) throws NullPointerException {
         DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
         modelo.setRowCount(0);
@@ -103,6 +124,11 @@ public class Buscar extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Al clickar en un usuario se abrira su perfil
+     *
+     * @param usuario Es el usuario cuyo perfil quieres abrir
+     */
     private void buscarUsuario(String usuario) {
         try {
             Usuario perf = dao.buscarUsuario(usuario);
@@ -116,6 +142,9 @@ public class Buscar extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Ese metodo permite cambiar el criterio de busqueda
+     */
     private void cambiarFiltro() {
         if (buscador.isSelected()) {
             try {
@@ -378,12 +407,22 @@ public class Buscar extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre la ventana para ti
+     *
+     * @param evt
+     */
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
         ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
+    /**
+     * Abre la ventana de buscar
+     *
+     * @param evt
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         Buscar buscar = new Buscar(vMain, true, dao, usu, false);
@@ -391,6 +430,11 @@ public class Buscar extends javax.swing.JDialog {
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    /**
+     * Abre la ventana de subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
         Subir subir = new Subir(vMain, true, dao, usu, null);
@@ -398,22 +442,42 @@ public class Buscar extends javax.swing.JDialog {
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
+    /**
+     * Abre la ventana de tienda
+     *
+     * @param evt
+     */
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
         Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre la ventana de perfil
+     *
+     * @param evt
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
+    /**
+     * Cambia el filtro de busqueda
+     *
+     * @param evt
+     */
     private void buscadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscadorMouseClicked
         cambiarFiltro();
     }//GEN-LAST:event_buscadorMouseClicked
 
+    /**
+     * Si se clicka en un usuario se abrira su perfil
+     *
+     * @param evt
+     */
     private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
         int fila = tablaUsuarios.rowAtPoint(evt.getPoint());
 
@@ -434,10 +498,18 @@ public class Buscar extends javax.swing.JDialog {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
+    /**
+     * Cambia el filtro de busqueda
+     *
+     * @param evt
+     */
     private void buscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscadorKeyReleased
         cambiarFiltro();
     }//GEN-LAST:event_buscadorKeyReleased
 
+    /**
+     * Este metodo cierra la ventana
+     */
     private void cerrar() {
         this.dispose();
         vMain.dispose();

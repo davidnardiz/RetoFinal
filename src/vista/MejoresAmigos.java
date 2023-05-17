@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
-import clases.Publicacion;
 import clases.Usuario;
 import excepciones.ErrDelete;
 import excepciones.ErrInsert;
@@ -12,24 +7,28 @@ import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JToggleButton;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class MejoresAmigos extends javax.swing.JDialog {
 
     private List<Usuario> usuariosList;
     private DAO dao;
     private Usuario nosotros;
 
+    /**
+     * Genera una pantalla para poder añadir y eliminar mejores amigos
+     *
+     * @param vMain Es la ventana padre
+     * @param aThis Es la pantalla desde la que se le llama
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de a logica del negocio
+     * @param usu Es el usuario que controla la aplicacion
+     */
     public MejoresAmigos(VMain vMain, Perfil aThis, boolean modal, DAO dao, Usuario usu) {
         super(vMain, modal);
         initComponents();
@@ -49,6 +48,10 @@ public class MejoresAmigos extends javax.swing.JDialog {
         aniadir();
     }
 
+    /**
+     * Ese metodo añade el usuario selecionado en el combobox a tu lista de
+     * mejores amigos
+     */
     private void aniadir() {
         try {
             amigos.removeAllItems();
@@ -70,6 +73,10 @@ public class MejoresAmigos extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Este metodo quita de tu lista de mejores amigos al usuario que esta
+     * seleccionado en el combobox
+     */
     private void quitar() {
         try {
             amigos.removeAllItems();
@@ -196,16 +203,31 @@ public class MejoresAmigos extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Llama al metodo de añadir
+     *
+     * @param evt
+     */
     private void aniadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aniadirActionPerformed
         // TODO add your handling code here:
         aniadir();
     }//GEN-LAST:event_aniadirActionPerformed
 
+    /**
+     * Llama al metodo de quitar
+     *
+     * @param evt
+     */
     private void quitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitarActionPerformed
         // TODO add your handling code here:
         quitar();
     }//GEN-LAST:event_quitarActionPerformed
 
+    /**
+     * Guarda los cambios en la base de datos
+     *
+     * @param evt
+     */
     private void btnAniQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAniQuitActionPerformed
         // TODO add your handling code here:
         try {

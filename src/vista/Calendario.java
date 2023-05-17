@@ -4,10 +4,20 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ *
+ * @author arceu
+ */
 public class Calendario extends javax.swing.JDialog {
 
     private Inicio registrar;
 
+    /**
+     * Crea la ventana donde se muestra el calendario
+     *
+     * @param parent Es la ventana desde la que se abre
+     * @param modal Es si la ventana es modal
+     */
     public Calendario(Inicio parent, boolean modal) {
         //  super(parent, modal);
         this.registrar = parent;
@@ -68,6 +78,11 @@ public class Calendario extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Escribe en la ventana en la que se ha abierto la fecha seleccionada
+     *
+     * @param evt
+     */
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         Date date = calendario.getDate();
 

@@ -1,9 +1,18 @@
 package excepciones;
 
+/**
+ *
+ * @author arceu
+ */
 public class ErrSelect extends Exception {
 
     private String mensaje = "";
 
+    /**
+     * Genera una excepcion para los errores de seleccion
+     *
+     * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
+     */
     public ErrSelect(String tabla) {
 
         switch (tabla) {
@@ -29,6 +38,9 @@ public class ErrSelect extends Exception {
         }
     }
 
+    /**
+     * Este metodo muestra la ventana del error
+     */
     public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Publicacion;
@@ -10,17 +6,17 @@ import excepciones.ErrDelete;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
-import java.awt.Container;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class PublicacionesGuardadas extends javax.swing.JDialog {
 
     private List<Publicacion> publicacionesList;
@@ -31,6 +27,17 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     private Perfil perfil;
     private DAO dao;
 
+    /**
+     * Genera una pantalla con todas las publicaciones que ha guardado
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica del negocio
+     * @param publi Es la publicacion que va a abrir
+     * @param usu Es el usuario que controla la aplicacion
+     * @param usuarioPerfil1 Es el usuario del perfil
+     * @param perfil Es la ventan desde la que se ha abieryo
+     */
     public PublicacionesGuardadas(VMain vMain, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil1, Perfil perfil) {
         super(vMain, modal);
         this.nosotros = usu;
@@ -186,6 +193,11 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre la publicacion que has clickado
+     *
+     * @param evt
+     */
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
         int columna = tablaPublicaciones.columnAtPoint(evt.getPoint());
@@ -199,6 +211,11 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
+    /**
+     * Vuelve a la pantalla anterior
+     *
+     * @param evt
+     */
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
         perfil.setVisible(true);
@@ -206,6 +223,11 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    /**
+     * Elimina todas las publicaciones que has guardado
+     *
+     * @param evt
+     */
     private void btnEliminarPubsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPubsActionPerformed
         try {
             // TODO add your handling code here:
@@ -221,6 +243,11 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnEliminarPubsActionPerformed
 
+    /**
+     * Carga la tabla con las publicaciones que has guardado
+     *
+     * @param publicacionesList Son las publicaciones que has guardado
+     */
     public void cargarTabla(List<Publicacion> publicacionesList) {
         DefaultTableModel modelo = (DefaultTableModel) tablaPublicaciones.getModel();
         modelo.setRowCount(0);
@@ -256,6 +283,11 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Abre una pantalla con todos los datos de la foto
+     *
+     * @param foto Es la foto que vas a abrir
+     */
     private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
         Publicacion publi = null;

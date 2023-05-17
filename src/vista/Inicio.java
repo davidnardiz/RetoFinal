@@ -24,6 +24,10 @@ import modelo.DAO;
 import net.miginfocom.swing.MigLayout;
 import utilidades.Utilidades;
 
+/**
+ *
+ * @author arceu
+ */
 public class Inicio extends javax.swing.JLayeredPane {
 
     private MyTextField txtUsuario;
@@ -40,6 +44,12 @@ public class Inicio extends javax.swing.JLayeredPane {
     private String error = "";
     private VMain conector;
 
+    /**
+     * Genera una pantalla para poder iniciar sesion y registrarse
+     *
+     * @param conector Ventana padre
+     * @param dao Es la interfaz de la logica del negocio
+     */
     public Inicio(VMain conector, DAO dao) {
         initComponents();
         initRegister();
@@ -50,6 +60,9 @@ public class Inicio extends javax.swing.JLayeredPane {
         this.dao = dao;
     }
 
+    /**
+     * Genera la pantalla de inicar sesion
+     */
     private void initRegister() {
         register.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]10[]10[]10[]25[]push"));
 
@@ -107,6 +120,9 @@ public class Inicio extends javax.swing.JLayeredPane {
 
     }
 
+    /**
+     * Genera la pantalla de inicar sesion
+     */
     private void initLogin() {
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]push"));
 
@@ -156,6 +172,9 @@ public class Inicio extends javax.swing.JLayeredPane {
 
     }
 
+    /**
+     * Inicia sesion el la aplicacion
+     */
     public void iniciarSesion() {
         error = "";
         boolean bien = false;
@@ -204,6 +223,9 @@ public class Inicio extends javax.swing.JLayeredPane {
         }
     }
 
+    /**
+     * Registra al usuario en la base de datos
+     */
     private void registrarse() {
         error = comprobarDatosUsuario();
         if (error == "") {
@@ -247,6 +269,11 @@ public class Inicio extends javax.swing.JLayeredPane {
         }
     }
 
+    /**
+     * Cambia la pantalla de iniciar sesion a registrarse
+     *
+     * @param show Es para saber si cambia a registrar o a iniciar sesion
+     */
     public void showRegister(boolean show) {
         if (show) {
             register.setVisible(true);
@@ -307,6 +334,11 @@ public class Inicio extends javax.swing.JLayeredPane {
     private javax.swing.JPanel register;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Comprueba si los datos del registro del usuario son validos o no
+     *
+     * @return Devuelve los errores que ha cometido el usuario
+     */
     private String comprobarDatosUsuario() {
         String error = "";
 
@@ -357,6 +389,9 @@ public class Inicio extends javax.swing.JLayeredPane {
         return error;
     }
 
+    /**
+     * Vacia todos los campos
+     */
     private void limpiar() {
         txtUsuario.setText("");
         txtEmail.setText("");
@@ -365,6 +400,17 @@ public class Inicio extends javax.swing.JLayeredPane {
         txtDni.setText("");
     }
 
+    /**
+     * Busca si los campos unicos ya existen en la base de datos
+     *
+     * @param error Es el string donde se guardan los errores que ha cometido el
+     * usuario
+     * @param usuario Es el nombre del usuario
+     * @param email Es el gmail del usuario
+     * @param tlf Es el telefono del usuario
+     * @param dni Es el dni del usuario
+     * @return Devuelve los campos en los que se ha equivocado
+     */
     private String comprobarUsuario(String error, String usuario, String email, String tlf, String dni) {
         try {
             List<Usuario> usuarios = dao.listarUsuario();
@@ -413,6 +459,9 @@ public class Inicio extends javax.swing.JLayeredPane {
         return error;
     }
 
+    /**
+     * Envia un correo al gmail del usuario con su contraseña
+     */
     private void recuperarCorreo() {
         if (txtUsuarioReg.getText().isBlank()) {
             VentanaMensaje ve = new VentanaMensaje("Cuidado", "Por favor introduce el usuario para poder enviarte un gmail");

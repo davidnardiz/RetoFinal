@@ -1,12 +1,18 @@
 package excepciones;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-
+/**
+ *
+ * @author arceu
+ */
 public class ErrInsert extends Exception {
 
     private String mensaje;
 
+    /**
+     * Genera una excepcion para los errores de insercion
+     *
+     * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
+     */
     public ErrInsert(String tabla) {
 
         switch (tabla) {
@@ -33,6 +39,9 @@ public class ErrInsert extends Exception {
         }
     }
 
+    /**
+     * Este metodo muestra la ventana del error
+     */
     public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }

@@ -7,18 +7,27 @@ import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.GroupLayout.Group;
-import javax.swing.JDialog;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class BloquearDesbloquear extends javax.swing.JDialog {
 
     private DAO dao;
     private Usuario nosotros;
     private int cant = 0;
 
+    /**
+     * Genera una ventana para bloquear y desbloquear usuarios
+     *
+     * @param vMain Es la ventana padre
+     * @param aThis Es la ventana desde la que se llama al metodo
+     * @param modal Es si la ventana es modal
+     * @param dao Es la interfaz de la logica del negocio
+     * @param usu Es el usuario que controla la aplicacion
+     */
     public BloquearDesbloquear(VMain vMain, Perfil aThis, boolean modal, DAO dao, Usuario usu) {
         super(vMain, modal);
         this.dao = dao;
@@ -36,15 +45,16 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Ese metodo carga un combobox
+     */
     private void bloquear() {
         try {
             bloqueados.removeAllItems();
             btnBloqDesbloq.setText("Bloquear");
             List<Usuario> etiquetados = dao.listarDesbloqueados(nosotros);
             for (Usuario i : etiquetados) {
-                if (i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())) {
-
-                } else {
+                if (!i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())) {
                     bloqueados.addItem(i.getUsuario());
                 }
 
@@ -57,6 +67,9 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Ese metodo carga un combobox
+     */
     private void desbloquear() {
         try {
             bloqueados.removeAllItems();
@@ -199,6 +212,12 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
         desbloquear();
     }//GEN-LAST:event_desbloquearActionPerformed
 
+    /**
+     * Ese metodo bloquea o desbloquea al usuario que esta seleccionado en el
+     * combobox en base a si el boton esta pulsado o si no
+     *
+     * @param evt
+     */
     private void btnBloqDesbloqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloqDesbloqActionPerformed
         // TODO add your handling code here:
         try {

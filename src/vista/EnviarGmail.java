@@ -15,6 +15,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class EnviarGmail extends javax.swing.JDialog {
 
     private Properties mProperties;
@@ -35,6 +39,17 @@ public class EnviarGmail extends javax.swing.JDialog {
     private String razon;
     private int intentos = 3;
 
+    /**
+     * Genera una pantalla donde se envia un correo al gmail del usuario
+     *
+     * @param vMain Es la ventana padre
+     * @param aThis Es la ventana desde la que se le llama
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param us Es el usuario que controla la aplicacion
+     * @param razon Este valor determina si el correo es de registro o de
+     * recuperacion
+     */
     public EnviarGmail(VMain vMain, Inicio aThis, boolean modal, DAO dao, Usuario us, String razon) {
         super(vMain, modal);
 
@@ -92,6 +107,9 @@ public class EnviarGmail extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Crea el gmail
+     */
     private void crearEmail() {
         receptor = usu.getCorreo();
 
@@ -122,6 +140,9 @@ public class EnviarGmail extends javax.swing.JDialog {
         enviarEmail();
     }
 
+    /**
+     * Envia el gmail al usuario
+     */
     private void enviarEmail() {
         try {
             Transport mTransport = mSession.getTransport("smtp");
@@ -188,6 +209,12 @@ public class EnviarGmail extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Si la razon es de registro pedira el codigo que se le ha enviado al gmail
+     * si no simplemente cierra la ventana
+     *
+     * @param evt
+     */
     private void cerrar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrar
         if (!razon.equalsIgnoreCase("Contrasenia")) {
 

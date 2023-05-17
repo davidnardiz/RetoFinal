@@ -1,9 +1,18 @@
 package excepciones;
 
+/**
+ *
+ * @author arceu
+ */
 public class ErrVariados extends Exception {
 
     private String mensaje;
 
+    /**
+     * Genera una excepcion para los errores de variados
+     *
+     * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
+     */
     public ErrVariados(String razon) {
 
         switch (razon) {
@@ -24,6 +33,9 @@ public class ErrVariados extends Exception {
         }
     }
 
+    /**
+     * Este metodo muestra la ventana del error
+     */
     public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }

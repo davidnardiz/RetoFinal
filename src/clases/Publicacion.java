@@ -14,7 +14,8 @@ public class Publicacion {
     private String id_cancion;
 
     /**
-     * ******** METODOS *********
+     *
+     * @return Devuelve todos los atributos de la publicacion
      */
     @Override
     public String toString() {
@@ -23,12 +24,7 @@ public class Publicacion {
                 + ", usuario=" + usuario + ", id_cancion=" + id_cancion + "]";
     }
 
-    /**
-     * ******** CONSTRUCTORES *********
-     */
-    /**
-     * ******** GETTERS && SETTERS *********
-     */
+    //GETTERS && SETTERS
     public String getId_publicacion() {
         return id_publicacion;
     }

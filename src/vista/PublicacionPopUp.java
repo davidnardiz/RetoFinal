@@ -16,6 +16,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class PublicacionPopUp extends javax.swing.JDialog {
 
     private DAO dao;
@@ -25,10 +29,20 @@ public class PublicacionPopUp extends javax.swing.JDialog {
     private VMain vMain;
     private boolean guardado;
 
+    /**
+     * Abre una ventana donde se muestran todos los datos de una publicacion
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param publi Es la publicacion que se quiere mostrar
+     * @param usu Es el usuario que controla la aplicacion
+     * @param usuarioPerfil Es el usuaio que ha subido la publicacion
+     * @param perfil Es la ventana desde la que se abre
+     */
     public PublicacionPopUp(VMain vMain, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil, Perfil perfil) {
         super(vMain, modal);
         try {
-
             this.vMain = vMain;
             this.dao = dao;
             this.usu = usu;
@@ -228,6 +242,11 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Da o quita el like
+     *
+     * @param evt
+     */
     private void darLike(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_darLike
         try {
             if (btnLike.isSelected()) {
@@ -247,6 +266,12 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_darLike
 
+    /**
+     * Permite editar los datos de la publicacion, solo si la hemos subido
+     * nosotros
+     *
+     * @param evt
+     */
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         Subir subir = new Subir(vMain, true, dao, usu, publi);
         this.dispose();
@@ -254,6 +279,11 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         subir.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
+    /**
+     * Permite eliminar la publicacion, solo si la hemos subido nosotros
+     *
+     * @param evt
+     */
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int seguro = JOptionPane.showConfirmDialog(this, "Seguro que quieres eliminar la publicacion");
 
@@ -270,6 +300,11 @@ public class PublicacionPopUp extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    /**
+     * Abre el perfil del usuario etiquetado en la publicacion
+     *
+     * @param evt
+     */
     private void btnEtiquetadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetadoActionPerformed
         try {
             this.dispose();
@@ -291,6 +326,9 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         guardar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    /**
+     * Guarda la publicacion para poder verla mas tarde
+     */
     private void guardar() {
         try {
             if (btnGuardar.isSelected()) {

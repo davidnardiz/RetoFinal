@@ -30,6 +30,9 @@ public class ErrDelete extends Exception {
         }
     }
 
+    /**
+     * Este metodo muestra la ventana del error
+     */
     public void mostrarError() {
         VentanaError vent = new VentanaError(mensaje);
     }

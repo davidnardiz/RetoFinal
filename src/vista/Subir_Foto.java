@@ -5,16 +5,26 @@ import clases.Usuario;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class Subir_Foto extends javax.swing.JPanel {
 
     private Subir subir;
     private DAO dao;
     private Usuario usu;
 
+    /**
+     * Genera una pantalla para subir fotos
+     *
+     * @param subir Es la ventana desde la que se le llama
+     * @param par Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param usu Es el usuario que controla la aplicacion
+     */
     public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
         try {
             initComponents();
@@ -152,10 +162,20 @@ public class Subir_Foto extends javax.swing.JPanel {
         add(btnSubir, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 480, 86, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre el explorador de archivos para seleccionar una foto
+     *
+     * @param evt
+     */
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         subir.elegirFoto();
     }//GEN-LAST:event_btnFotoActionPerformed
 
+    /**
+     * Sube la publicacion
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed

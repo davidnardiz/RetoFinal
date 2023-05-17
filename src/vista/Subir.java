@@ -9,7 +9,6 @@ import excepciones.ErrAlter;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
-import excepciones.VentanaError;
 import excepciones.VentanaMensaje;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -23,6 +22,10 @@ import javax.swing.JTextField;
 import modelo.DAO;
 import utilidades.Utilidades;
 
+/**
+ *
+ * @author arceu
+ */
 public class Subir extends javax.swing.JDialog {
 
     private DAO dao;
@@ -39,6 +42,15 @@ public class Subir extends javax.swing.JDialog {
 
     private boolean editar = false;
 
+    /**
+     * Abre una ventana para subir publicaciones
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param usu Es el usuario que controla la aplicacion
+     * @param publiEditar Es si vas a editar una publicacion o no
+     */
     public Subir(VMain vMain, boolean modal, DAO dao, Usuario usu, Publicacion publiEditar) {
         super(vMain, modal);
         this.vMain = vMain;
@@ -72,6 +84,9 @@ public class Subir extends javax.swing.JDialog {
         });
     }
 
+    /**
+     * Abre el explorador de archivos para seleccionar una foto
+     */
     public void elegirFoto() {
         imagen = Utilidades.seleccionarImagen(this);
         if (imagen != null) {
@@ -79,6 +94,9 @@ public class Subir extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Guarda la publicacion en la base de datos
+     */
     public void subirPublicacion() {
         Publicacion publi;
         String id;
@@ -178,6 +196,9 @@ public class Subir extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Comprueba si los datos son validos o no
+     */
     public void comprobarDatos() {
         String mensaje = "";
         boolean correcto = true;
@@ -294,6 +315,9 @@ public class Subir extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Vacia todos los campos
+     */
     public void limpiar() {
         imagen = null;
 
@@ -335,6 +359,9 @@ public class Subir extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Muestra los datos de la publicacion que se va a editar
+     */
     private void mostrarDatos() {
         imagen = publiEditar.getImagen();
 
@@ -635,12 +662,22 @@ public class Subir extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre la ventana paraTi
+     *
+     * @param evt
+     */
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
         ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
+    /**
+     * Abre la ventana buscar
+     *
+     * @param evt
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         Buscar buscar = new Buscar(vMain, true, dao, usu, false);
@@ -648,6 +685,11 @@ public class Subir extends javax.swing.JDialog {
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    /**
+     * Abre la ventana subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
         Subir subir = new Subir(vMain, true, dao, usu, null);
@@ -655,33 +697,63 @@ public class Subir extends javax.swing.JDialog {
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
+    /**
+     * Abre la ventana tienda
+     *
+     * @param evt
+     */
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
         Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre la ventana perfil
+     *
+     * @param evt
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
+    /**
+     * Cambia la pantalla para poder subir una foto
+     *
+     * @param evt
+     */
     private void cambiarFoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarFoto
         panelSlide.show(0);
         limpiar();
     }//GEN-LAST:event_cambiarFoto
 
+    /**
+     * Cambia la pantalla para poder subir un reel
+     *
+     * @param evt
+     */
     private void cambiarReel(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarReel
         panelSlide.show(1);
         limpiar();
     }//GEN-LAST:event_cambiarReel
 
+    /**
+     * Cambia la pantalla para poder subir una historia
+     *
+     * @param evt
+     */
     private void cambiarHistoria(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarHistoria
         panelSlide.show(2);
         limpiar();
     }//GEN-LAST:event_cambiarHistoria
 
+    /**
+     * Cierra la ventana
+     *
+     * @param evt
+     */
     private void cerrar() {
         this.dispose();
         vMain.dispose();

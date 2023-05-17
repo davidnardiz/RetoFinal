@@ -1,10 +1,17 @@
 package excepciones;
 
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.DocumentFilter;
-
+/**
+ *
+ * @author arceu
+ */
 public class VentanaMensaje extends javax.swing.JDialog {
 
+    /**
+     * Genera una ventana personalizada para poder ver los errores
+     *
+     * @param titulo Es el titulo de la ventana
+     * @param mensaje Es el mensaje que se va a mostrar
+     */
     public VentanaMensaje(String titulo, String mensaje) {
 
         // super(parent, modal);
@@ -107,6 +114,11 @@ public class VentanaMensaje extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Es el metodo para cerrar la ventana
+     *
+     * @param evt
+     */
     private void cerrar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrar
         this.dispose();
 

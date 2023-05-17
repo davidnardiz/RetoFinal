@@ -7,24 +7,19 @@ import excepciones.ErrInsert;
 import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+/**
+ *
+ * @author arceu
+ */
 public class Perfil extends javax.swing.JDialog {
 
     private DAO dao;
@@ -34,6 +29,15 @@ public class Perfil extends javax.swing.JDialog {
     private VMain vMain;
     private List<Publicacion> publicacionesList;
 
+    /**
+     * Crea una pantalla donde se muestra el perfil del usuario
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param nosotros Es el usuario que controla la aplicacion
+     * @param usuarioPerfil Es el usuario cuyo perfil queremos ver
+     */
     public Perfil(VMain vMain, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
         super(vMain, modal);
         try {
@@ -106,6 +110,11 @@ public class Perfil extends javax.swing.JDialog {
         });
     }
 
+    /**
+     * Carga la tabla con las publicaciones del usuario del perfil
+     *
+     * @param publicacionesList Son las publicaciones que queremos mostrar
+     */
     private void cargarTabla(List<Publicacion> publicacionesList) {
         DefaultTableModel modelo = (DefaultTableModel) tablaPublicaciones.getModel();
         modelo.setRowCount(0);
@@ -141,6 +150,11 @@ public class Perfil extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Genera una ventana donde se ve la foto que ha clickado y todos sus datos
+     *
+     * @param foto Es la foto que queremos ver
+     */
     private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
         publi = null;
@@ -157,6 +171,10 @@ public class Perfil extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Ocultar y desoculta un JPanel que no permite a los usuario ver perfiles
+     * que no sigue
+     */
     private void mostrarPublicacion() {
         try {
 
@@ -730,12 +748,22 @@ public class Perfil extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre una pantalla de paraTi
+     *
+     * @param evt
+     */
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
         ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
+    /**
+     * Abre una ventna de buscar
+     *
+     * @param evt
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         Buscar buscar = new Buscar(vMain, true, dao, usu, false);
@@ -743,6 +771,11 @@ public class Perfil extends javax.swing.JDialog {
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    /**
+     * Abre una ventana de subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
         Subir subir = new Subir(vMain, true, dao, usu, null);
@@ -750,18 +783,33 @@ public class Perfil extends javax.swing.JDialog {
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
+    /**
+     * Abre una ventana de tienda
+     *
+     * @param evt
+     */
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
         Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre una ventana de perfil
+     *
+     * @param evt
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
+    /**
+     * Muestra unicamente las fotos del usuario del perfil
+     *
+     * @param evt
+     */
     private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
         try {
             publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
@@ -774,6 +822,11 @@ public class Perfil extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
+    /**
+     * Muestra unicamente los reels del usuario del perfil
+     *
+     * @param evt
+     */
     private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
         try {
             publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Reel");
@@ -786,6 +839,11 @@ public class Perfil extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
+    /**
+     * Muestra unicamente las historias del usuario del perfil
+     *
+     * @param evt
+     */
     private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
         try {
             publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Historia");
@@ -798,6 +856,11 @@ public class Perfil extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
+    /**
+     * Sigue o deja de seguir al usuario del perfil
+     *
+     * @param evt
+     */
     private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
         try {
             if (btnSeguir.isSelected()) {
@@ -827,6 +890,11 @@ public class Perfil extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_seguir
 
+    /**
+     * Abre la foto que se clicka
+     *
+     * @param evt
+     */
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
         int columna = tablaPublicaciones.columnAtPoint(evt.getPoint());
@@ -840,6 +908,11 @@ public class Perfil extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
+    /**
+     * Cierra el panel de opciones
+     *
+     * @param evt
+     */
     private void equisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_equisMouseClicked
         // TODO add your handling code here:
         btnMenu.setBorder(null);
@@ -862,6 +935,11 @@ public class Perfil extends javax.swing.JDialog {
         tablaPublicaciones.setEnabled(true);
     }//GEN-LAST:event_equisMouseClicked
 
+    /**
+     * Abre el menu de opciones
+     *
+     * @param evt
+     */
     private void btnMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuMouseClicked
         // TODO add your handling code here:
         btnMenu.setBorder(null);
@@ -886,40 +964,35 @@ public class Perfil extends javax.swing.JDialog {
         btnEtiquetas.setBorder(null);
         btnCerrarSesion.setBorder(null);
         btnMejoresAmigos.setBorder(null);
-
-        /*
-        Point img1L = franjaMenu.getLocationOnScreen();
-        int targetX = img1L.x;
-        int targetY = img1L.y;
-
-        int startX = franjaMenu.getX();
-        int startY = franjaMenu.getY();
-        int endX = targetX;
-        int endY = targetY;
-        Animator animator = new Animator(750, new TimingTargetAdapter() {
-            @Override
-            public void timingEvent(float fraction) {
-                int x = (int) (startX + (endX - startX) * fraction);
-                int y = (int) (startY + (endY - startY) * fraction);
-                franjaMenu.setLocation(x, y);
-
-            }
-        });
-         */
     }//GEN-LAST:event_btnMenuMouseClicked
 
+    /**
+     * Abre una ventana para ver las publicaciones que ha guardado
+     *
+     * @param evt
+     */
     private void btnPublisGuardadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublisGuardadasActionPerformed
         // TODO add your handling code here:
         PublicacionesGuardadas vent = new PublicacionesGuardadas(vMain, true, dao, publi, usu, usuarioPerfil, this);
         vent.setVisible(true);
     }//GEN-LAST:event_btnPublisGuardadasActionPerformed
 
+    /**
+     * Abre una ventana para ver las publicaciones en las que le han etiquetado
+     *
+     * @param evt
+     */
     private void btnEtiquetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetasActionPerformed
         // TODO add your handling code here:
         PublicacionesEtiquetadas vent = new PublicacionesEtiquetadas(vMain, true, dao, publi, usu, usuarioPerfil, this);
         vent.setVisible(true);
     }//GEN-LAST:event_btnEtiquetasActionPerformed
 
+    /**
+     * Cierra la sesion y abre la ventana de inicar sesion
+     *
+     * @param evt
+     */
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         // TODO add your handling code here:
         int dialogButton = JOptionPane.YES_NO_OPTION;
@@ -933,18 +1006,33 @@ public class Perfil extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
+    /**
+     * Abre la ventana para añadir o eliminar mejores amigos
+     *
+     * @param evt
+     */
     private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
         // TODO add your handling code here:
         MejoresAmigos vent = new MejoresAmigos(vMain, this, true, dao, usu);
         vent.setVisible(true);
     }//GEN-LAST:event_btnMejoresAmigosActionPerformed
 
+    /**
+     * Abre la ventana para bloquear o desbloquear usuarios
+     *
+     * @param evt
+     */
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
         // TODO add your handling code here:
         BloquearDesbloquear bd = new BloquearDesbloquear(vMain, this, true, dao, usu);
         bd.setVisible(true);
     }//GEN-LAST:event_btnBloquearActionPerformed
 
+    /**
+     * Abre una ventana para editar el perfil
+     *
+     * @param evt
+     */
     private void btnEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPerfilActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -953,12 +1041,20 @@ public class Perfil extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnEditarPerfilActionPerformed
 
+    /**
+     * Abre una ventana para poder hablar con el usuario del perfil
+     *
+     * @param evt
+     */
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
         pruebaChat chat = new pruebaChat(vMain, true, dao, usu, usuarioPerfil.getUsuario());
         this.dispose();
         chat.setVisible(true);
     }//GEN-LAST:event_btnMensajeActionPerformed
 
+    /**
+     * Cierra la ventana
+     */
     private void cerrar() {
         this.dispose();
         vMain.dispose();

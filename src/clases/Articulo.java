@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package clases;
 
 import java.time.LocalDate;
 
 /**
  *
- * @author 1dam
+ * @author arceu
  */
 public class Articulo {
 
@@ -22,8 +18,8 @@ public class Articulo {
     private String vendedor;
     private String imagen;
     private int valoracion;
-    //Getters y setters
 
+    //Getters y setters
     public void setValoracion(int valoracion) {
         this.valoracion = valoracion;
     }
@@ -104,6 +100,10 @@ public class Articulo {
         this.vendedor = vendedor;
     }
 
+    /**
+     *
+     * @return Devuelve todos los atributos del articulo
+     */
     @Override
     public String toString() {
         return "Articulo{" + "id_articulo=" + id_articulo + ", descripcion=" + descripcion + ", precio=" + precio + ", peso=" + peso + ", fechaSubida=" + fechaSubida + ", fechaCompra=" + fechaCompra + ", lugarEntrega=" + lugarEntrega + ", vendedor=" + vendedor + '}';

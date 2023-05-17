@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Publicacion;
@@ -16,6 +12,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class PublicacionesEtiquetadas extends javax.swing.JDialog {
 
     private List<Publicacion> publicacionesList;
@@ -26,6 +26,18 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
     private Perfil perfil;
     private DAO dao;
 
+    /**
+     * Genera una ventana para mostrar las publicaciones en las que te han
+     * etiquetado
+     *
+     * @param vMain Ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica del negocio
+     * @param publi Es la publicacion que se va a ver
+     * @param usu Es el usuario que controla la aplicacion
+     * @param usuarioPerfil1 Es el usuario del perfil
+     * @param parent Es la ventana desde la que se le llama
+     */
     public PublicacionesEtiquetadas(VMain vMain, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil1, JDialog parent) {
         super(vMain, modal);
         this.nosotros = usu;
@@ -170,6 +182,11 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre la publicacion que has clickados
+     *
+     * @param evt
+     */
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
         int columna = tablaPublicaciones.columnAtPoint(evt.getPoint());
@@ -183,6 +200,11 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
+    /**
+     * Vuelve a la ventana desde la que le has llamado
+     *
+     * @param evt
+     */
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -190,6 +212,11 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    /**
+     * Carga la tabla con publicaciones
+     *
+     * @param publicacionesList Son la publicaciones que quieres mostrar
+     */
     private void cargarTabla(List<Publicacion> publicacionesList) {
         DefaultTableModel modelo = (DefaultTableModel) tablaPublicaciones.getModel();
         modelo.setRowCount(0);
@@ -225,6 +252,11 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Genera una pantalla con los datos de la publicacion
+     *
+     * @param foto Es la publicacion cuyos datos vamos a ver
+     */
     private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
         Publicacion publi = null;

@@ -1,7 +1,6 @@
 package vista;
 
 import clases.Articulo;
-import clases.Mensaje;
 import clases.Usuario;
 import excepciones.ErrInsert;
 import excepciones.ErrSelect;
@@ -13,8 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
@@ -27,11 +24,14 @@ import panelMensaje.DefaultOption;
 import panelMensaje.GlassPanePopup;
 import panelMensaje.Message;
 import panelMensaje.ModernScrollBarUI;
-import panelMensaje.Notifications;
 import tienda.panelContenido;
 import tienda.panelContenido2;
 import utilidades.Utilidades;
 
+/**
+ *
+ * @author arceu
+ */
 public class AniadirProducto extends javax.swing.JDialog {
 
     private Tienda tien;
@@ -40,6 +40,18 @@ public class AniadirProducto extends javax.swing.JDialog {
     private String imagen;
     private boolean añadir;
 
+    /**
+     * Genera una ventana para poder añadir, modificar o elimar articulos a la
+     * base de datos
+     *
+     * @param tien Es la ventana de la que viene
+     * @param modal Dice si la pantalla es modal o si no
+     * @param dao Es la interface de la logica del negocio
+     * @param usu Es el usuario que usa la aplicacion
+     * @param añadir Es para saber si va a añadir algo
+     * @param borrar Es para saber si va a borrar algo
+     * @param modificar Es para saber si va a modificar algo
+     */
     public AniadirProducto(Tienda tien, boolean modal, DAO dao, Usuario usu, boolean añadir, boolean borrar, boolean modificar) {
         super(tien, modal);
         this.dao = dao;

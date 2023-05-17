@@ -1,5 +1,9 @@
 package clases;
 
+/**
+ *
+ * @author arceu
+ */
 public class Foto extends Publicacion {
 
     private String id_publicacion;
@@ -8,7 +12,8 @@ public class Foto extends Publicacion {
     private String etiquetado;
 
     /**
-     * ******** METODOS *********
+     *
+     * @return Devuelve todos los atributos de la foto
      */
     @Override
     public String toString() {
@@ -16,12 +21,7 @@ public class Foto extends Publicacion {
                 + ", etiquetado=" + etiquetado + "]";
     }
 
-    /**
-     * ******** CONSTRUCTOR *********
-     */
-    /**
-     * ******** GETTER && SETTER *********
-     */
+//Getters setters
     public String getId_publicacion() {
         return id_publicacion;
     }

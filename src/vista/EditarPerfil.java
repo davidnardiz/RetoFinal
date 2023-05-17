@@ -1,20 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Usuario;
 import excepciones.ErrAlter;
 import excepciones.ErrVariados;
 import java.awt.Color;
-import java.awt.Frame;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import modelo.DAO;
 import utilidades.Utilidades;
 
+/**
+ *
+ * @author arceu
+ */
 public class EditarPerfil extends javax.swing.JDialog {
 
     private Usuario nosotros;
@@ -24,6 +21,15 @@ public class EditarPerfil extends javax.swing.JDialog {
     private Usuario us;
     private Usuario usuarioPerfil;
 
+    /**
+     * Crea una ventana para poder editar los datos del perfil
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal o no
+     * @param dao Es la interfaz de la logica del negocio
+     * @param usu Es el usuario que controla la aplicacion
+     * @param usuarioPerfil Es el usuario cuyo perfil vamos a modificars
+     */
     public EditarPerfil(VMain vMain, boolean modal, DAO dao, Usuario usu, Usuario usuarioPerfil) {
         super(vMain, modal);
         this.nosotros = usu;
@@ -38,6 +44,11 @@ public class EditarPerfil extends javax.swing.JDialog {
         cargarDatos(usu);
     }
 
+    /**
+     * Muestra los datos del usuario por pantalla
+     *
+     * @param us Es el usuario cuyos datos vamos a mostrar
+     */
     private void cargarDatos(Usuario us) {
         try {
             fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + nosotros.getIcono())));
@@ -159,14 +170,29 @@ public class EditarPerfil extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cierra la pantalla
+     *
+     * @param evt
+     */
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         cerrar();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    /**
+     * Llama al metodo para poder cambiar los datos
+     *
+     * @param evt
+     */
     private void btnEnviarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarDatosActionPerformed
         editarDatos();
     }//GEN-LAST:event_btnEnviarDatosActionPerformed
 
+    /**
+     * Genera una ventana para poder seleccionar la nueva foto de perfil
+     *
+     * @param evt
+     */
     private void fotoPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoPerfilMouseClicked
         ruta = Utilidades.seleccionarIcono(this);
         if (ruta != null) {
@@ -175,12 +201,18 @@ public class EditarPerfil extends javax.swing.JDialog {
 
     }//GEN-LAST:event_fotoPerfilMouseClicked
 
+    /**
+     * Cierra la pantalla y vuelve al perfil
+     */
     private void cerrar() {
         Perfil per = new Perfil(vMain, true, dao, us, usuarioPerfil);
         this.dispose();
         per.setVisible(true);
     }
 
+    /**
+     * Edita los datos del usuario con los nuevos datos de la pantalla
+     */
     private void editarDatos() {
         try {
             Usuario us = new Usuario();

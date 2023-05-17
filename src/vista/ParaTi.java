@@ -29,6 +29,10 @@ import panelMensaje.GlassPanePopup;
 import panelMensaje.NotificationsChat;
 import utilidades.Utilidades;
 
+/**
+ *
+ * @author arceu
+ */
 public class ParaTi extends javax.swing.JDialog {
 
     private VMain vMain;
@@ -39,6 +43,15 @@ public class ParaTi extends javax.swing.JDialog {
     private List<String> hanSalido = new ArrayList<>();
     private List<Publicacion> publicacionesDisponibles = new ArrayList<>();
 
+    /**
+     * Genera una ventana donde se muestran las publicaciones de los usuarios y
+     * permite interactuar con ellas
+     *
+     * @param conector Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica del negocio
+     * @param usu Es el usuario que controla la app
+     */
     public ParaTi(VMain conector, boolean modal, DAO dao, Usuario usu) {
         super(conector, modal);
         this.dao = dao;
@@ -76,6 +89,11 @@ public class ParaTi extends javax.swing.JDialog {
         });
     }
 
+    /**
+     * Prepara la pantalla para la nueva imagen. Esconde o muestra campos
+     * dependiendo si a publicacion los tiene a demas de mostrar los datos de la
+     * misma
+     */
     private void siguienteFoto() {
         try {
 
@@ -168,6 +186,11 @@ public class ParaTi extends javax.swing.JDialog {
 
     }
 
+    /**
+     * De todas las publicaciones que hay en la base de datos escoje una al azar
+     *
+     * @return El id de una publicacion
+     */
     private String generarPublicacionAleatoria() {
         String publiActual = "";
         int numRandom;
@@ -196,6 +219,12 @@ public class ParaTi extends javax.swing.JDialog {
 
     }
 
+    /**
+     * De todas las publicaciones que el usuario puede ver le muestra una
+     * aleatoriamente
+     *
+     * @return El id de la publicacion
+     */
     private String generarPublicacionAleatoriaReducida() {
         String publiActual = "";
         int numRandom;
@@ -256,6 +285,9 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Guarda la publicacion para que la puedas ver mas tarde
+     */
     private void guardar() {
         try {
             if (btnGuardar.isSelected()) {
@@ -625,6 +657,11 @@ public class ParaTi extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre la pantalla de mensajes
+     *
+     * @param evt
+     */
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
         try {
             List<String> conversaciones = dao.sacarConversaciones(usu.getUsuario());
@@ -661,24 +698,46 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnMensajeActionPerformed
 
+    /**
+     * Abre la pantalla de buscar
+     *
+     * @param evt
+     * @throws NullPointerException
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnBuscarActionPerformed
         Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.setVisible(false);
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    /**
+     * Abre la pantalla de subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         Subir subir = new Subir(vMain, true, dao, usu, null);
         this.setVisible(false);
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
+    /**
+     * Abre la pantalla de tienda
+     *
+     * @param evt
+     */
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
         Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.setVisible(false);
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre la pantalla de perfil
+     *
+     * @param evt
+     * @throws NullPointerException
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) throws NullPointerException{//GEN-FIRST:event_btnCuentaActionPerformed
         Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.setVisible(false);
@@ -693,6 +752,11 @@ public class ParaTi extends javax.swing.JDialog {
         darLike();
     }//GEN-LAST:event_btnLikeMouseClicked
 
+    /**
+     * Abre el perfil del usuario de la publicacion
+     *
+     * @param evt
+     */
     private void buscarPerfil(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarPerfil
         try {
             Usuario etiquetado = dao.buscarUsuario(publi.getUsuario());
@@ -707,6 +771,11 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_buscarPerfil
 
+    /**
+     * Abre el perfil del usuario etiquetado
+     *
+     * @param evt
+     */
     private void buscarEtiquetado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarEtiquetado
         try {
             Usuario etiquetado = dao.buscarUsuario(((Foto) publi).getEtiquetado());
@@ -725,6 +794,11 @@ public class ParaTi extends javax.swing.JDialog {
         guardar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    /**
+     * Muestra todas la publicaciones que existen
+     *
+     * @param evt
+     */
     private void rdbtnTodasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnTodasActionPerformed
         try {
             publicacionesDisponibles = dao.listarPublicaciones();
@@ -737,6 +811,11 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_rdbtnTodasActionPerformed
 
+    /**
+     * Muestra las publicaciones de los usuarios que sigues
+     *
+     * @param evt
+     */
     private void rdbtnSiguiendoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnSiguiendoActionPerformed
         try {
             publicacionesDisponibles = dao.listarPublicacionesParaTi(usu.getUsuario());
@@ -749,6 +828,11 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_rdbtnSiguiendoActionPerformed
 
+    /**
+     * Abre la ventana para poder ver las canciones
+     *
+     * @param evt
+     */
     private void btnCancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancionActionPerformed
         try {
             Cancion can = dao.buscarCancionXId(publi.getId_cancion());
@@ -762,6 +846,9 @@ public class ParaTi extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnCancionActionPerformed
 
+    /**
+     * Cierra la pantalla
+     */
     private void cerrar() {
         this.dispose();
         vMain.dispose();
