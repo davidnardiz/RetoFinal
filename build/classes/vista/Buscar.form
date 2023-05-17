@@ -369,9 +369,10 @@
       </Constraints>
     </Component>
     <Component class="utilidades.Filtros_Buscador.TextFieldSearchOption" name="buscador">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="textFieldSearchOption1"/>
-      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buscadorMouseClicked"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="buscadorKeyReleased"/>
+      </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="344" y="100" width="300" height="-1"/>

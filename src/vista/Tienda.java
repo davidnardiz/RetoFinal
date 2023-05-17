@@ -9,10 +9,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -62,6 +59,8 @@ public class Tienda extends javax.swing.JDialog {
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
+
+        setLocationRelativeTo(null);
 
         JScrollBar sb = scroll.getVerticalScrollBar();
         sb.setOpaque(false);
@@ -143,6 +142,7 @@ public class Tienda extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
+        setFocusable(false);
         setModal(true);
         setName("paraTi"); // NOI18N
         setResizable(false);
@@ -160,7 +160,7 @@ public class Tienda extends javax.swing.JDialog {
         lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
         franjaArriba.add(lblLogoLetras, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 6, 185, 65));
 
-        carritoCompraLleno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/carrito-de-supermercado-removebg-preview (1).jpg"))); // NOI18N
+        carritoCompraLleno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/carrito-de-supermercado-removebg-preview (1).jpg"))); // NOI18N
         carritoCompraLleno.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 carritoCompraLlenoMouseClicked(evt);
@@ -168,7 +168,7 @@ public class Tienda extends javax.swing.JDialog {
         });
         franjaArriba.add(carritoCompraLleno, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 57, 51));
 
-        carritoCompra1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/carrito-de-compras (1)-removebg-preview (1).jpg"))); // NOI18N
+        carritoCompra1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/carrito-de-compras (1)-removebg-preview (1).jpg"))); // NOI18N
         franjaArriba.add(carritoCompra1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 57, 51));
 
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 645, -1));
@@ -180,12 +180,16 @@ public class Tienda extends javax.swing.JDialog {
         btnParaTi.setToolTipText("");
         btnParaTi.setAlignmentY(0.0F);
         btnParaTi.setAutoscrolls(true);
+        btnParaTi.setBorder(null);
+        btnParaTi.setBorderPainted(false);
         btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusPainted(false);
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnParaTi.setMaximumSize(new java.awt.Dimension(50, 50));
         btnParaTi.setMinimumSize(new java.awt.Dimension(50, 50));
         btnParaTi.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnParaTi.setRequestFocusEnabled(false);
         btnParaTi.setRolloverEnabled(false);
         btnParaTi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,12 +202,16 @@ public class Tienda extends javax.swing.JDialog {
         btnBuscar.setToolTipText("");
         btnBuscar.setAlignmentY(0.0F);
         btnBuscar.setAutoscrolls(true);
+        btnBuscar.setBorder(null);
+        btnBuscar.setBorderPainted(false);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusPainted(false);
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBuscar.setMaximumSize(new java.awt.Dimension(50, 50));
         btnBuscar.setMinimumSize(new java.awt.Dimension(50, 50));
         btnBuscar.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnBuscar.setRequestFocusEnabled(false);
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,12 +224,16 @@ public class Tienda extends javax.swing.JDialog {
         btnSubir.setToolTipText("");
         btnSubir.setAlignmentY(0.0F);
         btnSubir.setAutoscrolls(true);
+        btnSubir.setBorder(null);
+        btnSubir.setBorderPainted(false);
         btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusPainted(false);
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSubir.setMaximumSize(new java.awt.Dimension(50, 50));
         btnSubir.setMinimumSize(new java.awt.Dimension(50, 50));
         btnSubir.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnSubir.setRequestFocusEnabled(false);
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -234,12 +246,16 @@ public class Tienda extends javax.swing.JDialog {
         btnTienda.setToolTipText("");
         btnTienda.setAlignmentY(0.0F);
         btnTienda.setAutoscrolls(true);
+        btnTienda.setBorder(null);
+        btnTienda.setBorderPainted(false);
         btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusPainted(false);
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnTienda.setMaximumSize(new java.awt.Dimension(50, 50));
         btnTienda.setMinimumSize(new java.awt.Dimension(50, 50));
         btnTienda.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnTienda.setRequestFocusEnabled(false);
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,12 +268,16 @@ public class Tienda extends javax.swing.JDialog {
         btnCuenta.setToolTipText("");
         btnCuenta.setAlignmentY(0.0F);
         btnCuenta.setAutoscrolls(true);
+        btnCuenta.setBorder(null);
+        btnCuenta.setBorderPainted(false);
         btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusPainted(false);
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCuenta.setMaximumSize(new java.awt.Dimension(50, 50));
         btnCuenta.setMinimumSize(new java.awt.Dimension(50, 50));
         btnCuenta.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnCuenta.setRequestFocusEnabled(false);
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,7 +335,7 @@ public class Tienda extends javax.swing.JDialog {
         getContentPane().add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 86, 563, 625));
 
         opciones1.setBackground(new java.awt.Color(41, 51, 54));
-        opciones1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/opciones-removebg-preview (1).jpg"))); // NOI18N
+        opciones1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/opciones-removebg-preview (1).jpg"))); // NOI18N
         opciones1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 opciones1MouseClicked(evt);
@@ -323,21 +343,21 @@ public class Tienda extends javax.swing.JDialog {
         });
         getContentPane().add(opciones1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 630, 53, 50));
 
-        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/boton-editar-removebg-preview (1).jpg"))); // NOI18N
+        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/boton-editar-removebg-preview (1).jpg"))); // NOI18N
         lblModificar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblModificarMouseClicked(evt);
             }
         });
 
-        lblBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
+        lblBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
         lblBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblBorrarMouseClicked(evt);
             }
         });
 
-        lblSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/boton-mas-removebg-preview (1) (1).jpg"))); // NOI18N
+        lblSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/boton-mas-removebg-preview (1) (1).jpg"))); // NOI18N
         lblSubir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblSubirMouseClicked(evt);
@@ -384,7 +404,7 @@ public class Tienda extends javax.swing.JDialog {
         getContentPane().add(panelDestino, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 460, -1, -1));
 
         opciones2.setBackground(new java.awt.Color(41, 51, 54));
-        opciones2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/opciones-removebg-preview (1).jpg"))); // NOI18N
+        opciones2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/opciones-removebg-preview (1).jpg"))); // NOI18N
         opciones2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 opciones2MouseClicked(evt);
@@ -392,7 +412,7 @@ public class Tienda extends javax.swing.JDialog {
         });
         getContentPane().add(opciones2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 630, 53, 50));
 
-        filtrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/filtrar.jpg"))); // NOI18N
+        filtrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/filtrar.jpg"))); // NOI18N
         filtrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 filtrarMouseClicked(evt);

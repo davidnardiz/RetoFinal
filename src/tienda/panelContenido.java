@@ -156,7 +156,7 @@ public class panelContenido extends javax.swing.JPanel {
         descripcion.setBorder(null);
         panelShadow.add(descripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 180, 60));
 
-        comprar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/anadir-a-la-cesta-removebg-preview (1).jpg"))); // NOI18N
+        comprar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/anadir-a-la-cesta-removebg-preview (1).jpg"))); // NOI18N
         comprar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 comprarMouseClicked(evt);
@@ -169,14 +169,14 @@ public class panelContenido extends javax.swing.JPanel {
 
         panelShadow.add(imgArticulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 250, 140));
 
-        agregado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/marca-de-verificacion-removebg-preview (1).jpg"))); // NOI18N
+        agregado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/marca-de-verificacion-removebg-preview (1).jpg"))); // NOI18N
         panelShadow.add(agregado, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, -1, -1));
         panelShadow.add(pic, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 40, 30));
 
         vendedor.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         panelShadow.add(vendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 134, 30));
 
-        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
+        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
         borrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 borrarMouseClicked(evt);

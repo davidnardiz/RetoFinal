@@ -386,22 +386,28 @@ public class ParaTi extends javax.swing.JDialog {
         btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
         btnParaTi.setToolTipText("");
         btnParaTi.setAlignmentY(0.0F);
-        btnParaTi.setAutoscrolls(true);
         btnParaTi.setBorder(null);
+        btnParaTi.setBorderPainted(false);
         btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setDefaultCapable(false);
+        btnParaTi.setFocusPainted(false);
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnParaTi.setRequestFocusEnabled(false);
         btnParaTi.setRolloverEnabled(false);
 
         btnBuscar.setBackground(franjaArriba.getBackground());
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
         btnBuscar.setToolTipText("");
         btnBuscar.setAlignmentY(0.0F);
-        btnBuscar.setAutoscrolls(true);
         btnBuscar.setBorder(null);
+        btnBuscar.setBorderPainted(false);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setDefaultCapable(false);
+        btnBuscar.setFocusPainted(false);
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBuscar.setRequestFocusEnabled(false);
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -413,11 +419,14 @@ public class ParaTi extends javax.swing.JDialog {
         btnSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/subir.png"))); // NOI18N
         btnSubir.setToolTipText("");
         btnSubir.setAlignmentY(0.0F);
-        btnSubir.setAutoscrolls(true);
         btnSubir.setBorder(null);
+        btnSubir.setBorderPainted(false);
         btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setDefaultCapable(false);
+        btnSubir.setFocusPainted(false);
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSubir.setRequestFocusEnabled(false);
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -429,11 +438,14 @@ public class ParaTi extends javax.swing.JDialog {
         btnTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/tienda.png"))); // NOI18N
         btnTienda.setToolTipText("");
         btnTienda.setAlignmentY(0.0F);
-        btnTienda.setAutoscrolls(true);
         btnTienda.setBorder(null);
+        btnTienda.setBorderPainted(false);
         btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setDefaultCapable(false);
+        btnTienda.setFocusPainted(false);
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTienda.setRequestFocusEnabled(false);
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -445,11 +457,14 @@ public class ParaTi extends javax.swing.JDialog {
         btnCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cuenta.png"))); // NOI18N
         btnCuenta.setToolTipText("");
         btnCuenta.setAlignmentY(0.0F);
-        btnCuenta.setAutoscrolls(true);
         btnCuenta.setBorder(null);
+        btnCuenta.setBorderPainted(false);
         btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setDefaultCapable(false);
+        btnCuenta.setFocusPainted(false);
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCuenta.setRequestFocusEnabled(false);
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -612,9 +627,6 @@ public class ParaTi extends javax.swing.JDialog {
 
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
         try {
-            // pruebaChat chat = new pruebaChat(this, true, dao, usu);
-            //this.setVisible(false);
-            //chat.setVisible(true);
             List<String> conversaciones = dao.sacarConversaciones(usu.getUsuario());
 
             for (String men : conversaciones) {

@@ -509,7 +509,7 @@ public class DAOImplementacionBD implements DAO {
 
         try {
             stmt = con.prepareStatement(LISTAR_USUARIOS_X_SEGUIDORES);
-            stmt.setString(1, "%" + seguidores + "%");
+            stmt.setString(1, seguidores);
 
             ResultSet rs = stmt.executeQuery();
 

@@ -195,7 +195,7 @@ public class AniadirProducto extends javax.swing.JDialog {
         });
         pestañaAñadir.add(aniadirFoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 160, -1, -1));
 
-        correcto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/marca-de-verificacion-removebg-preview (1).jpg"))); // NOI18N
+        correcto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/marca-de-verificacion-removebg-preview (1).jpg"))); // NOI18N
         pestañaAñadir.add(correcto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 150, 52, 51));
 
         pestañas.addTab("Añadir", pestañaAñadir);

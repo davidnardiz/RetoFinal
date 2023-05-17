@@ -44,6 +44,8 @@ public class pruebaChat extends javax.swing.JDialog {
         this.usu = usu;
         this.vMain = vMain;
         initComponents();
+
+        setLocationRelativeTo(null);
         if (!this.isActive()) {
             super.setVisible(false);
 
@@ -139,7 +141,7 @@ public class pruebaChat extends javax.swing.JDialog {
                 .addComponent(lblLogo)
                 .addGap(18, 18, 18)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(341, Short.MAX_VALUE))
         );
         franjaArribaLayout.setVerticalGroup(
             franjaArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,14 +159,17 @@ public class pruebaChat extends javax.swing.JDialog {
         franajAbajo.setBackground(new java.awt.Color(43, 45, 47));
         franajAbajo.setPreferredSize(new java.awt.Dimension(632, 100));
 
+        btnParaTi.setBackground(franajAbajo.getBackground());
         btnParaTi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/para ti.png"))); // NOI18N
         btnParaTi.setToolTipText("");
         btnParaTi.setAlignmentY(0.0F);
         btnParaTi.setAutoscrolls(true);
         btnParaTi.setBorder(null);
         btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusPainted(false);
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnParaTi.setRequestFocusEnabled(false);
         btnParaTi.setRolloverEnabled(false);
         btnParaTi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,14 +177,17 @@ public class pruebaChat extends javax.swing.JDialog {
             }
         });
 
+        btnBuscar.setBackground(franajAbajo.getBackground());
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/buscar.png"))); // NOI18N
         btnBuscar.setToolTipText("");
         btnBuscar.setAlignmentY(0.0F);
         btnBuscar.setAutoscrolls(true);
         btnBuscar.setBorder(null);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusPainted(false);
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBuscar.setRequestFocusEnabled(false);
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,14 +195,17 @@ public class pruebaChat extends javax.swing.JDialog {
             }
         });
 
+        btnSubir.setBackground(franajAbajo.getBackground());
         btnSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/subir.png"))); // NOI18N
         btnSubir.setToolTipText("");
         btnSubir.setAlignmentY(0.0F);
         btnSubir.setAutoscrolls(true);
         btnSubir.setBorder(null);
         btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusPainted(false);
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSubir.setRequestFocusEnabled(false);
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,14 +213,17 @@ public class pruebaChat extends javax.swing.JDialog {
             }
         });
 
+        btnTienda.setBackground(franajAbajo.getBackground());
         btnTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/tienda.png"))); // NOI18N
         btnTienda.setToolTipText("");
         btnTienda.setAlignmentY(0.0F);
         btnTienda.setAutoscrolls(true);
         btnTienda.setBorder(null);
         btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusPainted(false);
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTienda.setRequestFocusEnabled(false);
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,14 +231,17 @@ public class pruebaChat extends javax.swing.JDialog {
             }
         });
 
+        btnCuenta.setBackground(franajAbajo.getBackground());
         btnCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cuenta.png"))); // NOI18N
         btnCuenta.setToolTipText("");
         btnCuenta.setAlignmentY(0.0F);
         btnCuenta.setAutoscrolls(true);
         btnCuenta.setBorder(null);
         btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusPainted(false);
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCuenta.setRequestFocusEnabled(false);
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,7 +264,7 @@ public class pruebaChat extends javax.swing.JDialog {
                 .addComponent(btnTienda)
                 .addGap(66, 66, 66)
                 .addComponent(btnCuenta)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         franajAbajoLayout.setVerticalGroup(
             franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,7 +285,7 @@ public class pruebaChat extends javax.swing.JDialog {
         background1.setLayout(background1Layout);
         background1Layout.setHorizontalGroup(
             background1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(chatArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(chatArea, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
         );
         background1Layout.setVerticalGroup(
             background1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

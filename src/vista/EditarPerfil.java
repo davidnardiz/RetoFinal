@@ -169,7 +169,10 @@ public class EditarPerfil extends javax.swing.JDialog {
 
     private void fotoPerfilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoPerfilMouseClicked
         ruta = Utilidades.seleccionarIcono(this);
-        fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + ruta)));
+        if (ruta != null) {
+            fotoPerfil.setIcon(new ImageIcon(EditarPerfil.class.getResource("/imagenes/iconos/" + ruta)));
+        }
+
     }//GEN-LAST:event_fotoPerfilMouseClicked
 
     private void cerrar() {

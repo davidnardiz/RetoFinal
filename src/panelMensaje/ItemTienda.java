@@ -95,7 +95,7 @@ public class ItemTienda extends javax.swing.JPanel {
             }
         });
 
-        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
+        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
         borrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 borrarMouseClicked(evt);

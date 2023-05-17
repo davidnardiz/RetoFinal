@@ -90,6 +90,7 @@ public class NotificationsChat extends javax.swing.JPanel {
                 String ultimoMensaje = mensajes.get(mensajes.size() - 1).getMensaje();
                 int n = (int) ChronoUnit.DAYS.between(mensajes.get(mensajes.size() - 1).getFechaEnvio(), fechaHoy);
                 System.out.println(n);
+
                 if (n == 0) {
                     panel.add(new Item(new ImageIcon(rutaProyecto + "\\src\\imagenes\\iconos\\" + otroUsu.getIcono()), con, ultimoMensaje, "Hoy", dao, usu, tienda));
                 } else {

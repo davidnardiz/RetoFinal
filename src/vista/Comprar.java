@@ -270,9 +270,9 @@ public class Comprar extends javax.swing.JDialog {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("TU OPIONION ES IMPORTANTE");
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/cara-feliz.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cara-feliz.png"))); // NOI18N
 
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/verificar.png"))); // NOI18N
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/verificar.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

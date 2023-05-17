@@ -104,7 +104,7 @@ public class panelContenido2 extends javax.swing.JPanel {
         precioModificar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         panelShadow.add(precioModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 100, 20));
 
-        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/boton-editar-removebg-preview (1).jpg"))); // NOI18N
+        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/boton-editar-removebg-preview (1).jpg"))); // NOI18N
         lblModificar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblModificarMouseClicked(evt);

@@ -56,10 +56,14 @@ public class Buscar extends javax.swing.JDialog {
 
         });
 
-        buscador.addOption(new SearchOption("usuario", new ImageIcon(getClass().getResource("/utilidades/Filtros_Buscador/user.png"))));
-        buscador.addOption(new SearchOption("verificado", new ImageIcon(getClass().getResource("/imagenes/pantalla/verificado.png"))));
-        buscador.addOption(new SearchOption("mejos", new ImageIcon(getClass().getResource("/imagenes/pantalla/mejoresAmigosBuscar.png"))));
-        buscador.addOption(new SearchOption("seguidores", new ImageIcon(getClass().getResource("/utilidades/Filtros_Buscador/address.png"))));
+        String rutaProyecto = System.getProperty("user.dir");
+
+        System.out.println(rutaProyecto + "src\\utilidades\\Filtros_Buscador\\user.png");
+
+        buscador.addOption(new SearchOption("usuario", new ImageIcon(rutaProyecto + "\\src\\utilidades\\Filtros_Buscador\\user.png")));
+        buscador.addOption(new SearchOption("verificado", new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png")));
+        buscador.addOption(new SearchOption("mejos", new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\mejoresAmigosBuscar.png")));
+        buscador.addOption(new SearchOption("seguidores", new ImageIcon(rutaProyecto + "\\src\\utilidades\\Filtros_Buscador\\address.png")));
         buscador.setSelectedIndex(0);
         cargarTabla(usuariosList);
 
@@ -359,7 +363,16 @@ public class Buscar extends javax.swing.JDialog {
         lblBuscadorText.setText("Buscador:");
         getContentPane().add(lblBuscadorText, new org.netbeans.lib.awtextra.AbsoluteConstraints(44, 109, -1, -1));
 
-        buscador.setText("textFieldSearchOption1");
+        buscador.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscadorMouseClicked(evt);
+            }
+        });
+        buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscadorKeyReleased(evt);
+            }
+        });
         getContentPane().add(buscador, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 100, 300, -1));
 
         pack();
