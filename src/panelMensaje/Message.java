@@ -1,21 +1,21 @@
 package panelMensaje;
 
 import clases.Articulo;
+import excepciones.ErrAlter;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.DAO;
 import panelMensaje.GlassPanePopup;
 import vista.AniadirProducto;
 import vista.Tienda;
 
-/**
- *
- * @author RAVEN
- */
 public class Message extends javax.swing.JPanel {
 
     private AniadirProducto produc;
@@ -103,10 +103,16 @@ public class Message extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdCancelActionPerformed
 
     public void eventOK(ActionListener event) {
-        cmdOK.addActionListener(event);
-        dao.modificarArt(art);
-        tien.cargarElementos(false);
-        produc.dispose();
+        try {
+            cmdOK.addActionListener(event);
+            dao.modificarArt(art);
+            tien.cargarElementos(false);
+            produc.dispose();
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrAlter ex) {
+            ex.mostrarError();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

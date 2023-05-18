@@ -5,7 +5,11 @@
 package tienda;
 
 import clases.Articulo;
+import excepciones.ErrAlter;
+import excepciones.ErrVariados;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -14,15 +18,8 @@ import panelMensaje.Message;
 import vista.AniadirProducto;
 import vista.Tienda;
 
-/**
- *
- * @author 1dam
- */
 public class panelContenido2 extends javax.swing.JPanel {
 
-    /**
-     * Creates new form panelContenido
-     */
     private Timer timer;
 
     private JLabel carritoCompra;
@@ -107,7 +104,7 @@ public class panelContenido2 extends javax.swing.JPanel {
         precioModificar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         panelShadow.add(precioModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 100, 20));
 
-        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/boton-editar-removebg-preview (1).jpg"))); // NOI18N
+        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/boton-editar-removebg-preview (1).jpg"))); // NOI18N
         lblModificar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblModificarMouseClicked(evt);
@@ -124,14 +121,20 @@ public class panelContenido2 extends javax.swing.JPanel {
 
             System.out.println("No haz hecho cambios!!");
         } else {
-            Articulo art = new Articulo();
-            art.setId_articulo(id);
-            art.setDescripcion(descripcion.getText());
-            art.setPrecio(Float.parseFloat(precioModificar.getText()));
-            art.setPeso(Float.parseFloat(pesoModificar.getText()));
-            dao.modificarArt(art);
-            produc.dispose();
-            tien.cargarElementos(false);
+            try {
+                Articulo art = new Articulo();
+                art.setId_articulo(id);
+                art.setDescripcion(descripcion.getText());
+                art.setPrecio(Float.parseFloat(precioModificar.getText()));
+                art.setPeso(Float.parseFloat(pesoModificar.getText()));
+                dao.modificarArt(art);
+                produc.dispose();
+                tien.cargarElementos(false);
+            } catch (ErrVariados ex) {
+                ex.mostrarError();
+            } catch (ErrAlter ex) {
+                ex.mostrarError();
+            }
         }
 
     }//GEN-LAST:event_lblModificarMouseClicked

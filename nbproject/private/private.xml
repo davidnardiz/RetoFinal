@@ -3,18 +3,48 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/panelContenido.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/Tienda.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Message.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/panelContenido2.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/AniadirProducto.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/GlassPanePopup.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Popup.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/tienda/RippleEffect.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/vista/ParaTi.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/clases/Articulo.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/Notifications.java</file>
-            <file>file:/C:/Users/bayro/Desktop/RetoFinal-pruebasJason/src/panelMensaje/NotificationsChat.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Mensaje.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/VMain.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/PublicacionPopUp.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Reel.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Articulo.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/EnviarGmail.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/utilidades/Utilidades.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Tienda.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/PublicacionesEtiquetadas.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Cancion.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/PanelCover.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Historia.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/Button.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Canciones.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Perfil.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/ErrDelete.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Usuario.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/utilidades/ExploradorDeArchivos.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/ErrSelect.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/ErrVariados.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/ErrInsert.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/TipoHistoria.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/AniadirProducto.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/VentanaError.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Subir.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Foto.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Subir_Foto.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/excepciones/ErrAlter.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/EditarPerfil.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Buscar.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Calendario.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/PanelSlide.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Subir_Historia.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/BloquearDesbloquear.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/clases/Publicacion.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Inicio.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/controlador/Instagram.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/CargandoTienda.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/PublicacionesGuardadas.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/Subir_Reel.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/MejoresAmigos.java</file>
+            <file>file:/C:/Users/arceu/Desktop/RetoFinal/src/vista/ParaTi.java</file>
         </group>
     </open-files>
 </project-private>

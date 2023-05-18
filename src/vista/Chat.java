@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Usuario;
@@ -10,22 +6,18 @@ import java.awt.event.KeyEvent;
 import modelo.DAO;
 import chat.ChatEvent;
 
-/**
- *
- * @author bayro
- */
 public class Chat extends javax.swing.JDialog {
 
     private DAO dao;
-    private ParaTi paraTi;
+    private VMain vMain;
     private Usuario usu;
 
-    public Chat(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, boolean usu) {
+    public Chat(VMain parent, boolean modal, DAO dao, Usuario nosotros, boolean usu) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = nosotros;
-        this.paraTi = parent;
+        this.vMain = parent;
 
         chatArea.addChatEvent(new ChatEvent() {
             @Override
@@ -214,32 +206,33 @@ public class Chat extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed

@@ -1,12 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Articulo;
-import clases.Mensaje;
 import clases.Usuario;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -26,41 +24,50 @@ import panelMensaje.DefaultOption;
 import panelMensaje.GlassPanePopup;
 import panelMensaje.Message;
 import panelMensaje.ModernScrollBarUI;
-import panelMensaje.Notifications;
 import tienda.panelContenido;
 import tienda.panelContenido2;
 import utilidades.Utilidades;
 
 /**
  *
- * @author 1dam
+ * @author arceu
  */
 public class AniadirProducto extends javax.swing.JDialog {
 
-    /**
-     * Creates new form AniadirProducto
-     */
     private Tienda tien;
     private DAO dao;
     private Usuario usu;
     private String imagen;
     private boolean añadir;
 
+    /**
+     * Genera una ventana para poder añadir, modificar o elimar articulos a la
+     * base de datos
+     *
+     * @param tien Es la ventana de la que viene
+     * @param modal Dice si la pantalla es modal o si no
+     * @param dao Es la interface de la logica del negocio
+     * @param usu Es el usuario que usa la aplicacion
+     * @param añadir Es para saber si va a añadir algo
+     * @param borrar Es para saber si va a borrar algo
+     * @param modificar Es para saber si va a modificar algo
+     */
     public AniadirProducto(Tienda tien, boolean modal, DAO dao, Usuario usu, boolean añadir, boolean borrar, boolean modificar) {
-
         super(tien, modal);
         this.dao = dao;
         this.usu = usu;
         this.tien = tien;
         initComponents();
         getContentPane().setBackground(new Color(49, 51, 53));
+        //Aniadimos un srollbar para cuando el volumen de items en el panel supere al que se puede ver por pantalla.
         JScrollBar sb = scroll.getVerticalScrollBar();
+        //Aplicamos metodos para hacerla mas visual.
         sb.setOpaque(false);
         sb.setForeground(new Color(33, 140, 206));
         sb.setPreferredSize(new Dimension(8, 8));
         sb.setUI(new ModernScrollBarUI());
         sb.setBackground(new Color(49, 51, 53));
-
+        //Aplicamos todo lo mismo al otro panel susceptible de tener muchos elementos
         JScrollBar sb2 = scroll2.getVerticalScrollBar();
         sb2.setOpaque(false);
         sb2.setForeground(new Color(33, 140, 206));
@@ -69,15 +76,20 @@ public class AniadirProducto extends javax.swing.JDialog {
         sb2.setBackground(new Color(49, 51, 53));
 
         correcto.setVisible(false);
+        //Ponemos un layout de 2 filas, para mostrar todos los elementos en columnas,en dos concretamente
         pestañaAñadir.setBackground(new Color(49, 51, 53));
         pestañaBorrar.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[][]"));
         pestañaBorrar.setBackground(new Color(49, 51, 53));
-
+         //Ponemos un layout de 2 filas, para mostrar todos los elementos en columnas,en dos concretamente
         pestañaModificar.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[] []"));
         pestañaModificar.setBackground(new Color(49, 51, 53));
 
+        //Llamamos al metodo install del popUp para asi poder hacer uso del popUp en esta ventana.
         GlassPanePopup.install(tien, tien);
+
         cargarElementos();
+        //Dependiendo del estado de los diferentes boolean que recibe la ventana mostraremos un panel u otro del tabb 
+        //Ademas al mostrar el que le corresponde al boolean, no dejaremos que navegue por los otros paneles, por ello los ponemos en false el enable.
         if (añadir) {
             pestañas.setSelectedIndex(0);
             pestañas.setEnabledAt(1, false);
@@ -202,7 +214,7 @@ public class AniadirProducto extends javax.swing.JDialog {
         });
         pestañaAñadir.add(aniadirFoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 160, -1, -1));
 
-        correcto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/marca-de-verificacion-removebg-preview (1).jpg"))); // NOI18N
+        correcto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/marca-de-verificacion-removebg-preview (1).jpg"))); // NOI18N
         pestañaAñadir.add(correcto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 150, 52, 51));
 
         pestañas.addTab("Añadir", pestañaAñadir);
@@ -262,11 +274,15 @@ public class AniadirProducto extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+    *Evento para llamar al meotodo de utilidades de seleccionar una foto
+    *Este abre el explorador y seleccionada la imagen, si ha seleccionado una imagen quitamos el boton de aniadir una foto
+    **/
     private void aniadirFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aniadirFotoActionPerformed
         imagen = Utilidades.seleccionarImagenTienda(this, WIDTH, HEIGHT);
         if (imagen != null) {
             aniadirFoto.setVisible(false);
+            //Ocultamos el boton de subir foto y en su lugar mostramos un tick de correcto, para informar al usuario de que ha seleccionado la foto correctamente
             correcto.setVisible(true);
         }
     }//GEN-LAST:event_aniadirFotoActionPerformed
@@ -274,31 +290,48 @@ public class AniadirProducto extends javax.swing.JDialog {
     private void DescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DescripcionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_DescripcionActionPerformed
-
+    /**
+    *Metodo al pulsar el boton de subir la imagen, que llamara al dao para ejecutar la inserccion en la base de datos
+    **/
     private void subirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_subirMouseClicked
 
-        Articulo art = new Articulo();
-        String codigo;
-        String ultimoCodigo = "";
-        int numCod = 0;
-        ultimoCodigo = dao.calcularIdArticulo("A");
-        numCod = Integer.parseInt(ultimoCodigo.substring(2));
-        numCod++;
-        codigo = "A-" + String.format("%03d", numCod);
+        try {
+            //Declaramos un articulo para cargar los datos
+            Articulo art = new Articulo();
+            String codigo;
+            String ultimoCodigo = "";
+            int numCod = 0;
+            //Sacamos el ultimo codigo en la base de datos
+            ultimoCodigo = dao.calcularIdArticulo("A");
+            //De este cogemos solo su numero
+            numCod = Integer.parseInt(ultimoCodigo.substring(2));
+            //A este ultimo codigo le sumamos uno mas (++)
+            numCod++;
+            //Concatenamos el nuevo codigo del articulo
+            codigo = "A-" + String.format("%03d", numCod);
+            //Le ponemos al objeto todos los datos recogidos en la ventana 
+            art.setId_articulo(codigo);
+            art.setDescripcion(Descripcion.getText());
+            art.setPrecio(Float.parseFloat(Precio.getText()));
+            art.setPeso(Integer.parseInt(peso.getText()));
+            art.setImagen(imagen);
+            art.setVendedor(usu.getUsuario());
+            art.setFechaSubida(LocalDate.now());
+            art.setFechaCompra(null);
+            art.setValoracion(0);
+            //Llamamos al dao para ejecutar el insert en la base de datos
+            dao.insertarArticulo(art);
 
-        art.setId_articulo(codigo);
-        art.setDescripcion(Descripcion.getText());
-        art.setPrecio(Float.parseFloat(Precio.getText()));
-        art.setPeso(Integer.parseInt(peso.getText()));
-        art.setImagen(imagen);
-        art.setVendedor(usu.getUsuario());
-        art.setFechaSubida(LocalDate.now());
-        art.setFechaCompra(null);
-        art.setValoracion(0);
-        dao.insertarArticulo(art);
+            this.dispose();
+            tien.cargarElementos(false);
 
-        this.dispose();
-        tien.cargarElementos(false);
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrInsert ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_subirMouseClicked
 
     /**
@@ -323,28 +356,38 @@ public class AniadirProducto extends javax.swing.JDialog {
     private javax.swing.JScrollPane scroll2;
     private javax.swing.JButton subir;
     // End of variables declaration//GEN-END:variables
-
+    /**
+    *Metodo para cargar todos los elementos que haya subido el usuario actual
+    *Asi controlamos que solo pueda modificar o borrar sus propios articulos y no los de los demas.
+    **/
     private void cargarElementos() {
-        List<Articulo> articulos = dao.sacarTodosLosArticulos();
+        try {
+            List<Articulo> articulos = dao.sacarTodosLosArticulos();
 
-        for (Articulo art : articulos) {
-            if (art.getVendedor().equalsIgnoreCase(usu.getUsuario())) {
-                String precio = String.valueOf(art.getPrecio());
-                String usuV = art.getVendedor();
-                String peso = String.valueOf(art.getPeso());
-                Usuario otroUsu = dao.buscarUsuario(usuV);
+            for (Articulo art : articulos) {
+                //Comparamos el vendedor del articulo actual con el nombre del usuario.
+                if (art.getVendedor().equalsIgnoreCase(usu.getUsuario())) {
+                    String precio = String.valueOf(art.getPrecio());
+                    String usuV = art.getVendedor();
+                    String peso = String.valueOf(art.getPeso());
+                    Usuario otroUsu = dao.buscarUsuario(usuV);
 
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
 
-                pestañaBorrar.add(new panelContenido(icon, icon2, dao, tien, true, false, usu, art, true, this));
+                    pestañaBorrar.add(new panelContenido(icon, icon2, dao, tien, true, false, usu, art, true, this));
 
-                pestañaModificar.add(new panelContenido2(icon, icon2, art.getVendedor(), precio, art.getDescripcion(), dao, tien, false, art.getId_articulo(), true, peso, this));
+                    pestañaModificar.add(new panelContenido2(icon, icon2, art.getVendedor(), precio, art.getDescripcion(), dao, tien, false, art.getId_articulo(), true, peso, this));
 
+                }
             }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
     }
-
+    //???¿¿?¿?¿?¿?¿¿?¿?¿?¿??¿?¿????????????
     public void popUpMensaje(Message mensaje) {
         GlassPanePopup.showPopup(mensaje, new DefaultOption() {
 

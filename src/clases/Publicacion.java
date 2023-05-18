@@ -11,25 +11,20 @@ public class Publicacion {
     private LocalDate fecha_subida;
     private String ubicacion;
     private String usuario;
-    private String etiquetado;
     private String id_cancion;
 
     /**
-     * ******** METODOS *********
+     *
+     * @return Devuelve todos los atributos de la publicacion
      */
     @Override
     public String toString() {
         return "Publicacion [id_publicacion=" + id_publicacion + ", imagen=" + imagen + ", numLikes=" + numLikes
                 + ", numComentarios=" + numComentarios + ", fecha_subida=" + fecha_subida + ", ubicacion=" + ubicacion
-                + ", usuario=" + usuario + ", etiquetado= " + etiquetado + ", id_cancion=" + id_cancion + "]";
+                + ", usuario=" + usuario + ", id_cancion=" + id_cancion + "]";
     }
 
-    /**
-     * ******** CONSTRUCTORES *********
-     */
-    /**
-     * ******** GETTERS && SETTERS *********
-     */
+    //GETTERS && SETTERS
     public String getId_publicacion() {
         return id_publicacion;
     }
@@ -84,14 +79,6 @@ public class Publicacion {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
-    }
-
-    public String getEtiquetado() {
-        return etiquetado;
-    }
-
-    public void setEtiquetado(String etiquetado) {
-        this.etiquetado = etiquetado;
     }
 
     public String getId_cancion() {

@@ -1,11 +1,15 @@
 package tienda;
 
 import clases.Articulo;
+import excepciones.ErrAlter;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Component;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import modelo.DAO;
 import vista.CargandoTienda;
@@ -199,7 +203,13 @@ public class StarRating extends javax.swing.JPanel {
         LocalDate fechaActual = LocalDate.now();
         compra.dispose();
         for (Articulo a : ar) {
-            dao.comprarArticulo(recibirLugar, fechaActual, getStar(), a.getId_articulo());
+            try {
+                dao.comprarArticulo(recibirLugar, fechaActual, getStar(), a.getId_articulo());
+            } catch (ErrVariados ex) {
+                ex.mostrarError();
+            } catch (ErrAlter ex) {
+                ex.mostrarError();
+            }
 
         }
         ar.clear();

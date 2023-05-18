@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package clases;
 
 import java.time.LocalDate;
@@ -59,6 +55,10 @@ public class Mensaje {
         this.usuario2 = usuario2;
     }
 
+    /**
+     *
+     * @return Devuelve todos los atributos del mensaje
+     */
     public void getDatos() {
         System.out.println(usuario1);
         System.out.println(usuario2);

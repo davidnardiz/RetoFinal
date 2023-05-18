@@ -31,7 +31,7 @@ public class Comprar extends javax.swing.JDialog {
     private Usuario usu;
     private Tienda tien;
     public boolean cargar;
-
+    
     public Comprar(Tienda tien, boolean modal, DAO dao, List<Articulo> ar, Usuario usu) {
         super(tien, modal);
         this.dao = dao;
@@ -41,21 +41,26 @@ public class Comprar extends javax.swing.JDialog {
 
         initComponents();
         this.setLocationRelativeTo(tien);
+        //Instalamos el scroll al panel para cuando haya muchos elementos
         JScrollBar sb = scroll.getVerticalScrollBar();
+        //Aplicamos filtros para hacerlo mas moderno visualmente
         sb.setOpaque(false);
         sb.setForeground(new Color(33, 140, 206));
         sb.setPreferredSize(new Dimension(8, 8));
         sb.setUI(new ModernScrollBarUI());
         scroll.setBackground(new Color(49, 51, 53));
+        //Le agregamos un layout para ordenar los elementos en columna 
         panelResumen.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
         panelResumen.setBackground(new Color(49, 51, 53));
+        //Ocultamos la barra de carga, que posteriormente la mostraremos para un efecto por codigo
         Cargando.setVisible(false);
         getContentPane().setBackground(new Color(49, 51, 53));
         jPanel1.setBackground(new Color(49, 51, 53));
         jPanel2.setBackground(new Color(49, 51, 53));
         jPanel3.setBackground(new Color(49, 51, 53));
         subtotal.setText(Float.toString(calcularSubtotal()));
-
+        //Para obligar a seguir los pasos correctos le habilitamos solo la primera pestania del tab, obligando asi a cumplirla
+        //Y no pudiendo saltarse este paso
         pestañas.setSelectedIndex(0);
         pestañas.setEnabledAt(1, false);
         pestañas.setEnabledAt(2, false);
@@ -270,9 +275,9 @@ public class Comprar extends javax.swing.JDialog {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("TU OPIONION ES IMPORTANTE");
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/cara-feliz.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/cara-feliz.png"))); // NOI18N
 
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/verificar.png"))); // NOI18N
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/verificar.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -358,7 +363,8 @@ public class Comprar extends javax.swing.JDialog {
     private void btnConfirmarPedidoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnConfirmarPedidoKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnConfirmarPedidoKeyPressed
-
+    //Evento para confirmar el pedido. Una vez el usuario ha verificado que quiere comprar todo lo que se le muestra se pasara a la siguiente pestania
+    //Esto se hara automatico y deshabilitando todas las demas pestanias, obligando de nuevo a seguir paso a paso al usuario
     private void btnConfirmarPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarPedidoMouseClicked
         pestañas.setSelectedIndex(1);
         pestañas.setEnabledAt(0, false);
@@ -368,19 +374,27 @@ public class Comprar extends javax.swing.JDialog {
     private void LugarEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LugarEntregaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_LugarEntregaActionPerformed
-
+    /**
+    *Metodo para confirmarla compra una vez introducido el lugar de entrega
+    **/
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
-        Cargando.setVisible(true);
-
+        //Hacemos visible la barra de cargar, para conseguir el efecto de cargando el pedido
+    Cargando.setVisible(true);
+        //
         Cargando.setBackground(new Color(49, 51, 53));
+        //Hacemos uso del thread, para congelar el codigo y asi conseguir poner en la barra de carga numeros y que sea un efecto fluido
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i <= 100; i = i + 4) {
                     try {
+                        //asignamos el nuevo valor a la barra de carga, que sera siempre la i. La cual se va sumando 
                         Cargando.setValue(i);
+                        //Cada vez que hacemos esto, dormimos el proceso durante 60 milisegundos
                         Thread.sleep(60);
+                        //Una vez la i llega a 100 significa que la barra se ha completado
                         if (i == 100) {
+                            //Abrimos la siguiente pestaña y deshabilitamos las funciones de las demas
                             pestañas.setSelectedIndex(2);
                             pestañas.setEnabledAt(0, false);
                             pestañas.setEnabledAt(1, false);
@@ -392,6 +406,8 @@ public class Comprar extends javax.swing.JDialog {
             }
         });
         t.start();
+        //Llamamos al metodo "recibir dato" de starRating. Este metodo se encarga de recibir el dato que hemos introducido en el textfiel de lugar de entrega.
+        //Realizamos esta accion porque una vez pulsemos la estrella que queramos completaremos el proceso de compra y alli sera donde hagamos las ejecuciones en la base de datos.
         starRating1.recibirDato(LugarEntrega.getText());
     }//GEN-LAST:event_btnConfirmarMouseClicked
 
@@ -427,6 +443,7 @@ public class Comprar extends javax.swing.JDialog {
     private javax.swing.JLabel subtotal;
     // End of variables declaration//GEN-END:variables
 
+    //Metodo para carcular cuanto es el total actual del carrito de compra y mostrarlo en un label
     private float calcularSubtotal() {
         float total = 0;
         for (Articulo a : ar) {
@@ -434,7 +451,9 @@ public class Comprar extends javax.swing.JDialog {
         }
         return total;
     }
-
+    /**
+    *Metodo para cargar los elementos en el panel del resumen
+    **/
     public void aniadirProductosResumen(List<Articulo> ar1) {
         panelResumen.removeAll();
         for (Articulo a : ar1) {

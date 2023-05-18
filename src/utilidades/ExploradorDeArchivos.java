@@ -2,6 +2,10 @@ package utilidades;
 
 import java.io.File;
 
+/**
+ *
+ * @author arceu
+ */
 public class ExploradorDeArchivos extends javax.swing.JDialog {
 
     public ExploradorDeArchivos() {

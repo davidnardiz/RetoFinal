@@ -2,12 +2,13 @@ package vista;
 
 import clases.Articulo;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -26,32 +27,31 @@ import panelMensaje.ModernScrollBarUI;
 import panelMensaje.Notifications;
 import tienda.FiltrarPanel;
 
-import tienda.panelContenido;
-
+import tienda.panelContenido
 public class Tienda extends javax.swing.JDialog {
 
     private DAO dao;
     private Usuario usu;
-    private ParaTi paraTi;
+    private VMain vMain;
     private boolean añadir;
     private boolean borrar;
     private boolean modificar;
     private List<Articulo> ar;
     private FiltrarPanel filtrarPanel = new FiltrarPanel(this);
 
-    public Tienda(ParaTi parent, boolean modal, DAO dao, Usuario usu) {
+    public Tienda(VMain parent, boolean modal, DAO dao, Usuario usu) {
         super(parent, modal);
         this.setModal(modal);
         this.dao = dao;
         this.usu = usu;
         this.ar = ar;
-        this.paraTi = parent;
+        this.vMain = parent;
         boolean añadir;
         boolean borrar;
         boolean modificar;
-
+        
         ar = new ArrayList<>();
-
+        /**Instalamos el popUp para el efecto**/
         GlassPanePopup.install(this, this);
 
         setTitle("Tienda");
@@ -59,6 +59,9 @@ public class Tienda extends javax.swing.JDialog {
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
 
+        setLocationRelativeTo(null);
+        //Aniadimos un scrollbar al panel por si hubiera demasiados y no caben en la pantalla
+        //Aplicamos metodos, para modificar el color asi como la apariencia. Haciendolo visualmente mas atractivo
         JScrollBar sb = scroll.getVerticalScrollBar();
         sb.setOpaque(false);
         sb.setForeground(new Color(33, 140, 206));
@@ -66,18 +69,21 @@ public class Tienda extends javax.swing.JDialog {
         sb.setUI(new ModernScrollBarUI());
         scroll.setBackground(new Color(49, 51, 53));
         cargarElementos(false);
+        //Le ponemos un layout de 2, es decir todos los elementos que carguemos en este panel se aniadiran en dos columnas
         panel.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[][]"));
         panel.setBackground(new Color(49, 51, 53));
         panelOpciones.setBackground(new Color(49, 51, 53));
         panelDestino.setBackground(new Color(49, 51, 53));
+        //Ocultamos desde la ejecucion del programa el panel con las opciones, para posteriormente en el codigo efectuar el codigo y mostrarlo
         panelOpciones.setVisible(false);
-
+        //Ocultamos el panel con el boton de opciones, que solo se mostrara cuando este el panel de opciones fuera. Y este volvera a ocultarlo
+        //Mas adelante por codigo se ve.
         opciones2.setVisible(false);
-
+        //Ocultamos el carrito de compra lleno, el cual solo se mostrara si se aniade articulos a la cesta
         carritoCompraLleno.setVisible(false);
         //efectoCarrito();
     }
-
+    //Realizamos el get y set del ArrayList de la cesta de compra para aniadir o eliminar articulos de este en otras paneles.
     public void setAr(List<Articulo> ar) {
         this.ar = ar;
     }
@@ -85,7 +91,9 @@ public class Tienda extends javax.swing.JDialog {
     public List<Articulo> getAr() {
         return ar;
     }
-
+    //Hacemos publicos para todas las clases el label, para asi poder manipular si es visible o no en funcion del arraylist del carrito de compra
+    //Esto se hace asi porque el metodo para aniadir productos al carrito se hace en otro panel aparte y asi cuando ese evento ocurra, podremos 
+    //mostrarlo o ocultarlo desde alli directament.
     public void setCarritoCompraLleno(JLabel carritoCompraLleno) {
         this.carritoCompraLleno = carritoCompraLleno;
     }
@@ -139,6 +147,7 @@ public class Tienda extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(49, 51, 53));
+        setFocusable(false);
         setModal(true);
         setName("paraTi"); // NOI18N
         setResizable(false);
@@ -156,7 +165,7 @@ public class Tienda extends javax.swing.JDialog {
         lblLogoLetras.setPreferredSize(new java.awt.Dimension(50, 16));
         franjaArriba.add(lblLogoLetras, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 6, 185, 65));
 
-        carritoCompraLleno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/carrito-de-supermercado-removebg-preview (1).jpg"))); // NOI18N
+        carritoCompraLleno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/carrito-de-supermercado-removebg-preview (1).jpg"))); // NOI18N
         carritoCompraLleno.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 carritoCompraLlenoMouseClicked(evt);
@@ -164,7 +173,7 @@ public class Tienda extends javax.swing.JDialog {
         });
         franjaArriba.add(carritoCompraLleno, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 57, 51));
 
-        carritoCompra1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/carrito-de-compras (1)-removebg-preview (1).jpg"))); // NOI18N
+        carritoCompra1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/carrito-de-compras (1)-removebg-preview (1).jpg"))); // NOI18N
         franjaArriba.add(carritoCompra1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 57, 51));
 
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 645, -1));
@@ -176,12 +185,16 @@ public class Tienda extends javax.swing.JDialog {
         btnParaTi.setToolTipText("");
         btnParaTi.setAlignmentY(0.0F);
         btnParaTi.setAutoscrolls(true);
+        btnParaTi.setBorder(null);
+        btnParaTi.setBorderPainted(false);
         btnParaTi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnParaTi.setFocusPainted(false);
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnParaTi.setMaximumSize(new java.awt.Dimension(50, 50));
         btnParaTi.setMinimumSize(new java.awt.Dimension(50, 50));
         btnParaTi.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnParaTi.setRequestFocusEnabled(false);
         btnParaTi.setRolloverEnabled(false);
         btnParaTi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,12 +207,16 @@ public class Tienda extends javax.swing.JDialog {
         btnBuscar.setToolTipText("");
         btnBuscar.setAlignmentY(0.0F);
         btnBuscar.setAutoscrolls(true);
+        btnBuscar.setBorder(null);
+        btnBuscar.setBorderPainted(false);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setFocusPainted(false);
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBuscar.setMaximumSize(new java.awt.Dimension(50, 50));
         btnBuscar.setMinimumSize(new java.awt.Dimension(50, 50));
         btnBuscar.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnBuscar.setRequestFocusEnabled(false);
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -212,12 +229,16 @@ public class Tienda extends javax.swing.JDialog {
         btnSubir.setToolTipText("");
         btnSubir.setAlignmentY(0.0F);
         btnSubir.setAutoscrolls(true);
+        btnSubir.setBorder(null);
+        btnSubir.setBorderPainted(false);
         btnSubir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSubir.setFocusPainted(false);
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSubir.setMaximumSize(new java.awt.Dimension(50, 50));
         btnSubir.setMinimumSize(new java.awt.Dimension(50, 50));
         btnSubir.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnSubir.setRequestFocusEnabled(false);
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,12 +251,16 @@ public class Tienda extends javax.swing.JDialog {
         btnTienda.setToolTipText("");
         btnTienda.setAlignmentY(0.0F);
         btnTienda.setAutoscrolls(true);
+        btnTienda.setBorder(null);
+        btnTienda.setBorderPainted(false);
         btnTienda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnTienda.setFocusPainted(false);
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnTienda.setMaximumSize(new java.awt.Dimension(50, 50));
         btnTienda.setMinimumSize(new java.awt.Dimension(50, 50));
         btnTienda.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnTienda.setRequestFocusEnabled(false);
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,12 +273,16 @@ public class Tienda extends javax.swing.JDialog {
         btnCuenta.setToolTipText("");
         btnCuenta.setAlignmentY(0.0F);
         btnCuenta.setAutoscrolls(true);
+        btnCuenta.setBorder(null);
+        btnCuenta.setBorderPainted(false);
         btnCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCuenta.setFocusPainted(false);
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCuenta.setMaximumSize(new java.awt.Dimension(50, 50));
         btnCuenta.setMinimumSize(new java.awt.Dimension(50, 50));
         btnCuenta.setPreferredSize(new java.awt.Dimension(50, 50));
+        btnCuenta.setRequestFocusEnabled(false);
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,7 +340,7 @@ public class Tienda extends javax.swing.JDialog {
         getContentPane().add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 86, 563, 625));
 
         opciones1.setBackground(new java.awt.Color(41, 51, 54));
-        opciones1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/opciones-removebg-preview (1).jpg"))); // NOI18N
+        opciones1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/opciones-removebg-preview (1).jpg"))); // NOI18N
         opciones1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 opciones1MouseClicked(evt);
@@ -319,21 +348,21 @@ public class Tienda extends javax.swing.JDialog {
         });
         getContentPane().add(opciones1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 630, 53, 50));
 
-        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/boton-editar-removebg-preview (1).jpg"))); // NOI18N
+        lblModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/boton-editar-removebg-preview (1).jpg"))); // NOI18N
         lblModificar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblModificarMouseClicked(evt);
             }
         });
 
-        lblBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
+        lblBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/borrar (1)-removebg-preview (1).jpg"))); // NOI18N
         lblBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblBorrarMouseClicked(evt);
             }
         });
 
-        lblSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/boton-mas-removebg-preview (1) (1).jpg"))); // NOI18N
+        lblSubir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/boton-mas-removebg-preview (1) (1).jpg"))); // NOI18N
         lblSubir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblSubirMouseClicked(evt);
@@ -380,7 +409,7 @@ public class Tienda extends javax.swing.JDialog {
         getContentPane().add(panelDestino, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 460, -1, -1));
 
         opciones2.setBackground(new java.awt.Color(41, 51, 54));
-        opciones2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/opciones-removebg-preview (1).jpg"))); // NOI18N
+        opciones2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/opciones-removebg-preview (1).jpg"))); // NOI18N
         opciones2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 opciones2MouseClicked(evt);
@@ -388,7 +417,7 @@ public class Tienda extends javax.swing.JDialog {
         });
         getContentPane().add(opciones2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 630, 53, 50));
 
-        filtrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconos/filtrar.jpg"))); // NOI18N
+        filtrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/filtrar.jpg"))); // NOI18N
         filtrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 filtrarMouseClicked(evt);
@@ -398,38 +427,66 @@ public class Tienda extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+     /**
+     * Abre la ventana para ti
+     *
+     * @param evt
+     */
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
-
+    
+    /**
+     * Abre la ventana de buscar
+     *
+     * @param evt
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
-
+    /**
+     * Abre la ventana de subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
+    /**
+     * Abre la ventana de tienda
+     *
+     * @param evt
+     */
 
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre la ventana de perfil
+     *
+     * @param evt
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
-
+    /**
+    *Meotodo para el efecto de desplegar el panel de opciones
+    *Al clickar en el boton mas, hacemos visible el panel que contiene las demas opciones y lo movemos a una zona visible
+    *Esto mediante el efecto de "animator". Indicamos el punto de partido del panel, asi como el punto de destino 
+    **/
     private void opciones1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opciones1MouseClicked
 
         panelOpciones.setVisible(true);
@@ -443,7 +500,7 @@ public class Tienda extends javax.swing.JDialog {
 
         int endX = targetX - 10;
         int endY = targetY - 30;
-
+        //Aqui definimos la nueva localizacion del panel, asi como la duracion del efecto 
         Animator animator = new Animator(400, new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
@@ -464,43 +521,56 @@ public class Tienda extends javax.swing.JDialog {
 
         // Iniciar el Animator
         animator.start();
-
+        //ocultamos el boton de mas que desplega el panel y mostramos un boton de opciones, que tendra un evento para volver a ocultar el panel
         opciones1.setVisible(false);
         opciones2.setVisible(true);
     }//GEN-LAST:event_opciones1MouseClicked
-
+    /**
+    *Un label con la imagen de modificar, si pulsamos en este llamamos a la ventana "AniadirProducto" para efectuar la modificacion
+    *Para avisarle de que venimos de modificar le mandamos por parametro un boolean que indicara que proviene de este boton.
+    **/
     private void lblModificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblModificarMouseClicked
         modificar = true;
         AniadirProducto aniadir = new AniadirProducto(this, true, dao, usu, false, false, modificar);
         aniadir.setVisible(true);
     }//GEN-LAST:event_lblModificarMouseClicked
-
+    /**
+    *Un label con la imagen de borrar, si pulsamos en este llamamos a la ventana "AniadirProducto" para efectuar la eliminación
+    *Para avisarle de que venimos de borrar le mandamos por parametro un boolean que indicara que proviene de este boton.
+    **/
     private void lblBorrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBorrarMouseClicked
         borrar = true;
         AniadirProducto aniadir = new AniadirProducto(this, true, dao, usu, false, borrar, false);
         aniadir.setVisible(true);
     }//GEN-LAST:event_lblBorrarMouseClicked
-
+    /**
+    *Un label con la imagen de subir, si pulsamos en este llamamos a la ventana "AniadirProducto" para efectuar la subida del nuevo producto
+    *Para avisarle de que venimos de subir le mandamos por parametro un boolean que indicara que proviene de este boton.
+    **/
     private void lblSubirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSubirMouseClicked
         añadir = true;
         AniadirProducto aniadir = new AniadirProducto(this, true, dao, usu, añadir, false, false);
         aniadir.setVisible(true);
     }//GEN-LAST:event_lblSubirMouseClicked
-
+    /**
+    *Evento para ocultar el panel de opciones anteriormente desplegado
+    *Mediante unas variables fijas que guardan la posicion original del panel de opciones antes de salir, le regresamos a esa posicion
+    *y ocultamos, logrando asi el efecto de desplegado
+    **/
     private void opciones2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opciones2MouseClicked
 
         int startX = panelOpciones.getX();
         int startY = panelOpciones.getY();
-
+        //Variables de destino, donde inicialmente se encontraba el panel
         int endX = 570;
         int endY = 620;
-
+        //Efecto con la duracion del mismo
         Animator animator = new Animator(400, new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
                 int x = (int) (startX + (endX - startX) * fraction);
                 int y = (int) (startY + (endY - startY) * fraction);
-
+                //Nueva localizacion del panel
                 panelOpciones.setLocation(x, y);
             }
 
@@ -512,14 +582,20 @@ public class Tienda extends javax.swing.JDialog {
 
         // Iniciar el Animator
         animator.start();
+        //al acabar el efecto del todo ocultamos el panel, logrando el efecto final
         panelOpciones.setVisible(false);
+        //Ocultamos el boton de opciones y volvemos a mostrar el boton de mas para asi volver a sacar el panel si se desea
         opciones2.setVisible(false);
         opciones1.setVisible(true);
     }//GEN-LAST:event_opciones2MouseClicked
-
+    /**
+    *Efecto a boton de cuando esta el carrito de compra lleno, al clickar en el nos muestra un popUp con todo el contenido del carrito
+    *Con un boolean de tienda=True para indicarle que viene de aqui y ejecutar unas acciones concretas
+    **/
     private void carritoCompraLlenoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_carritoCompraLlenoMouseClicked
 
         boolean tien = true;
+       
         GlassPanePopup.showPopup(new Notifications(usu, dao, tien, ar, this, false, filtrarPanel), new DefaultOption() {
 
             @Override
@@ -533,6 +609,7 @@ public class Tienda extends javax.swing.JDialog {
                     @Override
                     public void correctBounds(ComponentWrapper cw) {
                         if (parent.isVisible()) {
+                            //Aqui definimos la posicion donde debe mostrarse el panel asi como el tamaño del mismo.
                             cw.setBounds(215, 70, 380, 500);
                         } else {
                             super.correctBounds(cw);
@@ -544,7 +621,10 @@ public class Tienda extends javax.swing.JDialog {
 
         });
     }//GEN-LAST:event_carritoCompraLlenoMouseClicked
-
+    /**
+    *Evento para mostrar el popUP del filtrado
+    *EL boolean de tienda anterior ahora se pasa en false para indicarle otras acciones a mostrar en el popUp
+    **/
     private void filtrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtrarMouseClicked
 
         GlassPanePopup.showPopup(new Notifications(usu, dao, false, ar, this, true, filtrarPanel), new DefaultOption() {
@@ -560,6 +640,7 @@ public class Tienda extends javax.swing.JDialog {
                     @Override
                     public void correctBounds(ComponentWrapper cw) {
                         if (parent.isVisible()) {
+                            //Definimos el tamaño y posicionamiento del popUp
                             cw.setBounds(265, 122, 380, 500);
                         } else {
                             super.correctBounds(cw);
@@ -596,58 +677,80 @@ public class Tienda extends javax.swing.JDialog {
     private javax.swing.JPanel panelOpciones;
     private javax.swing.JScrollPane scroll;
     // End of variables declaration//GEN-END:variables
-
+    /**
+    *Metodo para cargar el panel principal, donde mostraremos los articulos de la Tienda
+    *En este panel se compone de otros subpaneles para asi cargar todos los items de la tienda, los cuales se encuentran en un ArrayList
+    *Se le pasa por parametro un boolean para indicar si a la hora de cargar los elementos ha de cargar todos o aplicar un filtro para 
+    *Mostrar solo los que cumplan el requisito del filtro
+    **/
     public void cargarElementos(boolean filtrar) {
+        //Cada vez que usamos el metodo quitamos todos los elementos presente, asi si se ha añadido uno, modificado o aplicado algun filtro
+        //Estos elementos se cargaran y no estaran los anteriores a esto
         panel.removeAll();
-        if (filtrar) {
-            int max = filtrarPanel.obtenerMax();
-            int min = filtrarPanel.obtenerMin();
-            int opc = filtrarPanel.obtenerOpc();
+        try {
+            //Si filtrar se encuntra en true, llamaremos a un mentodo del dao concreto, para filtrar
+            if (filtrar) {
+                //Guardamos en variables los filtrs que se han aplicado en el panel de filtrar
+                int max = filtrarPanel.obtenerMax();
+                int min = filtrarPanel.obtenerMin();
+                int opc = filtrarPanel.obtenerOpc();
+                //Llamamos al metodo del dao para cargar en el ArrayList todos los articulos, pasandole los parametros que ha de cumplir
+                List<Articulo> articulos = dao.sacarArituclosPorPrecio(min, max, opc);
+                //REcorremos el ArrayList para buscar los articulos que hayan pasado el filtro y se encuentren en el ArrayList
+                for (Articulo art : articulos) {
+                    int cont = 0;
+                    String usuV = art.getVendedor();
+                    Usuario otroUsu = dao.buscarUsuario(usuV);
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
 
-            List<Articulo> articulos = dao.sacarArituclosPorPrecio(min, max, opc);
-
-            for (Articulo art : articulos) {
-                int cont = 0;
-                String usuV = art.getVendedor();
-                Usuario otroUsu = dao.buscarUsuario(usuV);
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
-
-                for (Articulo a : ar) {
-                    if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
-                        cont++;
-                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                    for (Articulo a : ar) {
+                        //Miramos si el articulo en el que se encuentra el foreach esta dentro del arraylist de la cesta de compra
+                        //asi controlamos si debemos o no mostrar el boton de agregar al carrito
+                        if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
+                            cont++;
+                            //En caso de estar en el carrito ya, no mostrarmos el boton de agregar, sino el de agregado
+                            //Esto lo conseguimos con el penultimo boolean pasado por parametro
+                            panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                        }
                     }
-                }
-                if (cont == 0) {
-                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
-                }
-
-            }
-        } else {
-            List<Articulo> articulos = dao.sacarTodosLosArticulos();
-
-            for (Articulo art : articulos) {
-                int cont = 0;
-                String usuV = art.getVendedor();
-                Usuario otroUsu = dao.buscarUsuario(usuV);
-                Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
-                Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
-
-                for (Articulo a : ar) {
-                    if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
-                        cont++;
-                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                    if (cont == 0) {
+                        //Si el cntador se ha mantenido a 0 significa que ese articulo no estaba en todo el arraylist de la cesta de compra
+                        //Por lo que debemos de cargar el elemento con el boton de agregar al carrito
+                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
                     }
-                }
-                if (cont == 0) {
-                    panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
+
                 }
 
+            } else {
+                //Aqui realizamos la misma operacion pero cargando todos los articulos presentes en la bda, sin tener en cuenta ningun filtro
+                List<Articulo> articulos = dao.sacarTodosLosArticulos();
+
+                for (Articulo art : articulos) {
+                    int cont = 0;
+                    String usuV = art.getVendedor();
+                    Usuario otroUsu = dao.buscarUsuario(usuV);
+                    Icon icon = new ImageIcon(getClass().getResource("/imagenes/iconos/" + otroUsu.getIcono()));
+                    Icon icon2 = new ImageIcon(getClass().getResource("/imagenes/tienda/" + art.getImagen()));
+
+                    for (Articulo a : ar) {
+                        if (art.getId_articulo().equalsIgnoreCase(a.getId_articulo())) {
+                            cont++;
+                            panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, true, null));
+                        }
+                    }
+                    if (cont == 0) {
+                        panel.add(new panelContenido(icon, icon2, dao, this, false, false, usu, art, false, null));
+                    }
+
+                }
             }
+
+            ///
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-
-        ///
     }
-
 }

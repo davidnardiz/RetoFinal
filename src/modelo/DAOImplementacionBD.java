@@ -24,22 +24,28 @@ import clases.Publicacion;
 import clases.Reel;
 import clases.TipoHistoria;
 import clases.Usuario;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import excepciones.ErrAlter;
+import excepciones.ErrDelete;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 
 public class DAOImplementacionBD implements DAO {
 
     private Connection con = null;
     private PreparedStatement stmt;
 
-    // Sentencias SQL
+// Sentencias SQL
     // Inserts
+    final private String REGISTRAR = "INSERT INTO usuario VALUES (?, ?, ?, ?, ?, ?, 'iconoPredeterminado.png', ?, ?, ?, ?)";
     final private String PUBLICAR = "INSERT INTO publicacion VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     final private String INSERTAR_FOTO = "INSERT INTO foto VALUES (?, ?, ?, ?)";
     final private String INSERTAR_REEL = "INSERT INTO reel VALUES (?, ?, ?, ?)";
     final private String INSERTAR_HISTORIA = "INSERT INTO historia VALUES (?, ?, ?)";
-
     final private String INSERTAR_LIKE = "INSERT INTO likes VALUES (?, ?)";
+    final private String INSERTAR_BLOQUEADO = "INSERT INTO bloqueados VALUES(?, ?)";
+    final private String INSERTAR_AMIGO = "INSERT INTO mejoramigo VALUES(?, ?)";
+    final private String GUARDAR_PUBLICACION = "INSERT INTO guardados VALUES(?, ?)";
 
     final private String INSERTAR_MENSAJE = "INSERT INTO mensaje VALUES(?, ?, ?)";
     final private String INSERTAR_CONVERSA = "INSERT INTO conversa VALUES(?, ?, ?)";
@@ -47,37 +53,53 @@ public class DAOImplementacionBD implements DAO {
     final private String INSERTAR_ARTICULO = "INSERT INTO articulo VALUES (?,?,?,?,?,?,?,?,?,?)";
 
 // Selects
+    // PARA TI
+    final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
+    final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
+    final private String COMPROBAR_GUARDADO = "SELECT * FROM guardados WHERE usuario = ? and id_publicacion = ?";
+    final private String LISTAR_ID = "SELECT id_publicacion FROM publicacion";
+    final private String BUSCAR_FOTO_ID = "SELECT * FROM foto WHERE id_publicacion = ?";
+    final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
+    final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
+    final private String COMPROBAR_MEJOS = "SELECT * FROM  mejorAmigo WHERE mejor_amigo = ? and usuario = ? ";
+    final private String COMPROBAR_BLOQUEADO = "SELECT * FROM bloqueados WHERE usuario_bloqueado = ? and usuario = ? ";
+
+    // BUSCAR
+    final private String LISTAR_USUARIOS = "SELECT * FROM usuario";
+    final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
+    final private String LISTAR_USUARIOS_VERIFICADOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ? and verificado = true";
+    final private String LISTAR_USUARIOS_X_SEGUIDORES = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE numSeguidores >= ?";
+    final private String LISTAR_USUARIOS_X_MEJOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario in (SELECT mejor_amigo FROM mejorAmigo WHERE usuario like ?)";
+    final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
+    final private String INICIAR_SESION = "SELECT * FROM usuario WHERE usuario = ? and contrasenia=?";
+    final private String LISTAR_BLOQUEADOS = "SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?";
+    final private String LISTAR_MEJORES_AMIGOS = "SELECT mejor_amigo FROM mejoramigo WHERE usuario = ?";
+    final private String LISTAR_DESBLOQUEADOS = "SELECT usuario FROM usuario WHERE usuario NOT IN(SELECT usuario_bloqueado FROM bloqueados WHERE usuario = ?)";
+    final private String LISTAR_NO_MEJORES_AMIGOS = "SELECT usuario FROM usuario WHERE usuario NOT IN(SELECT mejor_amigo FROM mejoramigo WHERE usuario = ?)";
+    final private String LISTAR_PUBLICACIONES_GUARDADAS = "SELECT * FROM publicacion WHERE id_publicacion IN (SELECT id_publicacion FROM guardados WHERE usuario = ?)";
+    final private String LISTAR_PUBLICACIONES_ETIQUETADAS = "SELECT * FROM publicacion WHERE id_publicacion IN (SELECT id_publicacion FROM foto WHERE etiquetado = ?)";
+
+    // SUBIR
+    final private String LISTAR_MUSICA = "SELECT titulo, artistas FROM cancion";
+    final private String BUSCAR_CANCION_X_TITULO = "SELECT * FROM cancion WHERE titulo = ?";
+    final private String BUSCAR_CANCION_X_ID = "SELECT * FROM cancion WHERE id_cancion = ?";
+    final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
+    final private String BUSCAR_COD_TIPOHISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
+    final private String BUSCAR_TIPO_TIPOHISTORIA = "SELECT tipo FROM tipoHistoria WHERE cod_tipo= ?";
+    final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
+
+    // PERFIL
+    final private String NUM_PUBLICACIONES_USUARIO = "SELECT count(*) FROM publicacion WHERE usuario = ?";
+    final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
+    final private String VER_SEGUIMIENTO = "SELECT * FROM sigue WHERE seguidor = ? and seguido = ?";
+    final private String BORRAR_PUBS_GUARDADAS = "DELETE FROM guardados WHERE usuario = ?";
+
     //Tienda
     final private String SACAR_PRODUCTOS = "SELECT * FROM articulo where lugar_entrega is null";
     final private String ULTIMO_ARTICULO = "SELECT id_articulo FROM articulo WHERE SUBSTRING(id_articulo, 1, 1) = ? ORDER BY id_articulo desc LIMIT 1;";
     final private String SACAR_MEDIA_VALORACION = "SELECT AVG(valoracion) AS media_valoracion from articulo where vendedor = ? and valoracion is not null ";
     final private String SACAR_ARTICULO_ORDENADO = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio";
     final private String SACAR_ARTICULO_ORDENADO_DESCENDETE = "SELECT * from articulo where lugar_entrega is null and precio >= ? and precio <= ? order by precio DESC ";
-    // PARA TI
-    final private String BUSCAR_PUBLICACIO_X_ID = "SELECT * FROM publicacion WHERE id_publicacion = ?";
-    final private String COMPROBAR_LIKE = "SELECT * FROM likes WHERE usuario = ? and id_publicacion = ?";
-    final private String LISTAR_ID = "SELECT id_publicacion FROM publicacion";
-    final private String BUSCAR_FOTO_ID = "SELECT * FROM foto WHERE id_publicacion = ?";
-    final private String BUSCAR_REEL_ID = "SELECT * FROM reel WHERE id_publicacion = ?";
-    final private String BUSCAR_HISTORIA_ID = "SELECT * FROM historia WHERE id_publicacion = ?";
-
-    // BUSCAR
-    final private String LISTAR_USUARIOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario";
-    final private String LISTAR_USUARIOS_X_USUARIO = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ?";
-    final private String LISTAR_USUARIOS_VERIFICADOS = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE usuario like ? and verificado = true";
-    final private String LISTAR_USUARIOS_X_SEGUIDORES = "SELECT usuario, verificado, icono, numSeguidores FROM usuario WHERE numSeguidores >= ?";
-    final private String BUSCAR_USUARIO = "SELECT * FROM usuario WHERE usuario = ?";
-
-    // SUBIR
-    final private String LISTAR_MUSICA = "SELECT titulo FROM cancion";
-    final private String BUSCAR_CANCION_X_TITULO = "SELECT * FROM cancion WHERE titulo = ?";
-    final private String LISTAR_TIPO_HISTORIA = "SELECT tipo FROM tipoHistoria";
-    final private String TIPO_HISTORIA = "SELECT cod_tipo FROM tipoHistoria WHERE tipo = ?";
-    final private String ULTIMA_PUBLICACION = "SELECT id_publicacion FROM publicacion WHERE SUBSTRING(id_publicacion, 1, 1) = ? ORDER BY id_publicacion desc LIMIT 1;";
-
-    // PERFIL
-    final private String NUM_PUBLICACIONES_USUARIO = "SELECT count(*) FROM publicacion WHERE usuario = ?";
-    final private String LISTAR_PUBLICACIONES_USUARIO = "SELECT * FROM publicacion WHERE usuario = ?";
 
     //CONVERSASCIONES
     final private String ULTIMO_MENSAJE = "SELECT id_mensaje FROM conversa WHERE SUBSTRING(id_mensaje, 1, 1) = ? ORDER BY id_mensaje desc LIMIT 1;";
@@ -91,21 +113,39 @@ public class DAOImplementacionBD implements DAO {
             + "END AS OTRO_USUARIO "
             + "FROM conversa WHERE ? IN(usuario, usuario2)";
 
-    // Alter
-    final private String SUMAR_LIKE = "UPDATE publicacion set numLikes = numLikes + 1 WHERE id_publicacion = ?";
-    final private String RESTAR_LIKE = "UPDATE publicacion set numLikes = numLikes - 1 WHERE id_publicacion = ?";
+// Update
+    final private String EDITAR_PERFIL = "UPDATE usuario set contrasenia = ?, icono = ?, correo = ?, telefono = ? WHERE usuario = ?";
     final private String MODIFICAR_ARTICULO = "UPDATE articulo set descripcion = ?, precio = ?, peso = ? where id_articulo = ?";
     final private String COMPRAR_ARTICULO = "UPDATE articulo set fecha_compra = ?, lugar_entrega = ?, valoracion = ? where id_articulo = ?";
-    // Deletes
+    final private String MODIFICAR_PUBLICACION = "UPDATE publicacion SET imagen = ?, ubicacion = ?, id_cancion = ? WHERE id_publicacion = ?";
+    final private String MODIFICAR_FOTO = "UPDATE foto SET descripcion = ?, resolucion = ?, etiquetado = ? WHERE id_publicacion = ?";
+    final private String MODIFICAR_REEL = "UPDATE reel SET duracion = ?, descripcion = ? WHERE id_publicacion = ?";
+    final private String MODIFICAR_HISTORIA = "UPDATE historia SET mejores_amigos = ?, cod_tipo = ? WHERE id_publicacion = ?";
+
+// Deletes
+    final private String ELIMINAR_PUBLICACION = "DELETE FROM publicacion WHERE id_publicacion = ?";
+    final private String ELIMINAR_USUARIO = "DELETE FROM usuario WHERE usuario = ?";
+    final private String QUITAR_AMIGO = "DELETE FROM mejoramigo WHERE usuario = ? and mejor_amigo = ?";
+    final private String QUITAR_PUBLICACION = "DELETE FROM guardados WHERE usuario = ? and id_publicacion = ?";
+    final private String DESBLOQUEAR_USUARIO = "DELETE FROM bloqueados WHERE usuario = ? and usuario_bloqueado = ?";
     final private String QUITAR_LIKES = "DELETE FROM likes WHERE usuario = ? and id_publicacion = ?";
     final private String BORRAR_ARTCIULO = "DELETE FROM articulo WHERE id_articulo = ?";
 
-    public void abrirConexion() {
+//Procedimientos
+    final private String SEGUIR = "call Seguir (?, ?)";
+    final private String DEJAR_SEGUIR = "call dejarSeguir(?, ?)";
+    final private String DAR_LIKE = "call DarLike(?, ?)";
+    final private String QUITAR_LIKE = "call QuitarLike(?, ?)";
+    final private String BLOQUEAR_USUARIO = "call bloquear(?, ?)";
+
+    final private String COMPROBAR_PUBLICACION = "SELECT MostrarPublicacion(?, ?)";
+
+    public void abrirConexion() throws ErrVariados {
 
         try {
             Properties configBDA = new Properties();
-            FileInputStream fis = new FileInputStream(
-                    "C:\\Users\\bayro\\Desktop\\RetoFinal-pruebasJason\\src\\configBDA.properties");
+            String rutaProyecto = System.getProperty("user.dir");
+            FileInputStream fis = new FileInputStream(rutaProyecto + "\\src\\configBDA.properties");
             configBDA.load(fis);
 
             final String URL = configBDA.getProperty("url");
@@ -115,11 +155,12 @@ public class DAOImplementacionBD implements DAO {
             con = DriverManager.getConnection(URL, USER, PASSWORD);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new ErrVariados("Fichero");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ErrVariados("LeerFichero");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ErrVariados("ConexionBDA");
         }
 
     }
@@ -216,11 +257,10 @@ public class DAOImplementacionBD implements DAO {
         try {
             usu.setUsuario(rs.getString("usuario"));
             usu.setContrasenia(rs.getString("contrasenia"));
+            usu.setCodGmail(rs.getString("codGmail"));
             usu.setDni(rs.getString("dni"));
-            usu.setNombre_completo(rs.getString("nombre_completo"));
             usu.setCorreo(rs.getString("correo"));
             usu.setTelefono(rs.getInt("telefono"));
-            usu.setGenero(rs.getString("genero"));
             usu.setIcono(rs.getString("icono"));
             usu.setFecha_nac(LocalDate.parse(rs.getString("fecha_nac"), formateador));
             usu.setNumSeguidores(rs.getInt("numSeguidores"));
@@ -236,9 +276,8 @@ public class DAOImplementacionBD implements DAO {
     /**
      * ****************** PARA TI *******************
      */
-    //Devuelve una publicacion en base a su id
     @Override
-    public Publicacion buscarPublicacionXId(String id) {
+    public Publicacion buscarPublicacionXId(String id) throws ErrVariados, ErrSelect {
         Publicacion publi = null;
 
         this.abrirConexion();
@@ -267,7 +306,7 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Publicacion");
         }
 
         this.cerrarConexion();
@@ -275,46 +314,70 @@ public class DAOImplementacionBD implements DAO {
         return publi;
     }
 
-    //Inserta un usuario y publicacion en la tabla Likes y suma 1 like a la publicacion
     @Override
-    public void insertarLike(String usuario, String publicacion) {
+    public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect {
+        List<Publicacion> publicaciones = new ArrayList<>();
         this.abrirConexion();
 
         try {
-            stmt = con.prepareStatement(INSERTAR_LIKE);
+            stmt = con.prepareStatement(LISTAR_ID);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(COMPROBAR_PUBLICACION);
+                stmt.setString(1, rs.getString("id_publicacion"));
+                stmt.setString(2, usuario);
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    if (rs2.getBoolean(1)) {
+                        Publicacion publi = new Publicacion();
+                        publi.setId_publicacion(rs.getString("id_publicacion"));
+                        publicaciones.add(publi);
+                    }
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ErrSelect("Publicacion");
+        }
+
+        this.cerrarConexion();
+        return publicaciones;
+    }
+
+    @Override
+    public void insertarLike(String usuario, String publicacion) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(DAR_LIKE);
             stmt.setString(1, usuario);
             stmt.setString(2, publicacion);
             stmt.execute();
 
-            stmt = con.prepareStatement(SUMAR_LIKE);
-
-            stmt.setString(1, publicacion);
-            stmt.execute();
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrInsert("Likes");
         }
         this.cerrarConexion();
 
     }
 
-    //Quita un usuario y publicacion de la tabla Likes y resta 1 like a la publicacion
     @Override
-    public void quirarLike(String usuario, String publicacion) {
+    public void quirarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete {
+
         this.abrirConexion();
 
         try {
-            stmt = con.prepareStatement(QUITAR_LIKES);
+            stmt = con.prepareStatement(QUITAR_LIKE);
             stmt.setString(1, usuario);
             stmt.setString(2, publicacion);
             stmt.execute();
 
-            stmt = con.prepareStatement(RESTAR_LIKE);
-            stmt.setString(1, publicacion);
-            stmt.execute();
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrDelete("Likes");
         }
         this.cerrarConexion();
 
@@ -323,9 +386,8 @@ public class DAOImplementacionBD implements DAO {
     /**
      * ****************** BUSCAR *******************
      */
-    //Devuelve un usario en base a su usuario
     @Override
-    public Usuario buscarUsuario(String usuario) {
+    public Usuario buscarUsuario(String usuario) throws ErrVariados, ErrSelect {
         Usuario usu = new Usuario();
         this.abrirConexion();
 
@@ -338,15 +400,14 @@ public class DAOImplementacionBD implements DAO {
                 usu = this.getUsuario(usu, rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usu;
     }
 
-    //Devuelve todas las id_publicacion que existen
     @Override
-    public List<Publicacion> listarPublicaciones() {
+    public List<Publicacion> listarPublicaciones() throws ErrVariados, ErrSelect {
         List<Publicacion> id = new ArrayList<>();
         this.abrirConexion();
 
@@ -361,15 +422,14 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Publicacion");
         }
         this.cerrarConexion();
         return id;
     }
 
-    //Devuelve todos los usarios que existen
     @Override
-    public List<Usuario> listarUsuario() {
+    public List<Usuario> listarUsuario() throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
         this.abrirConexion();
 
@@ -379,23 +439,19 @@ public class DAOImplementacionBD implements DAO {
 
             while (rs.next()) {
                 Usuario usu = new Usuario();
-                usu.setUsuario(rs.getString("usuario"));
-                usu.setVerificado(rs.getBoolean("verificado"));
-                usu.setIcono(rs.getString("icono"));
-                usu.setNumSeguidores(rs.getInt("numSeguidores"));
+                usu = this.getUsuario(usu, rs);
                 usuarios.add(usu);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
     }
 
-    //Devuelven todos los usuario que contengan un string en su usuario
     @Override
-    public List<Usuario> listarUsuarioXUsuario(String usuario) {
+    public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
         this.abrirConexion();
 
@@ -414,14 +470,14 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
     }
 
     @Override
-    public List<Usuario> listarUsuariosVerificados(String usuario) {
+    public List<Usuario> listarUsuariosVerificados(String usuario) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
         this.abrirConexion();
 
@@ -440,20 +496,21 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Usuario");
         }
         this.cerrarConexion();
         return usuarios;
     }
 
     @Override
-    public List<Usuario> listarUsuariosXSeguidores(String seguidores) {
+    public List<Usuario> listarUsuariosXSeguidores(String seguidores) throws ErrVariados, ErrSelect {
         List<Usuario> usuarios = new ArrayList<>();
         this.abrirConexion();
 
         try {
             stmt = con.prepareStatement(LISTAR_USUARIOS_X_SEGUIDORES);
             stmt.setString(1, seguidores);
+
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -466,8 +523,38 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Usuario");
         }
+        this.cerrarConexion();
+        return usuarios;
+    }
+
+    @Override
+    public List<Usuario> listarUsuarioXMejos(String usuario) throws ErrVariados, ErrSelect {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_USUARIOS_X_MEJOS);
+            stmt.setString(1, "%" + usuario + "%");
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Usuario usu = new Usuario();
+                usu.setUsuario(rs.getString("usuario"));
+                usu.setIcono(rs.getString("icono"));
+                usu.setNumSeguidores(rs.getInt("numSeguidores"));
+                usu.setVerificado(rs.getBoolean("verificado"));
+                usuarios.add(usu);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ErrSelect("Usuario");
+        }
+
         this.cerrarConexion();
         return usuarios;
     }
@@ -475,9 +562,32 @@ public class DAOImplementacionBD implements DAO {
     /**
      * ****************** SUBIR *******************
      */
-    //Inserta una publicacion en la BDA
     @Override
-    public void publicar(Publicacion publi) {
+    public String calcularId(String tipo) throws ErrVariados, ErrSelect {
+        String id;
+        String cod = "";
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ULTIMA_PUBLICACION);
+            stmt.setString(1, tipo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                id = rs.getString("id_publicacion");
+                cod = tipo + "-" + String.format("%03d", Integer.parseInt(id.substring(2, 5)) + 1);
+
+            }
+        } catch (SQLException e) {
+            throw new ErrSelect("Publicacion");
+
+        }
+        this.cerrarConexion();
+        return cod;
+    }
+
+    @Override
+    public void publicar(Publicacion publi) throws ErrVariados, ErrInsert {
         this.abrirConexion();
 
         try {
@@ -510,15 +620,14 @@ public class DAOImplementacionBD implements DAO {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrInsert("Publicacion");
         }
 
         this.cerrarConexion();
     }
 
-    //Muestra todos los titulos de las canciones que existen
     @Override
-    public List<Cancion> listarCanciones() {
+    public List<Cancion> listarCanciones() throws ErrVariados, ErrSelect {
         List<Cancion> canciones = new ArrayList<>();
 
         this.abrirConexion();
@@ -530,19 +639,19 @@ public class DAOImplementacionBD implements DAO {
             while (rs.next()) {
                 Cancion can = new Cancion();
                 can.setTitulo(rs.getString("titulo"));
+                can.setArtista(rs.getString("artistas"));
                 canciones.add(can);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Cancion");
         }
         this.cerrarConexion();
 
         return canciones;
     }
 
-    //Muestran la cancion a la que corresponde el titulo
     @Override
-    public Cancion buscarCancionXTitulo(String titulo) {
+    public Cancion buscarCancionXTitulo(String titulo) throws ErrVariados, ErrSelect {
         Cancion can = null;
         this.abrirConexion();
 
@@ -556,20 +665,49 @@ public class DAOImplementacionBD implements DAO {
 
                 can.setId_cancion(rs.getString("id_cancion"));
                 can.setTitulo(rs.getString("titulo"));
-                can.setArtista(rs.getString("artista"));
+                can.setArtista(rs.getString("artistas"));
                 can.setDuracion(rs.getFloat("duracion"));
                 can.setCod_genero(rs.getString("cod_genero"));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ErrSelect("Cancion");
         }
         this.cerrarConexion();
         return can;
     }
 
-    //Lista todos los tipos de historia que existen
     @Override
-    public List<TipoHistoria> listarTipoHistorias() {
+    public Cancion buscarCancionXId(String id) throws ErrVariados, ErrSelect {
+        Cancion can = null;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BUSCAR_CANCION_X_ID);
+            stmt.setString(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                can = new Cancion();
+
+                can.setId_cancion(rs.getString("id_cancion"));
+                can.setTitulo(rs.getString("titulo"));
+                can.setArtista(rs.getString("artistas"));
+                can.setDuracion(rs.getFloat("duracion"));
+                can.setCod_genero(rs.getString("cod_genero"));
+            }
+
+        } catch (SQLException e) {
+            throw new ErrSelect("Cancion");
+        }
+        this.cerrarConexion();
+        return can;
+    }
+
+    @Override
+    public List<TipoHistoria> listarTipoHistorias() throws ErrVariados, ErrSelect {
         List<TipoHistoria> tipoHistoria = new ArrayList<>();
 
         this.abrirConexion();
@@ -585,39 +723,106 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Historia");
         }
         this.cerrarConexion();
         return tipoHistoria;
     }
 
-    //Devuvle el codigo de un tipoHistoria dependiendo de su tipo
     @Override
-    public String tipoHistoria(String tipo) {
+    public String buscarCodTipoHistoria(String tipo) throws ErrVariados, ErrSelect {
         String cod = null;
         this.abrirConexion();
 
         try {
-            stmt = con.prepareStatement(TIPO_HISTORIA);
+            stmt = con.prepareStatement(BUSCAR_COD_TIPOHISTORIA);
             stmt.setString(1, tipo);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 cod = rs.getString("cod_tipo");
+
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Historia");
         }
         this.cerrarConexion();
         return cod;
     }
 
+    @Override
+    public String buscarTipoHistoria(String cod) throws ErrVariados, ErrSelect {
+        String tipo = null;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BUSCAR_TIPO_TIPOHISTORIA);
+            stmt.setString(1, cod);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                tipo = rs.getString("tipo");
+            }
+        } catch (SQLException e) {
+            throw new ErrSelect("Historia");
+        }
+        this.cerrarConexion();
+        return tipo;
+    }
+
+    @Override
+    public void editarPublicacion(Publicacion publi) throws ErrVariados, ErrAlter {
+        this.abrirConexion();
+
+        try {
+
+            stmt = con.prepareStatement(MODIFICAR_PUBLICACION);
+            stmt.setString(1, publi.getImagen());
+            stmt.setString(2, publi.getUbicacion());
+            stmt.setString(3, publi.getId_cancion());
+            stmt.setString(4, publi.getId_publicacion());
+
+            stmt.execute();
+
+            if (publi instanceof Foto) {
+                stmt = con.prepareStatement(MODIFICAR_FOTO);
+                stmt.setString(1, ((Foto) publi).getDescripcion());
+                stmt.setString(2, ((Foto) publi).getResolucion());
+                stmt.setString(3, ((Foto) publi).getEtiquetado());
+                stmt.setString(4, publi.getId_publicacion());
+
+                stmt.execute();
+
+            } else if (publi instanceof Reel) {
+                stmt = con.prepareStatement(MODIFICAR_REEL);
+                stmt.setInt(1, ((Reel) publi).getDuracion());
+                stmt.setString(2, ((Reel) publi).getDescripcion());
+                stmt.setString(3, publi.getId_publicacion());
+
+                stmt.execute();
+
+            } else {
+                stmt = con.prepareStatement(MODIFICAR_HISTORIA);
+                stmt.setBoolean(1, ((Historia) publi).isMejores_amigos());
+                stmt.setString(2, ((Historia) publi).getCod_tipo());
+                stmt.setString(3, publi.getId_publicacion());
+
+                stmt.execute();
+            }
+
+        } catch (SQLException e) {
+            throw new ErrAlter("Publicacion");
+
+        }
+
+        this.cerrarConexion();
+    }
+
     /**
      * ****************** PERFIL *******************
      */
-    //Mira a ver si le has dado like a una publicacion
     @Override
-    public boolean comprobarLike(String usuario, String publicacion) {
+    public boolean comprobarLike(String usuario, String publicacion) throws ErrVariados, ErrSelect {
         boolean like = false;
         this.abrirConexion();
 
@@ -631,78 +836,64 @@ public class DAOImplementacionBD implements DAO {
                 like = true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Likes");
         }
 
         this.cerrarConexion();
         return like;
     }
 
-    //Busca el codigo de la ultima publicacion
     @Override
-    public String calcularId(String tipo) {
-        String cod = "";
-        this.abrirConexion();
-
-        try {
-            stmt = con.prepareStatement(ULTIMA_PUBLICACION);
-            stmt.setString(1, tipo);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                cod = rs.getString("id_publicacion");
-            }
-        } catch (SQLException e) {
-            // TODO: handle exception
-        }
-        this.cerrarConexion();
-        return cod;
-    }
-
-    //Muestra todas las publicaciones que ha subido un usuario
-    @Override
-    public List<Publicacion> listarPublicacionesUsuario(String usuario, String tipo) {
+    public List<Publicacion> listarPublicacionesUsuario(String usuarioPerifl, String nosotros, String tipo) throws ErrVariados, ErrSelect {
         List<Publicacion> publicaciones = new ArrayList<>();
         Publicacion publi = null;
         this.abrirConexion();
 
         try {
             stmt = con.prepareStatement(LISTAR_PUBLICACIONES_USUARIO);
-            stmt.setString(1, usuario);
+            stmt.setString(1, usuarioPerifl);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String tipoPubli = tipo.substring(0, 1);
+                stmt = con.prepareStatement(COMPROBAR_PUBLICACION);
+                stmt.setString(1, rs.getString("id_publicacion"));
+                stmt.setString(2, nosotros);
+                ResultSet rs2 = stmt.executeQuery();
 
-                if (tipoPubli.equals(rs.getString("id_publicacion").substring(0, 1))) {
+                if (rs2.next()) {
+                    if (rs2.getBoolean(1)) {
 
-                    switch (tipoPubli) {
-                        case "F":
-                            publi = new Foto();
-                            break;
-                        case "R":
-                            publi = new Reel();
-                            break;
-                        case "H":
-                            publi = new Historia();
-                            break;
+                        String tipoPubli = tipo.substring(0, 1);
+
+                        if (tipoPubli.equals(rs.getString("id_publicacion").substring(0, 1))) {
+
+                            switch (tipoPubli) {
+                                case "F":
+                                    publi = new Foto();
+                                    break;
+                                case "R":
+                                    publi = new Reel();
+                                    break;
+                                case "H":
+                                    publi = new Historia();
+                                    break;
+                            }
+                            publi = this.getPublicacion(publi, rs);
+                            publicaciones.add(publi);
+                        }
                     }
-                    publi = this.getPublicacion(publi, rs);
-                    publicaciones.add(publi);
                 }
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Publicacion");
         }
 
         this.cerrarConexion();
         return publicaciones;
     }
 
-    //Mustra el numero de publicaciones de un usuario
     @Override
-    public int numPublicacionesUsuario(String usuario) {
+    public int numPublicacionesUsuario(String usuario) throws ErrVariados, ErrSelect {
         int numPubli = 0;
         this.abrirConexion();
 
@@ -716,14 +907,549 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Publicacion");
         }
         this.cerrarConexion();
         return numPubli;
     }
 
     @Override
-    public void insertarMensaje(Mensaje men) {
+    public boolean registrar(Usuario us) throws ErrVariados, ErrInsert {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+        ResultSet rs;
+        boolean registrar = false;
+        String f = us.getFecha_nac() + "";
+        try {
+            stmt = con.prepareStatement(REGISTRAR);
+
+            stmt.setString(1, us.getUsuario());
+            stmt.setString(2, us.getContrasenia());
+            stmt.setString(3, us.getCodGmail());
+            stmt.setString(4, us.getDni());
+            stmt.setString(5, us.getCorreo());
+            stmt.setInt(6, us.getTelefono());
+            stmt.setString(7, f);
+            stmt.setInt(8, us.getNumSeguidores());
+            stmt.setInt(9, us.getNumSeguidos());
+            stmt.setBoolean(10, us.isVerificado());
+
+            if (stmt.executeUpdate() == 1) {
+                registrar = true;
+            }
+        } catch (SQLException e) {
+            throw new ErrInsert("Usuario");
+        }
+        this.cerrarConexion();
+        return registrar;
+    }
+
+    @Override
+    public void seguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrInsert {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(SEGUIR);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, usuarioPerfil);
+
+            stmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ErrInsert("Sigue");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrDelete {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(DEJAR_SEGUIR);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, usuarioPerfil);
+
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new ErrDelete("Sigue");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public boolean verSeguimiento(String nosotros, String usuarioPerfil) throws ErrVariados, ErrSelect {
+        // TODO Auto-generated method stub
+        this.abrirConexion();
+
+        boolean sigue = false;
+        try {
+            stmt = con.prepareStatement(VER_SEGUIMIENTO);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, usuarioPerfil);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                sigue = true;
+            }
+
+        } catch (SQLException e) {
+            throw new ErrSelect("Sigue");
+        }
+
+        this.cerrarConexion();
+
+        return sigue;
+    }
+
+    @Override
+    public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        ResultSet rs;
+        Usuario us = null;
+        try {
+            stmt = con.prepareStatement(INICIAR_SESION);
+
+            stmt.setString(1, usuario);
+            stmt.setString(2, contrasenia);
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                us = new Usuario();
+                us = this.getUsuario(us, rs);
+            }
+
+        } catch (SQLException e) {
+            throw new ErrSelect("Usuario");
+        }
+        this.cerrarConexion();
+        return us;
+    }
+
+    @Override
+    public List<Usuario> listarBloqueados(Usuario usuario) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_BLOQUEADOS);
+
+            stmt.setString(1, usuario.getUsuario());
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+
+                stmt.setString(1, rs.getString("usuario_bloqueado"));
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Bloqueado");
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public List<Usuario> listarDesbloqueados(Usuario usuario) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_DESBLOQUEADOS);
+
+            stmt.setString(1, usuario.getUsuario());
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+
+                stmt.setString(1, rs.getString("usuario"));
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Bloqueado");
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public void eliminarPublicacion(String id_publicacion) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ELIMINAR_PUBLICACION);
+            stmt.setString(1, id_publicacion);
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new ErrDelete("Publicacion");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void guardarPublicación(String usuario, String id_publicacion) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(GUARDAR_PUBLICACION);
+
+            stmt.setString(1, usuario);
+            stmt.setString(2, id_publicacion);
+
+            stmt.execute();
+        } catch (SQLException ex) {
+            throw new ErrInsert("Guardado");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void bloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BLOQUEAR_USUARIO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            throw new ErrInsert("Bloquear");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(DESBLOQUEAR_USUARIO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            throw new ErrDelete("Bloquear");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(EDITAR_PERFIL);
+
+            stmt.setString(1, us.getContrasenia());
+            stmt.setString(2, us.getIcono());
+            stmt.setString(3, us.getCorreo());
+            stmt.setString(4, us.getTelefono() + "");
+            stmt.setString(5, us.getUsuario());
+
+            stmt.execute();
+        } catch (SQLException ex) {
+            throw new ErrAlter("Usuario");
+        }
+
+        this.cerrarConexion();
+
+    }
+
+    @Override
+    public void eliminarUsuario(String usuario) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(ELIMINAR_USUARIO);
+            stmt.setString(1, usuario);
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new ErrDelete("Usuario");
+        }
+    }
+
+    @Override
+    public List<Publicacion> listarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Publicacion> publicaciones = new ArrayList();
+        try {
+            stmt = con.prepareStatement(LISTAR_PUBLICACIONES_GUARDADAS);
+
+            stmt.setString(1, usuario);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Publicacion pub = new Publicacion();
+                pub = this.getPublicacion(pub, rs);
+                publicaciones.add(pub);
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Guardado");
+        }
+
+        this.cerrarConexion();
+
+        return publicaciones;
+    }
+
+    @Override
+    public boolean comprobarGuardado(String usuario, String publicacion) throws ErrVariados, ErrSelect {
+        boolean guardado = false;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(COMPROBAR_GUARDADO);
+            stmt.setString(1, usuario);
+            stmt.setString(2, publicacion);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                guardado = true;
+            }
+        } catch (SQLException e) {
+            throw new ErrSelect("Guardado");
+        }
+
+        this.cerrarConexion();
+        return guardado;
+
+    }
+
+    @Override
+    public void vaciarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(BORRAR_PUBS_GUARDADAS);
+
+            stmt.setString(1, usuario);
+
+            stmt.execute();
+        } catch (SQLException ex) {
+            throw new ErrDelete("Guardado");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public List<Publicacion> listarPublicacionesEtiquetadas(String usuario) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Publicacion> publicaciones = new ArrayList();
+        try {
+            stmt = con.prepareStatement(LISTAR_PUBLICACIONES_ETIQUETADAS);
+
+            stmt.setString(1, usuario);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Publicacion pub = new Publicacion();
+                pub = this.getPublicacion(pub, rs);
+                publicaciones.add(pub);
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Guardado");
+        }
+
+        this.cerrarConexion();
+
+        return publicaciones;
+
+    }
+
+    @Override
+    public List<Usuario> listarMejoresAmigos(Usuario nosotros) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_MEJORES_AMIGOS);
+
+            stmt.setString(1, nosotros.getUsuario());
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+                stmt.setString(1, rs.getString("mejor_amigo"));
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new ErrSelect("Mejos");
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public List<Usuario> listarNoMejoresAmigos(Usuario nosotros) throws ErrVariados, ErrSelect {
+        this.abrirConexion();
+        List<Usuario> usuarios = new ArrayList();
+
+        try {
+            stmt = con.prepareStatement(LISTAR_NO_MEJORES_AMIGOS);
+            stmt.setString(1, nosotros.getUsuario());
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                stmt = con.prepareStatement(BUSCAR_USUARIO);
+                stmt.setString(1, rs.getString("usuario"));
+
+                ResultSet rs2 = stmt.executeQuery();
+
+                if (rs2.next()) {
+                    Usuario usu = new Usuario();
+                    usu = this.getUsuario(usu, rs2);
+                    usuarios.add(usu);
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new ErrSelect("Mejos");
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    public void aniadirAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrInsert {
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(INSERTAR_AMIGO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            throw new ErrInsert("Mejos");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public boolean comprobarMejos(String nosotros, String el) throws ErrVariados, ErrSelect {
+        boolean esMejo = false;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(COMPROBAR_MEJOS);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, el);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                esMejo = true;
+            }
+
+        } catch (SQLException ex) {
+            throw new ErrSelect("Mejor Amigo");
+        }
+
+        this.cerrarConexion();
+        return esMejo;
+    }
+
+    @Override
+    public boolean comprobarBloqueado(String nosotros, String el) throws ErrVariados, ErrSelect {
+        boolean bloqueado = false;
+        this.abrirConexion();
+
+        try {
+            stmt = con.prepareStatement(COMPROBAR_BLOQUEADO);
+            stmt.setString(1, nosotros);
+            stmt.setString(2, el);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                bloqueado = true;
+            }
+        } catch (SQLException e) {
+            throw new ErrSelect("Bloqueados");
+        }
+        this.cerrarConexion();
+        return bloqueado;
+    }
+
+    @Override
+    public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void quitarAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrDelete {
+        this.abrirConexion();
+
+        try {
+
+            stmt = con.prepareStatement(QUITAR_AMIGO);
+
+            stmt.setString(1, nosotros.getUsuario());
+            stmt.setString(2, usu);
+
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            throw new ErrDelete("Mejos");
+        }
+
+        this.cerrarConexion();
+    }
+
+    @Override
+    public void insertarMensaje(Mensaje men) throws ErrVariados, ErrInsert {
         this.abrirConexion();
 
         try {
@@ -741,14 +1467,13 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-
-            e.printStackTrace();
+            throw new ErrInsert("Mensaje");
         }
         this.cerrarConexion();
     }
 
     @Override
-    public List<Mensaje> sacarMensajes(String usuario1, String usuario2) {
+    public List<Mensaje> sacarMensajes(String usuario1, String usuario2) throws ErrVariados, ErrSelect {
         List<Mensaje> mensajes = new ArrayList<>();
 
         this.abrirConexion();
@@ -773,15 +1498,14 @@ public class DAOImplementacionBD implements DAO {
                 mensajes.add(men);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ErrSelect("Mensaje");
         }
         this.cerrarConexion();
         return mensajes;
     }
 
     @Override
-    public String calcularIdMensaje(String string) {
+    public String calcularIdMensaje(String string) throws ErrVariados, ErrSelect {
         String cod = "";
         this.abrirConexion();
 
@@ -797,14 +1521,14 @@ public class DAOImplementacionBD implements DAO {
                 cod = "00000";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Mensaje");
         }
         this.cerrarConexion();
         return cod;
     }
 
     @Override
-    public List<String> sacarConversaciones(String usuario) {
+    public List<String> sacarConversaciones(String usuario) throws ErrVariados, ErrSelect {
         List<String> mensajes = new ArrayList<>();
 
         this.abrirConexion();
@@ -818,7 +1542,7 @@ public class DAOImplementacionBD implements DAO {
                 mensajes.add(rs.getString("OTRO_USUARIO"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Conversacion");
         }
         this.cerrarConexion();
         return mensajes;
@@ -826,7 +1550,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public List<Articulo> sacarTodosLosArticulos() {
+    public List<Articulo> sacarTodosLosArticulos() throws ErrVariados, ErrSelect {
         List<Articulo> articulos = new ArrayList<>();
         this.abrirConexion();
 
@@ -848,14 +1572,14 @@ public class DAOImplementacionBD implements DAO {
                 articulos.add(art);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
 
         return articulos;
     }
 
     @Override
-    public void insertarArticulo(Articulo art) {
+    public void insertarArticulo(Articulo art) throws ErrVariados, ErrInsert {
         this.abrirConexion();
 
         try {
@@ -873,12 +1597,12 @@ public class DAOImplementacionBD implements DAO {
             stmt.execute();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrInsert("Articulos");
         }
     }
 
     @Override
-    public String calcularIdArticulo(String string) {
+    public String calcularIdArticulo(String string) throws ErrVariados, ErrSelect {
         String cod = "";
         this.abrirConexion();
 
@@ -894,14 +1618,14 @@ public class DAOImplementacionBD implements DAO {
                 cod = "00000";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
         this.cerrarConexion();
         return cod;
     }
 
     @Override
-    public void borrarArticulo(String id) {
+    public void borrarArticulo(String id) throws ErrVariados, ErrDelete {
         this.abrirConexion();
 
         try {
@@ -910,14 +1634,14 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrDelete("Articulos");
         }
 
         this.cerrarConexion();
     }
 
     @Override
-    public void modificarArt(Articulo art) {
+    public void modificarArt(Articulo art) throws ErrVariados, ErrAlter {
         this.abrirConexion();
 
         try {
@@ -929,7 +1653,7 @@ public class DAOImplementacionBD implements DAO {
 
             stmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrAlter("Articulos");
         }
 
         this.cerrarConexion();
@@ -937,7 +1661,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) {
+    public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) throws ErrVariados, ErrAlter {
         this.abrirConexion();
 
         try {
@@ -948,14 +1672,14 @@ public class DAOImplementacionBD implements DAO {
             stmt.setString(4, id);
             stmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrAlter("Articulos");
         }
 
         this.cerrarConexion();
     }
 
     @Override
-    public int obtenerValoracion(Articulo ar) {
+    public int obtenerValoracion(Articulo ar) throws ErrVariados, ErrSelect {
         int valoracion = 0;
         this.abrirConexion();
 
@@ -971,7 +1695,7 @@ public class DAOImplementacionBD implements DAO {
                 valoracion = 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
         this.cerrarConexion();
         return valoracion;
@@ -979,7 +1703,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) {
+    public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) throws ErrVariados, ErrSelect {
         List<Articulo> articulos = new ArrayList<>();
         this.abrirConexion();
 
@@ -1032,10 +1756,9 @@ public class DAOImplementacionBD implements DAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ErrSelect("Articulos");
         }
 
         return articulos;
     }
-
 }

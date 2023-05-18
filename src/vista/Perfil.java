@@ -2,53 +2,119 @@ package vista;
 
 import clases.Publicacion;
 import clases.Usuario;
+import excepciones.ErrDelete;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
+/**
+ *
+ * @author arceu
+ */
 public class Perfil extends javax.swing.JDialog {
 
     private DAO dao;
-    private ParaTi paraTi;
     private Usuario usuarioPerfil;
     private Usuario usu;
+    private Publicacion publi;
+    private VMain vMain;
     private List<Publicacion> publicacionesList;
 
-    public Perfil(ParaTi parent, boolean modal, DAO dao, Usuario nosotros, Usuario usu) {
-        super(parent, modal);
-        this.setModal(modal);
-        this.dao = dao;
-        this.usu = nosotros;
-        this.usuarioPerfil = usu;
-        this.paraTi = parent;
+    /**
+     * Crea una pantalla donde se muestra el perfil del usuario
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param nosotros Es el usuario que controla la aplicacion
+     * @param usuarioPerfil Es el usuario cuyo perfil queremos ver
+     */
+    public Perfil(VMain vMain, boolean modal, DAO dao, Usuario nosotros, Usuario usuarioPerfil) {
+        super(vMain, modal);
+        try {
+            this.dao = dao;
+            this.usu = nosotros;
+            this.usuarioPerfil = usuarioPerfil;
+            this.vMain = vMain;
 
-        setTitle("Perfil");
-        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
-        getContentPane().setBackground(new Color(49, 51, 53));
-        initComponents();
+            setTitle("Perfil");
+            setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
+            getContentPane().setBackground(new Color(49, 51, 53));
+            initComponents();
+            setLocationRelativeTo(null);
 
-        if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
-            btn.setVisible(false);
-            btnEditarPerfil.setVisible(false);
+            if (dao.comprobarBloqueado(nosotros.getUsuario(), usuarioPerfil.getUsuario())) {
+                bloqueado.setVisible(true);
+                lblBloqueado.setVisible(true);
+
+                btnEditarPerfil.setVisible(false);
+                btnMenu.setVisible(false);
+                btnSeguir.setVisible(false);
+                btnMensaje.setVisible(false);
+                rdbtnFoto.setVisible(false);
+                rdbtnReel.setVisible(false);
+                rdbtnHistoria.setVisible(false);
+
+                franjaMenu.setVisible(false);
+
+            } else {
+                mostrarPublicacion();
+
+                if (!nosotros.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+                    btnMenu.setVisible(false);
+                    btnEditarPerfil.setVisible(false);
+
+                    if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario())) {
+                        btnSeguir.setSelected(true);
+                        btnSeguir.setText("Siguiendo");
+                    }
+                }
+                if (!usuarioPerfil.isVerificado()) {
+                    lblVerificado.setVisible(false);
+                }
+                lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
+                lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
+                lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
+                lblUsuario.setText(usuarioPerfil.getUsuario());
+
+                lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
+                publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
+
+                cargarTabla(publicacionesList);
+
+                franjaMenu.setVisible(false);
+            }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        } catch (NullPointerException ex) {
+            ErrVariados er = new ErrVariados("Imagen");
         }
-        if (!usuarioPerfil.isVerificado()) {
-            lblVerificado.setVisible(false);
-        }
 
-        lblNumPublicaciones.setText(dao.numPublicacionesUsuario(usuarioPerfil.getUsuario()) + "");
-        lblSeguidores.setText(usuarioPerfil.getNumSeguidores() + "");
-        lblSeguidos.setText(usuarioPerfil.getNumSeguidos() + "");
-        lblIcono.setIcon(new ImageIcon(ParaTi.class.getResource("/imagenes/iconos/" + usuarioPerfil.getIcono())));
-        lblUsuario.setText(usuarioPerfil.getUsuario());
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cerrar();
+            }
 
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        cargarTabla(publicacionesList);
+        });
     }
 
+    /**
+     * Carga la tabla con las publicaciones del usuario del perfil
+     *
+     * @param publicacionesList Son las publicaciones que queremos mostrar
+     */
     private void cargarTabla(List<Publicacion> publicacionesList) {
         DefaultTableModel modelo = (DefaultTableModel) tablaPublicaciones.getModel();
         modelo.setRowCount(0);
@@ -84,9 +150,14 @@ public class Perfil extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Genera una ventana donde se ve la foto que ha clickado y todos sus datos
+     *
+     * @param foto Es la foto que queremos ver
+     */
     private void abrirFoto(String foto) {
         String rutaProyecto = System.getProperty("user.dir");
-        Publicacion publi = null;
+        publi = null;
 
         for (Publicacion i : publicacionesList) {
             if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
@@ -95,21 +166,58 @@ public class Perfil extends javax.swing.JDialog {
             }
         }
 
-        PublicacionPopUp publiPop = new PublicacionPopUp(paraTi, true, dao, publi, usu, usuarioPerfil);
+        PublicacionPopUp publiPop = new PublicacionPopUp(vMain, true, dao, publi, usu, usuarioPerfil, this);
         publiPop.setVisible(true);
 
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * Ocultar y desoculta un JPanel que no permite a los usuario ver perfiles
+     * que no sigue
      */
+    private void mostrarPublicacion() {
+        try {
+
+            if (dao.verSeguimiento(usu.getUsuario(), usuarioPerfil.getUsuario()) || usu.getUsuario().equalsIgnoreCase(usuarioPerfil.getUsuario())) {
+                noSigue.setVisible(false);
+                lblSigue.setVisible(false);
+
+                rdbtnFoto.setVisible(true);
+                rdbtnReel.setVisible(true);
+                rdbtnHistoria.setVisible(true);
+            } else {
+                noSigue.setVisible(true);
+                lblSigue.setVisible(true);
+
+                rdbtnFoto.setVisible(false);
+                rdbtnReel.setVisible(false);
+                rdbtnHistoria.setVisible(false);
+            }
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+    }
+
     @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         tipoPublicacion = new javax.swing.ButtonGroup();
+        bloqueado = new javax.swing.JPanel();
+        lblBloqueado = new javax.swing.JLabel();
+        noSigue = new javax.swing.JPanel();
+        lblSigue = new javax.swing.JLabel();
+        franjaMenu = new javax.swing.JPanel();
+        equis = new javax.swing.JButton();
+        btnBloquear = new javax.swing.JButton();
+        btnPublisGuardadas = new javax.swing.JButton();
+        btnEtiquetas = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
+        btnMejoresAmigos = new javax.swing.JButton();
         franjaArriba = new javax.swing.JPanel();
         lblLogo = new javax.swing.JLabel();
         lblLogoLetras = new javax.swing.JLabel();
@@ -129,7 +237,7 @@ public class Perfil extends javax.swing.JDialog {
         lblUsuario = new javax.swing.JLabel();
         lblVerificado = new javax.swing.JLabel();
         btnEditarPerfil = new javax.swing.JButton();
-        btn = new javax.swing.JButton();
+        btnMenu = new javax.swing.JButton();
         btnMensaje = new javax.swing.JButton();
         btnSeguir = new javax.swing.JToggleButton();
         rdbtnFoto = new javax.swing.JRadioButton();
@@ -149,6 +257,150 @@ public class Perfil extends javax.swing.JDialog {
         setPreferredSize(new java.awt.Dimension(648, 864));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        bloqueado.setBackground(getBackground());
+
+        lblBloqueado.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        lblBloqueado.setForeground(new java.awt.Color(255, 255, 255));
+        lblBloqueado.setText("Este usuario te ha bloqueado");
+
+        javax.swing.GroupLayout bloqueadoLayout = new javax.swing.GroupLayout(bloqueado);
+        bloqueado.setLayout(bloqueadoLayout);
+        bloqueadoLayout.setHorizontalGroup(
+            bloqueadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bloqueadoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblBloqueado)
+                .addGap(15, 15, 15))
+        );
+        bloqueadoLayout.setVerticalGroup(
+            bloqueadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bloqueadoLayout.createSequentialGroup()
+                .addGap(283, 283, 283)
+                .addComponent(lblBloqueado)
+                .addContainerGap(293, Short.MAX_VALUE))
+        );
+
+        lblBloqueado.setVisible(false);
+
+        getContentPane().add(bloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 630, 640));
+        bloqueado.setVisible(false);
+
+        noSigue.setBackground(getBackground());
+
+        lblSigue.setFont(new java.awt.Font("SansSerif", 0, 48)); // NOI18N
+        lblSigue.setForeground(new java.awt.Color(255, 255, 255));
+        lblSigue.setText("No sigues a este usuario");
+
+        javax.swing.GroupLayout noSigueLayout = new javax.swing.GroupLayout(noSigue);
+        noSigue.setLayout(noSigueLayout);
+        noSigueLayout.setHorizontalGroup(
+            noSigueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(noSigueLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(lblSigue)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+        noSigueLayout.setVerticalGroup(
+            noSigueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(noSigueLayout.createSequentialGroup()
+                .addGap(161, 161, 161)
+                .addComponent(lblSigue)
+                .addContainerGap(187, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(noSigue, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 610, 410));
+
+        franjaMenu.setBackground(new java.awt.Color(35, 36, 37));
+        franjaMenu.setPreferredSize(new java.awt.Dimension(648, 80));
+
+        equis.setBackground(new java.awt.Color(35, 36, 37));
+        equis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pantalla/equis.png"))); // NOI18N
+        equis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                equisMouseClicked(evt);
+            }
+        });
+
+        btnBloquear.setBackground(new java.awt.Color(49, 51, 53));
+        btnBloquear.setForeground(new java.awt.Color(255, 255, 255));
+        btnBloquear.setText("Bloquear usuario");
+        btnBloquear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBloquearActionPerformed(evt);
+            }
+        });
+
+        btnPublisGuardadas.setBackground(new java.awt.Color(49, 51, 53));
+        btnPublisGuardadas.setForeground(new java.awt.Color(255, 255, 255));
+        btnPublisGuardadas.setText("Publicaciones guardadas");
+        btnPublisGuardadas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPublisGuardadasActionPerformed(evt);
+            }
+        });
+
+        btnEtiquetas.setBackground(new java.awt.Color(49, 51, 53));
+        btnEtiquetas.setForeground(new java.awt.Color(255, 255, 255));
+        btnEtiquetas.setText("Etiquetas");
+        btnEtiquetas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEtiquetasActionPerformed(evt);
+            }
+        });
+
+        btnCerrarSesion.setBackground(new java.awt.Color(133, 0, 0));
+        btnCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
+        btnMejoresAmigos.setBackground(new java.awt.Color(14, 105, 0));
+        btnMejoresAmigos.setForeground(new java.awt.Color(255, 255, 255));
+        btnMejoresAmigos.setText("Mejores Amigos");
+        btnMejoresAmigos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMejoresAmigosActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout franjaMenuLayout = new javax.swing.GroupLayout(franjaMenu);
+        franjaMenu.setLayout(franjaMenuLayout);
+        franjaMenuLayout.setHorizontalGroup(
+            franjaMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, franjaMenuLayout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addGroup(franjaMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnMejoresAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEtiquetas, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPublisGuardadas, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(equis, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35))
+        );
+        franjaMenuLayout.setVerticalGroup(
+            franjaMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(franjaMenuLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(equis, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(152, 152, 152)
+                .addComponent(btnBloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnPublisGuardadas, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnEtiquetas, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnMejoresAmigos, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
+        );
+
+        getContentPane().add(franjaMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 330, 830));
 
         franjaArriba.setBackground(new java.awt.Color(43, 45, 47));
         franjaArriba.setPreferredSize(new java.awt.Dimension(648, 80));
@@ -180,8 +432,6 @@ public class Perfil extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        lblLogoLetras.getAccessibleContext().setAccessibleName("");
 
         getContentPane().add(franjaArriba, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 682, -1));
 
@@ -357,29 +607,41 @@ public class Perfil extends javax.swing.JDialog {
 
         btnEditarPerfil.setBackground(new java.awt.Color(227, 227, 227));
         btnEditarPerfil.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btnEditarPerfil.setForeground(new java.awt.Color(0, 0, 0));
         btnEditarPerfil.setText("Editar Cuenta");
         btnEditarPerfil.setBorder(null);
         btnEditarPerfil.setBorderPainted(false);
         btnEditarPerfil.setFocusPainted(false);
+        btnEditarPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarPerfilActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
 
-        btn.setBackground(new java.awt.Color(227, 227, 227));
-        btn.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btn.setForeground(new java.awt.Color(0, 0, 0));
-        btn.setText("???");
-        btn.setBorder(null);
-        btn.setBorderPainted(false);
-        btn.setFocusPainted(false);
-        getContentPane().add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
+        btnMenu.setBackground(new java.awt.Color(227, 227, 227));
+        btnMenu.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnMenu.setText("Menú");
+        btnMenu.setBorder(null);
+        btnMenu.setBorderPainted(false);
+        btnMenu.setFocusPainted(false);
+        btnMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMenuMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btnMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
 
         btnMensaje.setBackground(new java.awt.Color(227, 227, 227));
         btnMensaje.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btnMensaje.setForeground(new java.awt.Color(0, 0, 0));
         btnMensaje.setText("Enviar Mensaje");
         btnMensaje.setBorder(null);
         btnMensaje.setBorderPainted(false);
         btnMensaje.setFocusPainted(false);
+        btnMensaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMensajeActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 242, 120, 42));
 
         btnSeguir.setBackground(new java.awt.Color(0, 149, 246));
@@ -390,6 +652,11 @@ public class Perfil extends javax.swing.JDialog {
         btnSeguir.setBorderPainted(false);
         btnSeguir.setFocusPainted(false);
         btnSeguir.setRolloverEnabled(false);
+        btnSeguir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                seguir(evt);
+            }
+        });
         getContentPane().add(btnSeguir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 242, 120, 42));
 
         rdbtnFoto.setBackground(getBackground());
@@ -421,11 +688,6 @@ public class Perfil extends javax.swing.JDialog {
                 rdbtnReelMouseClicked(evt);
             }
         });
-        rdbtnReel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdbtnReelActionPerformed(evt);
-            }
-        });
         getContentPane().add(rdbtnReel, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 314, -1, -1));
 
         rdbtnHistoria.setBackground(getBackground());
@@ -446,25 +708,32 @@ public class Perfil extends javax.swing.JDialog {
         scroll.setBackground(getBackground());
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scroll.setAutoscrolls(true);
+        scroll.setFocusable(false);
         scroll.setPreferredSize(new java.awt.Dimension(594, 351));
+        scroll.setRequestFocusEnabled(false);
 
         tablaPublicaciones.setBackground(getBackground());
         tablaPublicaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Title 1", "Title 2", "Title 3"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tablaPublicaciones.setFillsViewportHeight(true);
-        tablaPublicaciones.setPreferredSize(new java.awt.Dimension(594, 351));
-        tablaPublicaciones.setRowHeight(351);
-        tablaPublicaciones.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPublicaciones.setFocusable(false);
+        tablaPublicaciones.setRequestFocusEnabled(false);
+        tablaPublicaciones.setRowHeight(349);
+        tablaPublicaciones.setRowSelectionAllowed(false);
         tablaPublicaciones.setShowGrid(false);
         tablaPublicaciones.setTableHeader(null);
         tablaPublicaciones.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -474,82 +743,344 @@ public class Perfil extends javax.swing.JDialog {
         });
         scroll.setViewportView(tablaPublicaciones);
 
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-
         getContentPane().add(scroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 355, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre una pantalla de paraTi
+     *
+     * @param evt
+     */
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
+    /**
+     * Abre una ventna de buscar
+     *
+     * @param evt
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    /**
+     * Abre una ventana de subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
+    /**
+     * Abre una ventana de tienda
+     *
+     * @param evt
+     */
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre una ventana de perfil
+     *
+     * @param evt
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
-    private void rdbtnReelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnReelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdbtnReelActionPerformed
-
+    /**
+     * Muestra unicamente las fotos del usuario del perfil
+     *
+     * @param evt
+     */
     private void rdbtnFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnFotoMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Foto");
-        cargarTabla(publicacionesList);
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
+            cargarTabla(publicacionesList);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_rdbtnFotoMouseClicked
 
+    /**
+     * Muestra unicamente los reels del usuario del perfil
+     *
+     * @param evt
+     */
     private void rdbtnReelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnReelMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Reel");
-        cargarTabla(publicacionesList);
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Reel");
+            cargarTabla(publicacionesList);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_rdbtnReelMouseClicked
 
+    /**
+     * Muestra unicamente las historias del usuario del perfil
+     *
+     * @param evt
+     */
     private void rdbtnHistoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdbtnHistoriaMouseClicked
-        publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), "Historia");
-        cargarTabla(publicacionesList);
+        try {
+            publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Historia");
+            cargarTabla(publicacionesList);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
     }//GEN-LAST:event_rdbtnHistoriaMouseClicked
 
+    /**
+     * Sigue o deja de seguir al usuario del perfil
+     *
+     * @param evt
+     */
+    private void seguir(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seguir
+        try {
+            if (btnSeguir.isSelected()) {
+                dao.seguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+                btnSeguir.setText("Siguiendo");
+                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) + 1 + "");
+
+                publicacionesList = dao.listarPublicacionesUsuario(usuarioPerfil.getUsuario(), usu.getUsuario(), "Foto");
+                cargarTabla(publicacionesList);
+
+            } else {
+                dao.dejarSeguir(usu.getUsuario(), usuarioPerfil.getUsuario());
+                btnSeguir.setText("Seguir");
+                lblSeguidores.setText(Integer.parseInt(lblSeguidores.getText()) - 1 + "");
+            }
+
+            mostrarPublicacion();
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrInsert ex) {
+            ex.mostrarError();
+        } catch (ErrDelete ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+    }//GEN-LAST:event_seguir
+
+    /**
+     * Abre la foto que se clicka
+     *
+     * @param evt
+     */
     private void tablaPublicacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPublicacionesMouseClicked
         int fila = tablaPublicaciones.rowAtPoint(evt.getPoint());
         int columna = tablaPublicaciones.columnAtPoint(evt.getPoint());
 
-        abrirFoto(tablaPublicaciones.getValueAt(fila, columna).toString());
+        try {
+            abrirFoto(tablaPublicaciones.getValueAt(fila, columna).toString());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //Clickas en la tercera celda de la tabla y al haber menos imagenes da fallo;
+            //El fallo no repercute al codigo por lo que no quiero gestionarlo ni avisar
+        } catch (NullPointerException e) {
+        }
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
+    /**
+     * Cierra el panel de opciones
+     *
+     * @param evt
+     */
+    private void equisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_equisMouseClicked
+        // TODO add your handling code here:
+        btnMenu.setBorder(null);
+        franjaMenu.setVisible(false);
+        btnMenu.setVisible(true);
+        btnEditarPerfil.setEnabled(true);
+        btnMensaje.setVisible(true);
+        equis.setVisible(false);
+        equis.setBorder(null);
+        //btnBloquear.setVisible(true);
+        btnSubir.setEnabled(true);
+        btnSeguir.setVisible(false);
+        rdbtnReel.setEnabled(true);
+        rdbtnFoto.setEnabled(true);
+        rdbtnHistoria.setVisible(true);
+        btnBuscar.setEnabled(true);
+        btnParaTi.setEnabled(true);
+        btnTienda.setEnabled(true);
+        btnCuenta.setEnabled(true);
+        tablaPublicaciones.setEnabled(true);
+    }//GEN-LAST:event_equisMouseClicked
+
+    /**
+     * Abre el menu de opciones
+     *
+     * @param evt
+     */
+    private void btnMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuMouseClicked
+        // TODO add your handling code here:
+        btnMenu.setBorder(null);
+        franjaMenu.setVisible(true);
+        btnMenu.setVisible(false);
+        btnEditarPerfil.setEnabled(false);
+        btnMensaje.setVisible(false);
+        equis.setVisible(true);
+        equis.setBorder(null);
+        //btnBloquear.setVisible(true);
+        btnSubir.setEnabled(false);
+        rdbtnReel.setEnabled(false);
+        rdbtnFoto.setEnabled(false);
+        rdbtnHistoria.setVisible(false);
+        btnBuscar.setEnabled(false);
+        btnParaTi.setEnabled(false);
+        btnTienda.setEnabled(false);
+        btnCuenta.setEnabled(false);
+        tablaPublicaciones.setEnabled(false);
+        btnBloquear.setBorder(null);
+        btnPublisGuardadas.setBorder(null);
+        btnEtiquetas.setBorder(null);
+        btnCerrarSesion.setBorder(null);
+        btnMejoresAmigos.setBorder(null);
+    }//GEN-LAST:event_btnMenuMouseClicked
+
+    /**
+     * Abre una ventana para ver las publicaciones que ha guardado
+     *
+     * @param evt
+     */
+    private void btnPublisGuardadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublisGuardadasActionPerformed
+        // TODO add your handling code here:
+        PublicacionesGuardadas vent = new PublicacionesGuardadas(vMain, true, dao, publi, usu, usuarioPerfil, this);
+        vent.setVisible(true);
+    }//GEN-LAST:event_btnPublisGuardadasActionPerformed
+
+    /**
+     * Abre una ventana para ver las publicaciones en las que le han etiquetado
+     *
+     * @param evt
+     */
+    private void btnEtiquetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEtiquetasActionPerformed
+        // TODO add your handling code here:
+        PublicacionesEtiquetadas vent = new PublicacionesEtiquetadas(vMain, true, dao, publi, usu, usuarioPerfil, this);
+        vent.setVisible(true);
+    }//GEN-LAST:event_btnEtiquetasActionPerformed
+
+    /**
+     * Cierra la sesion y abre la ventana de inicar sesion
+     *
+     * @param evt
+     */
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        // TODO add your handling code here:
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        JOptionPane.showConfirmDialog(null, "¿Éstas seguro de que quieres cerrar sesión?", "ATENCIÓN!!", dialogButton);
+        if (dialogButton == JOptionPane.YES_OPTION) {
+            this.dispose();
+            vMain.setOpacity(1);
+            if (dialogButton == JOptionPane.NO_OPTION) {
+                remove(dialogButton);
+            }
+        }
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    /**
+     * Abre la ventana para añadir o eliminar mejores amigos
+     *
+     * @param evt
+     */
+    private void btnMejoresAmigosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMejoresAmigosActionPerformed
+        // TODO add your handling code here:
+        MejoresAmigos vent = new MejoresAmigos(vMain, this, true, dao, usu);
+        vent.setVisible(true);
+    }//GEN-LAST:event_btnMejoresAmigosActionPerformed
+
+    /**
+     * Abre la ventana para bloquear o desbloquear usuarios
+     *
+     * @param evt
+     */
+    private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
+        // TODO add your handling code here:
+        BloquearDesbloquear bd = new BloquearDesbloquear(vMain, this, true, dao, usu);
+        bd.setVisible(true);
+    }//GEN-LAST:event_btnBloquearActionPerformed
+
+    /**
+     * Abre una ventana para editar el perfil
+     *
+     * @param evt
+     */
+    private void btnEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPerfilActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        EditarPerfil vent = new EditarPerfil(vMain, true, dao, usu, usuarioPerfil);
+        vent.setVisible(true);
+
+    }//GEN-LAST:event_btnEditarPerfilActionPerformed
+
+    /**
+     * Abre una ventana para poder hablar con el usuario del perfil
+     *
+     * @param evt
+     */
+    private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
+        pruebaChat chat = new pruebaChat(vMain, true, dao, usu, usuarioPerfil.getUsuario());
+        this.dispose();
+        chat.setVisible(true);
+    }//GEN-LAST:event_btnMensajeActionPerformed
+
+    /**
+     * Cierra la ventana
+     */
+    private void cerrar() {
+        this.dispose();
+        vMain.dispose();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn;
+    private javax.swing.JPanel bloqueado;
+    private javax.swing.JButton btnBloquear;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnCuenta;
     private javax.swing.JButton btnEditarPerfil;
+    private javax.swing.JButton btnEtiquetas;
+    private javax.swing.JButton btnMejoresAmigos;
     private javax.swing.JButton btnMensaje;
+    private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnParaTi;
+    private javax.swing.JButton btnPublisGuardadas;
     private javax.swing.JToggleButton btnSeguir;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnTienda;
+    private javax.swing.JButton equis;
     private javax.swing.JPanel franajAbajo;
     private javax.swing.JPanel franjaArriba;
+    private javax.swing.JPanel franjaMenu;
+    private javax.swing.JLabel lblBloqueado;
     private javax.swing.JLabel lblIcono;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblLogoLetras;
@@ -559,8 +1090,10 @@ public class Perfil extends javax.swing.JDialog {
     private javax.swing.JLabel lblSeguidoresText;
     private javax.swing.JLabel lblSeguidos;
     private javax.swing.JLabel lblSeguidosText;
+    private javax.swing.JLabel lblSigue;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVerificado;
+    private javax.swing.JPanel noSigue;
     private javax.swing.JRadioButton rdbtnFoto;
     private javax.swing.JRadioButton rdbtnHistoria;
     private javax.swing.JRadioButton rdbtnReel;

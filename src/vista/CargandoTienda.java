@@ -14,17 +14,21 @@ public class CargandoTienda extends javax.swing.JDialog {
      * Creates new form CargandoTienda
      */
     private Tienda tien;
-
+    /**
+    *Ventana para efecto cargar 
+    **/
     public CargandoTienda(Tienda tien, boolean modal, Comprar compra) {
         super(tien, modal);
         this.tien = tien;
         initComponents();
+        //Threar para parar el codigo durante un determinador tiempo. Con un bucle fot dentro asi conseguimos controlar que cuando la Variables
+        //legue a 100 ejecutar una accion. En este caso cerrar esta ventana y abrir de nuevo la tienda, con los elementos cargados. Asi quitamos el item que ha sido comprado
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i <= 100; i = i + 4) {
                     try {
-
+                        //Dormimos el codigo durante 200 milisegundos por cada vez que pasa por aqui
                         Thread.sleep(200);
                         if (i == 100) {
                             dispose();
