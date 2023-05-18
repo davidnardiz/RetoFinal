@@ -19,6 +19,11 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+/**
+ * Es una clase auxiliar que genera un boton personalizado.
+ *
+ * @author Bayron
+ */
 public class Button extends JButton {
 
     public boolean isPaintBackground() {

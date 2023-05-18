@@ -27,9 +27,9 @@ import java.text.AttributedCharacterIterator;
 import java.util.Map;
 
 /**
- * A proxy for {@link Graphics2D}.
+ * Es una clase auxiliar que genera campos personalizados.
  *
- * @author Karl Tauber
+ * @author Bayron
  */
 public class Graphics2DProxy extends Graphics2D {
 

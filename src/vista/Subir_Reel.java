@@ -9,7 +9,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Subir_Reel extends javax.swing.JPanel {
 

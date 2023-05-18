@@ -18,7 +18,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author David
  */
 public class PublicacionPopUp extends javax.swing.JDialog {
 

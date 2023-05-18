@@ -9,7 +9,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Subir_Foto extends javax.swing.JPanel {
 

@@ -3,6 +3,11 @@ package tienda;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class ShadowRenderer {
 
     // size of the shadow in pixels (defines the fuzziness)

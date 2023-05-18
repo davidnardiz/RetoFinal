@@ -17,7 +17,7 @@ import utilidades.Filtros_Buscador.SearchOption;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Buscar extends javax.swing.JDialog {
 
@@ -44,6 +44,7 @@ public class Buscar extends javax.swing.JDialog {
         this.dao = dao;
         this.usu = usu;
         this.vMain = vMain;
+        this.conver = par1;
 
         try {
             this.usuariosList = dao.listarUsuario();
@@ -483,7 +484,7 @@ public class Buscar extends javax.swing.JDialog {
 
         if (conver) {
             String otroUsu = tablaUsuarios.getValueAt(fila, 2).toString();
-            pruebaChat chat = new pruebaChat(vMain, true, dao, usu, otroUsu);
+            PruebaChat chat = new PruebaChat(vMain, true, dao, usu, otroUsu);
             this.dispose();
             chat.setVisible(true);
 
@@ -495,7 +496,7 @@ public class Buscar extends javax.swing.JDialog {
                 //El fallo no repercute al codigo por lo que no quiero gestionarlo ni avisar
             } catch (NullPointerException e) {
             }
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
     /**

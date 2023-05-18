@@ -6,7 +6,7 @@ import net.miginfocom.layout.LayoutCallback;
 
 /**
  *
- * @author Raven
+ * @author Bayron
  */
 public interface Option {
 

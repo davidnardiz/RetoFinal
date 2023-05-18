@@ -2,6 +2,11 @@ package chat;
 
 import javax.swing.Icon;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class ModelMessage {
 
     public Icon getIcon() {

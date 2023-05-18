@@ -9,14 +9,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * <p>
- * This class provides a star shape. A star is defined by two radii and a number
- * of branches. Each branch spans between the two radii. The inner radius is the
- * distance between the center of the star and the origin of the branches. The
- * outer radius is the distance between the center of the star and the tips of
- * the branches.</p>
+ * Es una clase auxiliar que genera campos personalizados.
  *
- * @author Romain Guy <romain.guy@mac.com>
+ * @author Bayron
  */
 public class Star2D implements Shape {
 
@@ -27,22 +22,6 @@ public class Star2D implements Shape {
     private double outerRadius;
     private int branchesCount;
 
-    /**
-     * <p>
-     * Creates a new star whose center is located at the specified
-     * <code>x</code> and <code>y</code> coordinates. The number of branches and
-     * their length can be specified.</p>
-     *
-     * @param x the location of the star center
-     * @param y the location of the star center
-     * @param innerRadius the distance between the center of the star and the
-     * origin of the branches
-     * @param outerRadius the distance between the center of the star and the
-     * tip of the branches
-     * @param branchesCount the number of branches in this star; must be &gt;= 3
-     * @throws IllegalArgumentException if <code>branchesCount<code> is < 3 or
-     *   if <code>innerRadius</code> is &gt;= <code>outerRadius</code>
-     */
     public Star2D(double x, double y,
             double innerRadius, double outerRadius,
             int branchesCount) {
@@ -104,17 +83,6 @@ public class Star2D implements Shape {
         return path;
     }
 
-    /**
-     * <p>
-     * Sets the inner radius of the star, that is the distance between its
-     * center and the origin of the branches. The inner radius must always be
-     * lower than the outer radius.</p>
-     *
-     * @param innerRadius the distance between the center of the star and the
-     * origin of the branches
-     * @throws IllegalArgumentException if the inner radius is &gt;= outer
-     * radius
-     */
     public void setInnerRadius(double innerRadius) {
         if (innerRadius >= outerRadius) {
             throw new IllegalArgumentException("The inner radius must be <"
@@ -126,41 +94,18 @@ public class Star2D implements Shape {
                 getBranchesCount());
     }
 
-    /**
-     * <p>
-     * Sets location of the center of the star.</p>
-     *
-     * @param x the x location of the center of the star
-     */
     public void setX(double x) {
         this.x = x;
         starShape = generateStar(x, getY(), getInnerRadius(), getOuterRadius(),
                 getBranchesCount());
     }
 
-    /**
-     * <p>
-     * Sets the location of the center of the star.</p>
-     *
-     * @param y the x location of the center of the star
-     */
     public void setY(double y) {
         this.y = y;
         starShape = generateStar(getX(), y, getInnerRadius(), getOuterRadius(),
                 getBranchesCount());
     }
 
-    /**
-     * <p>
-     * Sets the outer radius of the star, that is the distance between its
-     * center and the tips of the branches. The outer radius must always be
-     * greater than the inner radius.</p>
-     *
-     * @param outerRadius the distance between the center of the star and the
-     * tips of the branches
-     * @throws IllegalArgumentException if the inner radius is &gt;= outer
-     * radius
-     */
     public void setOuterRadius(double outerRadius) {
         if (innerRadius >= outerRadius) {
             throw new IllegalArgumentException("The outer radius must be > "
@@ -172,14 +117,6 @@ public class Star2D implements Shape {
                 getBranchesCount());
     }
 
-    /**
-     * <p>
-     * Sets the number branches of the star. A star must always have at least 3
-     * branches.</p>
-     *
-     * @param branchesCount the number of branches
-     * @throws IllegalArgumentException if <code>branchesCount</code> is &lt;=2
-     */
     public void setBranchesCount(int branchesCount) {
         if (branchesCount <= 2) {
             throw new IllegalArgumentException("The number of branches must"
@@ -191,133 +128,71 @@ public class Star2D implements Shape {
                 getOuterRadius(), branchesCount);
     }
 
-    /**
-     * <p>
-     * Returns the location of the center of star.</p>
-     *
-     * @return the x coordinate of the center of the star
-     */
     public double getX() {
         return x;
     }
 
-    /**
-     * <p>
-     * Returns the location of the center of star.</p>
-     *
-     * @return the y coordinate of the center of the star
-     */
     public double getY() {
         return y;
     }
 
-    /**
-     * <p>
-     * Returns the distance between the center of the star and the origin of the
-     * branches.</p>
-     *
-     * @return the inner radius of the star
-     */
     public double getInnerRadius() {
         return innerRadius;
     }
 
-    /**
-     * <p>
-     * Returns the distance between the center of the star and the tips of the
-     * branches.</p>
-     *
-     * @return the outer radius of the star
-     */
     public double getOuterRadius() {
         return outerRadius;
     }
 
-    /**
-     * <p>
-     * Returns the number of branches of the star.</p>
-     *
-     * @return the number of branches, always &gt;= 3
-     */
     public int getBranchesCount() {
         return branchesCount;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rectangle getBounds() {
         return starShape.getBounds();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rectangle2D getBounds2D() {
         return starShape.getBounds2D();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(double x, double y) {
         return starShape.contains(x, y);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(Point2D p) {
         return starShape.contains(p);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean intersects(double x, double y, double w, double h) {
         return starShape.intersects(x, y, w, h);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean intersects(Rectangle2D r) {
         return starShape.intersects(r);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(double x, double y, double w, double h) {
         return starShape.contains(x, y, w, h);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(Rectangle2D r) {
         return starShape.contains(r);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public PathIterator getPathIterator(AffineTransform at) {
         return starShape.getPathIterator(at);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public PathIterator getPathIterator(AffineTransform at, double flatness) {
         return starShape.getPathIterator(at, flatness);

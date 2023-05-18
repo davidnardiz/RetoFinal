@@ -19,6 +19,11 @@ import javax.swing.SwingUtilities;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class RippleEffect {
 
     private final Component component;

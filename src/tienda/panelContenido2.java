@@ -18,6 +18,11 @@ import panelMensaje.Message;
 import vista.AniadirProducto;
 import vista.Tienda;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class panelContenido2 extends javax.swing.JPanel {
 
     private Timer timer;

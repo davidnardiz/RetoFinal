@@ -6,7 +6,7 @@ import vista.VMain;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Instagram {
 

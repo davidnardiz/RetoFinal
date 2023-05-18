@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author arceu
+ * @author David
  */
 public class Canciones extends javax.swing.JDialog {
 

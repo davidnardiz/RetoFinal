@@ -11,6 +11,11 @@ import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class ModernScrollBarUI extends BasicScrollBarUI {
 
     private static final int SCROLL_BAR_ALPHA_ROLLOVER = 100;

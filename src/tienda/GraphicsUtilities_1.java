@@ -14,6 +14,11 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class GraphicsUtilities_1 {
 
     private GraphicsUtilities_1() {

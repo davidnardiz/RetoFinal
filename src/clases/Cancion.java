@@ -2,7 +2,7 @@ package clases;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Cancion {
 

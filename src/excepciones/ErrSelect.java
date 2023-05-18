@@ -2,14 +2,14 @@ package excepciones;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class ErrSelect extends Exception {
 
     private String mensaje = "";
 
     /**
-     * Genera una excepcion para los errores de seleccion
+     * Genera una excepcion para los errores de seleccion en la base de datos
      *
      * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
      */
@@ -32,6 +32,12 @@ public class ErrSelect extends Exception {
                 break;
             case "Guardar":
                 mensaje = "Ha ocurrido un error a la hora de recuperar informacion de las publicaciones guardadas";
+                break;
+            case "Articulo":
+                mensaje = "Ha ocurrido un error a la hora de recuperar informacion de los articulos";
+                break;
+            case "Mensaje":
+                mensaje = "Ha ocurrido un error a la hora de recuperar informacion de los mensajes";
                 break;
             default:
                 mensaje = "Lo sentimos, ha ocurrido un error inesperado a la hora de recuperar datos de la base de datos";

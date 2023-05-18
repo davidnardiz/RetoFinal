@@ -6,8 +6,13 @@ import javax.swing.Icon;
 import modelo.DAO;
 import vista.ParaTi;
 import vista.VMain;
-import vista.pruebaChat;
+import vista.PruebaChat;
 
+/**
+ *
+ *
+ * @author Bayrons
+ */
 public class Item extends javax.swing.JPanel {
 
     private VMain vMain;
@@ -16,6 +21,17 @@ public class Item extends javax.swing.JPanel {
     private Usuario usu;
     private boolean tienda;
 
+    /**
+     * Genera un panel con todos los atributos del articulo.
+     *
+     * @param icon Es la imagen del articulo
+     * @param name Ese el nombre del articulo
+     * @param des Es la descripcion del articulo
+     * @param time Es la fecha de subida del articulo
+     * @param dao Es la interfaz de la logica del negocio
+     * @param usu Es el usuario que controla la aplicacion
+     * @param tienda Es si viene de la pantalla tienda o no
+     */
     public Item(Icon icon, String name, String des, String time, DAO dao, Usuario usu, boolean tienda) {
         initComponents();
         pic.setIcon(icon);
@@ -114,8 +130,13 @@ public class Item extends javax.swing.JPanel {
 
     }//GEN-LAST:event_formMouseClicked
 
+    /**
+     * Abre el chat con el usuario de la publicacion
+     *
+     * @param evt
+     */
     private void picMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_picMouseClicked
-        pruebaChat chat = new pruebaChat(vMain, true, dao, usu, name);
+        PruebaChat chat = new PruebaChat(vMain, true, dao, usu, name);
         chat.setVisible(true);
     }//GEN-LAST:event_picMouseClicked
 

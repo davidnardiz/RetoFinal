@@ -53,15 +53,14 @@ public class Tienda extends javax.swing.JDialog {
 
         ar = new ArrayList<>();
 
-        GlassPanePopup.install(this, this);
+        GlassPanePopup.install(vMain, this, this);
 
         setTitle("Tienda");
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/pantalla/logo.png")).getImage());
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
 
-        setLocationRelativeTo(null);
-
+        //setLocationRelativeTo(null);
         JScrollBar sb = scroll.getVerticalScrollBar();
         sb.setOpaque(false);
         sb.setForeground(new Color(33, 140, 206));
@@ -496,19 +495,19 @@ public class Tienda extends javax.swing.JDialog {
 
     private void lblModificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblModificarMouseClicked
         modificar = true;
-        AniadirProducto aniadir = new AniadirProducto(this, true, dao, usu, false, false, modificar);
+        AniadirProducto aniadir = new AniadirProducto(vMain, this, true, dao, usu, false, false, modificar);
         aniadir.setVisible(true);
     }//GEN-LAST:event_lblModificarMouseClicked
 
     private void lblBorrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBorrarMouseClicked
         borrar = true;
-        AniadirProducto aniadir = new AniadirProducto(this, true, dao, usu, false, borrar, false);
+        AniadirProducto aniadir = new AniadirProducto(vMain, this, true, dao, usu, false, borrar, false);
         aniadir.setVisible(true);
     }//GEN-LAST:event_lblBorrarMouseClicked
 
     private void lblSubirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSubirMouseClicked
         añadir = true;
-        AniadirProducto aniadir = new AniadirProducto(this, true, dao, usu, añadir, false, false);
+        AniadirProducto aniadir = new AniadirProducto(vMain, this, true, dao, usu, añadir, false, false);
         aniadir.setVisible(true);
     }//GEN-LAST:event_lblSubirMouseClicked
 

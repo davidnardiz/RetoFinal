@@ -14,6 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class ChatBox extends JComponent {
 
     private final BoxType boxType;

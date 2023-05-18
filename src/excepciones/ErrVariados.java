@@ -2,7 +2,7 @@ package excepciones;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class ErrVariados extends Exception {
 

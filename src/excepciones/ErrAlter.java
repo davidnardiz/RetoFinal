@@ -2,14 +2,14 @@ package excepciones;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class ErrAlter extends Exception {
 
     private String mensaje;
 
     /**
-     * Genera una excepcion para los errores de modificacion
+     * Genera una excepcion para los errores de modificacion de la base de datos
      *
      * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
      */

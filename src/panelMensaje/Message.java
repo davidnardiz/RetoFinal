@@ -16,6 +16,11 @@ import panelMensaje.GlassPanePopup;
 import vista.AniadirProducto;
 import vista.Tienda;
 
+/**
+ * Genera una clase auxiliar que muestra menajes personalizados.
+ *
+ * @author Bayron
+ */
 public class Message extends javax.swing.JPanel {
 
     private AniadirProducto produc;

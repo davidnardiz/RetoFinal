@@ -2,9 +2,12 @@ package tienda;
 
 import java.awt.Color;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class SliderGradient extends JSlider {
 
     public Color getTicksColor() {

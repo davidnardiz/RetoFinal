@@ -12,6 +12,11 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JSlider;
 import javax.swing.plaf.basic.BasicSliderUI;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class SliderGradientUI extends BasicSliderUI {
 
     private SliderGradient sliderGradient;

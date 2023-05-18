@@ -21,8 +21,9 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 import vista.Tienda;
 
 /**
+ * Genera pantalla con animaciones personalizadas.
  *
- * @author Raven
+ * @author Bayron
  */
 public class Popup extends JComponent {
 
@@ -35,15 +36,13 @@ public class Popup extends JComponent {
     private float animate;
     private boolean show;
     private boolean mouseHover;
-  
+
     public Popup(GlassPanePopup parent, Component component, Option option, Tienda tien) {
         this.parent = parent;
-       
+
         this.component = component;
         this.option = option;
-        
-       
-        
+
         init();
         initAnimator();
     }
@@ -100,7 +99,7 @@ public class Popup extends JComponent {
                 if (lc != null) {
                     layout.setComponentConstraints(component, lc);
                 }
-                
+
                 revalidate();
             }
 

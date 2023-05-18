@@ -31,7 +31,7 @@ import utilidades.Utilidades;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class ParaTi extends javax.swing.JDialog {
 
@@ -63,6 +63,7 @@ public class ParaTi extends javax.swing.JDialog {
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
 
+        GlassPanePopup.install(vMain, this, null);
         setLocationRelativeTo(null);
 
         if (usu.isVerificado()) {
@@ -669,7 +670,7 @@ public class ParaTi extends javax.swing.JDialog {
             for (String men : conversaciones) {
                 System.out.println(men);
             }
-            GlassPanePopup.showPopup(new NotificationsChat(usu, dao, false, null, null, true), new DefaultOption() {
+            GlassPanePopup.showPopup(new NotificationsChat(vMain, this, usu, dao, false, null, null, true), new DefaultOption() {
                 @Override
                 public float opacity() {
                     return 0;

@@ -15,7 +15,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author David
  */
 public class PublicacionesGuardadas extends javax.swing.JDialog {
 

@@ -4,6 +4,11 @@ public class ErrDelete extends Exception {
 
     private String mensaje;
 
+    /**
+     * Genera una excepcion para los errores de eliminar de la base de datos
+     *
+     * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
+     */
     public ErrDelete(String tabla) {
 
         switch (tabla) {
@@ -24,6 +29,9 @@ public class ErrDelete extends Exception {
                 break;
             case "Guardar":
                 mensaje = "Lo sentimos, ha ocurrido un error al dejar de guardar esta publicacion";
+                break;
+            case "Articulo":
+                mensaje = "Lo sentimos, ha ocurrido un error al dejar eliminar un articulo";
                 break;
             default:
                 mensaje = "Ha ocurrido un error inseperado a la hora de eliminar algo de la base de datos";

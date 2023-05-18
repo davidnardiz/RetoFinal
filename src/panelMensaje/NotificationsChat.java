@@ -37,8 +37,9 @@ public class NotificationsChat extends javax.swing.JPanel {
     private List<Articulo> ar;
     private Tienda tien;
     private boolean filtrar;
+    private ParaTi paraTi;
 
-    public NotificationsChat(Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien, boolean filtrar) {
+    public NotificationsChat(VMain vMain, ParaTi paraTi, Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien, boolean filtrar) {
         try {
             this.usu = usu;
             this.dao = dao;
@@ -47,6 +48,8 @@ public class NotificationsChat extends javax.swing.JPanel {
             this.ar = ar;
             this.tien = tien;
             this.filtrar = filtrar;
+            this.paraTi = paraTi;
+            this.vMain = vMain;
 
             initComponents();
 
@@ -65,10 +68,7 @@ public class NotificationsChat extends javax.swing.JPanel {
             List<String> conversaciones = dao.sacarConversaciones(usu.getUsuario());
 
             loadNoti(conversaciones);
-            if (conversaciones.size() >= 1) {
-                lblConver.setVisible(false);
-                btnConversacion.setVisible(false);
-            }
+
         } catch (ErrVariados ex) {
             ex.mostrarError();
         } catch (ErrSelect ex) {
@@ -184,6 +184,7 @@ public class NotificationsChat extends javax.swing.JPanel {
     private void btnConversacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConversacionActionPerformed
         Buscar buscar = new Buscar(vMain, true, dao, usu, true);
         this.setVisible(false);
+        paraTi.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnConversacionActionPerformed
 

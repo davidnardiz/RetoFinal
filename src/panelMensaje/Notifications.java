@@ -28,6 +28,11 @@ import vista.Comprar;
 import vista.Tienda;
 import vista.VMain;
 
+/**
+ * Es una clase auxiliar que genera mensajes personalizadas.
+ *
+ * @author Bayron
+ */
 public class Notifications extends javax.swing.JPanel {
 
     public Usuario usu;

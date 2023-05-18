@@ -10,7 +10,7 @@ import utilidades.Utilidades;
 
 /**
  *
- * @author arceu
+ * @author David
  */
 public class EditarPerfil extends javax.swing.JDialog {
 

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Articulo {
 

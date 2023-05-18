@@ -5,8 +5,9 @@ import java.awt.Component;
 import net.miginfocom.layout.LayoutCallback;
 
 /**
+ * Es una clase auxiliar que genera animaciones personalizadas.
  *
- * @author Raven
+ * @author Bayron
  */
 public class DefaultOption implements Option {
 

@@ -11,8 +11,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
+ * Es una clase auxiliar que genera un poton personalizado.
  *
- * @author RAVEN
+ * @author Bayron
  */
 public class Button extends JButton {
 

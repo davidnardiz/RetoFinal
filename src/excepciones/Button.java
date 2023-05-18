@@ -10,6 +10,11 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Jason
+ */
 public class Button extends JButton {
 
     private boolean mousePress;

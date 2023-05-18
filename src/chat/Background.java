@@ -6,6 +6,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
+/**
+ * Es una clase auxiliar que genera un fondo personalizado.
+ *
+ * @author Bayron
+ */
 public class Background extends JPanel {
 
     public Background() {

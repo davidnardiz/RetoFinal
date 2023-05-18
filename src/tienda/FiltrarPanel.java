@@ -16,7 +16,7 @@ import vista.Tienda;
 
 /**
  *
- * @author bayro
+ * @author Bayron
  */
 public class FiltrarPanel extends javax.swing.JPanel {
 

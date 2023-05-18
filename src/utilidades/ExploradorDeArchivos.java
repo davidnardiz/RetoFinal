@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class ExploradorDeArchivos extends javax.swing.JDialog {
 

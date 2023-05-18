@@ -2,6 +2,11 @@ package prueba;
 
 import javax.swing.Icon;
 
+/**
+ * Es una clase auxiliar que genera animaciones personalizadas.
+ *
+ * @author Bayron
+ */
 public class ModelMessage {
 
     public Icon getIcon() {

@@ -12,6 +12,11 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
+/**
+ * Es una clase auxiliar que genera animaciones personalizadas.
+ *
+ * @author Bayron
+ */
 public class AutoWrapText extends StyledEditorKit {
 
     @Override

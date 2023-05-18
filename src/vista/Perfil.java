@@ -18,7 +18,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Perfil extends javax.swing.JDialog {
 
@@ -1047,7 +1047,7 @@ public class Perfil extends javax.swing.JDialog {
      * @param evt
      */
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
-        pruebaChat chat = new pruebaChat(vMain, true, dao, usu, usuarioPerfil.getUsuario());
+        PruebaChat chat = new PruebaChat(vMain, true, dao, usu, usuarioPerfil.getUsuario());
         this.dispose();
         chat.setVisible(true);
     }//GEN-LAST:event_btnMensajeActionPerformed

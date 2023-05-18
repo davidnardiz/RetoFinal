@@ -5,6 +5,11 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class StarRatingNoEditable extends javax.swing.JPanel {
 
     public int getStar() {

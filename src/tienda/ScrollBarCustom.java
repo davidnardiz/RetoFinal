@@ -4,6 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JScrollBar;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class ScrollBarCustom extends JScrollBar {
 
     public ScrollBarCustom() {

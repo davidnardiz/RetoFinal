@@ -26,7 +26,7 @@ import utilidades.Utilidades;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Inicio extends javax.swing.JLayeredPane {
 

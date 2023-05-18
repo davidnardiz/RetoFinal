@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package tienda;
 
 import clases.Articulo;
@@ -12,8 +8,6 @@ import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -21,6 +15,11 @@ import modelo.DAO;
 import vista.AniadirProducto;
 import vista.Tienda;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class panelContenido extends javax.swing.JPanel {
 
     private Timer timer;

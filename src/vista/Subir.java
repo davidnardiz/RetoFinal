@@ -24,7 +24,7 @@ import utilidades.Utilidades;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Subir extends javax.swing.JDialog {
 

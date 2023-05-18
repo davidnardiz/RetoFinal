@@ -11,7 +11,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author David
  */
 public class BloquearDesbloquear extends javax.swing.JDialog {
 

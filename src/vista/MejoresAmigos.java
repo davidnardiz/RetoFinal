@@ -12,7 +12,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author David
  */
 public class MejoresAmigos extends javax.swing.JDialog {
 

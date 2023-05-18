@@ -10,10 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import vista.Tienda;
+import vista.VMain;
 
 /**
+ * Es una clase auxiliar que genera pantallas personalizadas.
  *
- * @author Raven
+ * @author Bayron
  */
 public class GlassPanePopup {
 
@@ -24,6 +26,7 @@ public class GlassPanePopup {
     private static GlassPanePopup instance;
     private JLayeredPane layerPane;
     private Tienda tien;
+
     private GlassPanePopup(JDialog fram, Tienda tien) {
         this.tien = tien;
         init();
@@ -50,11 +53,11 @@ public class GlassPanePopup {
 
     private void updateLayout() {
         for (Component com : layerPane.getComponents()) {
-           
+
         }
     }
 
-    public static void install(JDialog fram, Tienda tien) {
+    public static void install(VMain vMain, JDialog fram, Tienda tien) {
         instance = new GlassPanePopup(fram, tien);
         fram.setGlassPane(instance.layerPane);
         fram.addWindowStateListener(new WindowAdapter() {

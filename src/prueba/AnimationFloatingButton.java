@@ -5,6 +5,11 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+/**
+ * Es una clase auxiliar que genera animaciones personalizadas.
+ *
+ * @author Bayron
+ */
 public class AnimationFloatingButton {
 
     private final Animator animator;

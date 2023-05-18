@@ -1,10 +1,7 @@
 package tienda;
 
-import panelMensaje.*;
-import clases.Mensaje;
 import clases.Usuario;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -12,27 +9,19 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JScrollBar;
 import modelo.DAO;
-import net.miginfocom.swing.MigLayout;
 import vista.AniadirProducto;
-import vista.Buscar;
 import vista.ParaTi;
 import vista.Tienda;
+import vista.VMain;
 
 /**
+ * Es una clase auxiliar que genera campos personalizados.
  *
- * @author RAVEN
+ * @author Bayron
  */
 public class panelOpciones extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Notifications
-     */
     public Usuario usu;
     public DAO dao;
     private ParaTi paraTI;
@@ -40,15 +29,18 @@ public class panelOpciones extends javax.swing.JPanel {
     private boolean añadir;
     private boolean borrar;
     private boolean modificar;
-    public panelOpciones(Tienda tien, DAO dao, Usuario usu) {
+    private VMain vMain;
+
+    public panelOpciones(VMain vMain, Tienda tien, DAO dao, Usuario usu) {
+        this.vMain = vMain;
         this.tien = tien;
         this.usu = usu;
         this.dao = dao;
         initComponents();
         setOpaque(false);
-        boolean añadir ;
-        boolean borrar ;
-        boolean modificar ;
+        boolean añadir;
+        boolean borrar;
+        boolean modificar;
         loadNoti();
 
     }
@@ -71,7 +63,7 @@ public class panelOpciones extends javax.swing.JPanel {
         area.add(new Area(new RoundRectangle2D.Double(0, header, getWidth(), getHeight() - header, 10, 10)));
         g2.fill(area);
         g2.dispose();
-        
+
         super.paintComponent(grphcs);
     }
 
@@ -114,19 +106,19 @@ public class panelOpciones extends javax.swing.JPanel {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         añadir = true;
-        AniadirProducto aniadir = new AniadirProducto(tien, true, dao, usu, añadir, false, false);
+        AniadirProducto aniadir = new AniadirProducto(vMain, tien, true, dao, usu, añadir, false, false);
         aniadir.setVisible(true);
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-       borrar = true;
-        AniadirProducto aniadir = new AniadirProducto(tien, true, dao, usu, false, borrar, false);
+        borrar = true;
+        AniadirProducto aniadir = new AniadirProducto(vMain, tien, true, dao, usu, false, borrar, false);
         aniadir.setVisible(true);
     }//GEN-LAST:event_jLabel4MouseClicked
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         modificar = true;
-        AniadirProducto aniadir = new AniadirProducto(tien, true, dao, usu, false, false, modificar);
+        AniadirProducto aniadir = new AniadirProducto(vMain, tien, true, dao, usu, false, false, modificar);
         aniadir.setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
 

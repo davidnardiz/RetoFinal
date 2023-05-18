@@ -2,14 +2,14 @@ package excepciones;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class ErrInsert extends Exception {
 
     private String mensaje;
 
     /**
-     * Genera una excepcion para los errores de insercion
+     * Genera una excepcion para los errores de insercion en la base de datos
      *
      * @param tabla Es la tabla donde esta el fallo para generar asi el mensaje
      */
@@ -33,6 +33,12 @@ public class ErrInsert extends Exception {
                 break;
             case "Guardar":
                 mensaje = "Lo sentimos, ha ocurrido un error a la hora de guardar esta publicacion";
+                break;
+            case "Articulo":
+                mensaje = "Lo sentimos, ha ocurrido un error a la hora de guardar este articulo";
+                break;
+            case "Mensaje":
+                mensaje = "Lo sentimos, ha ocurrido un error a la hora de enviar este mensaje";
                 break;
             default:
                 mensaje = "Ha ocurrido un error inesperado a la hora de insertar algo la base de datos";

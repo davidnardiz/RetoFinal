@@ -8,6 +8,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import tienda.ShadowRenderer;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class PanelShadow extends JPanel {
 
     public ShadowType getShadowType() {
@@ -89,7 +94,7 @@ public class PanelShadow extends JPanel {
         }
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
-        g.setColor( new Color(49, 51, 53));
+        g.setColor(new Color(49, 51, 53));
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.fillRoundRect(0, 0, width, height, 5, 5);
 

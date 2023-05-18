@@ -7,6 +7,11 @@ import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
+/**
+ * Es una clase auxiliar que genera animaciones personalizadas.
+ *
+ * @author Bayron
+ */
 public class AnimationScroll {
 
     private final Animator animator;

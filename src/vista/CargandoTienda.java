@@ -1,20 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 /**
  *
- * @author bayro
+ * @author Bayron
  */
 public class CargandoTienda extends javax.swing.JDialog {
 
-    /**
-     * Creates new form CargandoTienda
-     */
     private Tienda tien;
 
+    /**
+     * Es una ventana auxiliar que genera una animacion personalizada.
+     *
+     * @param tien es la ventana desde la que se abre
+     * @param modal es si es modal o no
+     * @param compra
+     */
     public CargandoTienda(Tienda tien, boolean modal, Comprar compra) {
         super(tien, modal);
         this.tien = tien;

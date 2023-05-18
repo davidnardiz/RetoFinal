@@ -8,19 +8,17 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import modelo.DAO;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import vista.ParaTi;
 import vista.Tienda;
-import vista.pruebaChat;
-import tienda.panelContenido;
 import vista.Comprar;
 
 /**
  *
- * @author RAVEN
+ *
+ * @author Bayron
  */
 public class ItemTienda extends javax.swing.JPanel {
 
@@ -32,6 +30,18 @@ public class ItemTienda extends javax.swing.JPanel {
     private Tienda tien;
     private Comprar compra;
 
+    /**
+     * Genera una ventana que carga en el carrito de compra los articulos
+     * guardados.
+     *
+     * @param icon
+     * @param ar
+     * @param dao
+     * @param usu
+     * @param tienda
+     * @param tien
+     * @param compra
+     */
     public ItemTienda(Icon icon, Articulo ar, DAO dao, Usuario usu, boolean tienda, Tienda tien, Comprar compra) {
         initComponents();
         this.ar = ar;

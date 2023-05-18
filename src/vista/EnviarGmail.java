@@ -17,7 +17,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class EnviarGmail extends javax.swing.JDialog {
 

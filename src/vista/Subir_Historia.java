@@ -10,7 +10,7 @@ import modelo.DAO;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Subir_Historia extends javax.swing.JPanel {
 

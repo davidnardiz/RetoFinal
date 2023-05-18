@@ -7,47 +7,33 @@ package tienda;
 import clases.Articulo;
 import clases.Usuario;
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import modelo.DAO;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
-import vista.ParaTi;
 import vista.Tienda;
 
 /**
+ * Es una clase auxiliar que genera campos personalizados.
  *
- * @author 1dam
+ * @author Bayron
  */
 public class panelCarrito extends javax.swing.JPanel {
 
-    /**
-     * Creates new form panelContenido
-     */
     private Timer timer;
-  
+
     private JLabel carritoCompra;
     private DAO dao;
     private Tienda tien;
-    private boolean borrarB ;
+    private boolean borrarB;
     private boolean modificar;
     private Usuario usu;
     private Articulo art;
-   
-    
-    public panelCarrito( Icon image, DAO dao,  Articulo art) {
+
+    public panelCarrito(Icon image, DAO dao, Articulo art) {
         initComponents();
         setBackground(new Color(49, 51, 53));
-      
+
         this.art = art;
         this.dao = dao;
         this.usu = usu;
@@ -58,14 +44,11 @@ public class panelCarrito extends javax.swing.JPanel {
         vendedor.setText(art.getVendedor());
         descripcion.setText(art.getDescripcion());
         precio.setText(Float.toString(art.getPrecio()));
-       
-      
+
         vendedor.setForeground(Color.white);
         descripcion.setForeground(Color.white);
         precio.setForeground(Color.white);
     }
-
-  
 
     /**
      * This method is called from within the constructor to initialize the form.

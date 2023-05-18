@@ -11,6 +11,11 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLayeredPane;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class PictureBox extends JLayeredPane {
 
     public Icon getImage() {

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package vista;
 
 import clases.Mensaje;
@@ -27,17 +23,17 @@ import java.util.logging.Logger;
  *
  * @author bayro
  */
-public class pruebaChat extends javax.swing.JDialog {
+public class PruebaChat extends javax.swing.JDialog {
 
     /**
-     * Creates new form pruebaChat
+     * Creates new form PruebaChat
      */
     private DAO dao;
     private VMain vMain;
     private Usuario usu;
     private String name;
 
-    public pruebaChat(VMain vMain, boolean modal, DAO dao, Usuario usu, String name) {
+    public PruebaChat(VMain vMain, boolean modal, DAO dao, Usuario usu, String name) {
         super(vMain, modal);
         this.setModal(modal);
         this.dao = dao;

@@ -8,8 +8,9 @@ import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.layout.UnitValue;
 
 /**
+ * Es una clase auxiliar que genera animaciones personalizadas.
  *
- * @author Raven
+ * @author Bayron
  */
 public class DefaultLayoutCallBack extends LayoutCallback {
 

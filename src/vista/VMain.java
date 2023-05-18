@@ -14,7 +14,7 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 /**
  *
- * @author arceu
+ * @author Bayron
  */
 public class VMain extends javax.swing.JFrame {
 

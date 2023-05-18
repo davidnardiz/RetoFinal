@@ -16,7 +16,7 @@ import jnafilechooser.api.JnaFileChooser;
 
 /**
  *
- * @author arceu
+ * @author Jason
  */
 public class Utilidades {
 

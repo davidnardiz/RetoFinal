@@ -16,6 +16,11 @@ import vista.CargandoTienda;
 import vista.Comprar;
 import vista.Tienda;
 
+/**
+ * Es una clase auxiliar que genera campos personalizados.
+ *
+ * @author Bayron
+ */
 public class StarRating extends javax.swing.JPanel {
 
     public int getStar() {

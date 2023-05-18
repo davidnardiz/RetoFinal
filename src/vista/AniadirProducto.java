@@ -30,7 +30,7 @@ import utilidades.Utilidades;
 
 /**
  *
- * @author arceu
+ * @author Bayron
  */
 public class AniadirProducto extends javax.swing.JDialog {
 
@@ -44,6 +44,7 @@ public class AniadirProducto extends javax.swing.JDialog {
      * Genera una ventana para poder añadir, modificar o elimar articulos a la
      * base de datos
      *
+     * @param vMain Es la ventana padre
      * @param tien Es la ventana de la que viene
      * @param modal Dice si la pantalla es modal o si no
      * @param dao Es la interface de la logica del negocio
@@ -52,7 +53,7 @@ public class AniadirProducto extends javax.swing.JDialog {
      * @param borrar Es para saber si va a borrar algo
      * @param modificar Es para saber si va a modificar algo
      */
-    public AniadirProducto(Tienda tien, boolean modal, DAO dao, Usuario usu, boolean añadir, boolean borrar, boolean modificar) {
+    public AniadirProducto(VMain vMain, Tienda tien, boolean modal, DAO dao, Usuario usu, boolean añadir, boolean borrar, boolean modificar) {
         super(tien, modal);
         this.dao = dao;
         this.usu = usu;
@@ -81,7 +82,7 @@ public class AniadirProducto extends javax.swing.JDialog {
         pestañaModificar.setLayout(new MigLayout("inset 0, fillx, wrap 2", "fill", "[] []"));
         pestañaModificar.setBackground(new Color(49, 51, 53));
 
-        GlassPanePopup.install(tien, tien);
+        GlassPanePopup.install(vMain, tien, tien);
         cargarElementos();
         if (añadir) {
             pestañas.setSelectedIndex(0);
