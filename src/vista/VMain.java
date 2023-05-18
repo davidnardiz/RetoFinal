@@ -21,11 +21,11 @@ public class VMain extends javax.swing.JFrame {
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
     private MigLayout layout;
     private PanelCover cover;
-    private Inicio loginAndRegister;
+    private Inicio inicio;
     private DAO dao;
-    private boolean isLogin = true;
+    private boolean logeado = true;
     private final double addSize = 30;
-    private final double coverSize = 40;
+    private final double tamanioCover = 40;
     private final double loginSize = 60;
     private TimingTarget target;
 
@@ -40,48 +40,48 @@ public class VMain extends javax.swing.JFrame {
     private void init() {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
-        loginAndRegister = new Inicio(this, dao);
+        inicio = new Inicio(this, dao);
         target = new TimingTargetAdapter() {
             @Override
-            public void timingEvent(float fraction) {
-                double fractionCover;
-                double fractionLogin;
-                double size = coverSize;
-                if (fraction <= 0.5f) {
-                    size += fraction * addSize;
+            public void timingEvent(float fraccion) {
+                double fraccionCover;
+                double fraccionLogin;
+                double tamanio = tamanioCover;
+                if (fraccion <= 0.5f) {
+                    tamanio += fraccion * addSize;
                 } else {
-                    size += addSize - fraction * addSize;
+                    tamanio += addSize - fraccion * addSize;
                 }
-                if (isLogin) {
-                    fractionCover = 1f - fraction;
-                    fractionLogin = fraction;
-                    if (fraction >= 0.5f) {
-                        cover.registerRight(fractionCover * 100);
+                if (logeado) {
+                    fraccionCover = 1f - fraccion;
+                    fraccionLogin = fraccion;
+                    if (fraccion >= 0.5f) {
+                        cover.registroCorrecto(fraccionCover * 100);
                     } else {
-                        cover.loginRight(fractionLogin * 100);
+                        cover.loginCorrecto(fraccionLogin * 100);
                     }
                 } else {
-                    fractionCover = fraction;
-                    fractionLogin = 1f - fraction;
-                    if (fraction <= 0.5f) {
-                        cover.registerLeft(fraction * 100);
+                    fraccionCover = fraccion;
+                    fraccionLogin = 1f - fraccion;
+                    if (fraccion <= 0.5f) {
+                        cover.registroIncorrecto(fraccion * 100);
                     } else {
-                        cover.loginLeft((1f - fraction) * 100);
+                        cover.loginIncorrecto((1f - fraccion) * 100);
                     }
                 }
-                if (fraction >= 0.5f) {
-                    loginAndRegister.showRegister(isLogin);
+                if (fraccion >= 0.5f) {
+                    inicio.showRegister(logeado);
                 }
-                fractionCover = Double.valueOf(df.format(fractionCover));
-                fractionLogin = Double.valueOf(df.format(fractionLogin));
-                layout.setComponentConstraints(cover, "width " + size + "%, pos " + fractionCover + "al 0 n 100%");
-                layout.setComponentConstraints(loginAndRegister, "width " + loginSize + "%, pos " + fractionLogin + "al 0 n 100%");
+                fraccionCover = Double.valueOf(df.format(fraccionCover));
+                fraccionLogin = Double.valueOf(df.format(fraccionLogin));
+                layout.setComponentConstraints(cover, "width " + tamanio + "%, pos " + fraccionCover + "al 0 n 100%");
+                layout.setComponentConstraints(inicio, "width " + loginSize + "%, pos " + fraccionLogin + "al 0 n 100%");
                 bg.revalidate();
             }
 
             @Override
             public void end() {
-                isLogin = !isLogin;
+                logeado = !logeado;
             }
         };
 
@@ -90,20 +90,20 @@ public class VMain extends javax.swing.JFrame {
     }
 
     protected void animacion() {
-        Animator animator = new Animator(800, target);
-        animator.setAcceleration(0.5f);
-        animator.setDeceleration(0.5f);
-        animator.setResolution(0);  //  for smooth animation
+        Animator animador = new Animator(800, target);
+        animador.setAcceleration(0.5f);
+        animador.setDeceleration(0.5f);
+        animador.setResolution(0);  //  for smooth animation
         bg.setLayout(layout);
-        bg.add(cover, "width " + coverSize + "%, pos " + (isLogin ? "1al" : "0al") + " 0 n 100%");
-        bg.add(loginAndRegister, "width " + loginSize + "%, pos " + (isLogin ? "0al" : "1al") + " 0 n 100%"); //  1al as 100%
-        loginAndRegister.showRegister(!isLogin);
-        cover.login(isLogin);
+        bg.add(cover, "width " + tamanioCover + "%, pos " + (logeado ? "1al" : "0al") + " 0 n 100%");
+        bg.add(inicio, "width " + loginSize + "%, pos " + (logeado ? "0al" : "1al") + " 0 n 100%"); //  1al as 100%
+        inicio.showRegister(!logeado);
+        cover.login(logeado);
         cover.addEvent(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if (!animator.isRunning()) {
-                    animator.start();
+                if (!animador.isRunning()) {
+                    animador.start();
                 }
             }
         });

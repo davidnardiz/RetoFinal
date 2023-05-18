@@ -46,7 +46,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     }
 
     /**
-     * Ese metodo carga un combobox
+     * Ese metodo carga un combobox con los usuarios que el usuario principal puede bloquear.
      */
     private void bloquear() {
         try {
@@ -68,7 +68,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
     }
 
     /**
-     * Ese metodo carga un combobox
+     * Ese metodo carga un combobox con los usuarios que el usuario principal tiene bloqueados.
      */
     private void desbloquear() {
         try {
@@ -214,7 +214,7 @@ public class BloquearDesbloquear extends javax.swing.JDialog {
 
     /**
      * Ese metodo bloquea o desbloquea al usuario que esta seleccionado en el
-     * combobox en base a si el boton esta pulsado o si no
+     * combobox en base a si el boton esta pulsado o no.
      *
      * @param evt
      */

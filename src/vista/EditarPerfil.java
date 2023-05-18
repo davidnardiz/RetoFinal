@@ -9,8 +9,8 @@ import modelo.DAO;
 import utilidades.Utilidades;
 
 /**
- *
- * @author arceu
+ * 
+ * @author David
  */
 public class EditarPerfil extends javax.swing.JDialog {
 
@@ -45,9 +45,9 @@ public class EditarPerfil extends javax.swing.JDialog {
     }
 
     /**
-     * Muestra los datos del usuario por pantalla
+     * Muestra los datos del usuario por pantalla.
      *
-     * @param us Es el usuario cuyos datos vamos a mostrar
+     * @param us Es el usuario cuyos datos vamos a mostrar.
      */
     private void cargarDatos(Usuario us) {
         try {
@@ -171,7 +171,7 @@ public class EditarPerfil extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Cierra la pantalla
+     * Cierra la pantalla.
      *
      * @param evt
      */
@@ -180,7 +180,7 @@ public class EditarPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
-     * Llama al metodo para poder cambiar los datos
+     * Llama al metodo para poder cambiar los datos en la base de datos.
      *
      * @param evt
      */
@@ -189,7 +189,7 @@ public class EditarPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEnviarDatosActionPerformed
 
     /**
-     * Genera una ventana para poder seleccionar la nueva foto de perfil
+     * Genera una ventana para poder seleccionar la nueva foto de perfil.
      *
      * @param evt
      */
@@ -202,7 +202,7 @@ public class EditarPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_fotoPerfilMouseClicked
 
     /**
-     * Cierra la pantalla y vuelve al perfil
+     * Cierra la pantalla y vuelve al perfil.
      */
     private void cerrar() {
         Perfil per = new Perfil(vMain, true, dao, us, usuarioPerfil);
@@ -211,7 +211,7 @@ public class EditarPerfil extends javax.swing.JDialog {
     }
 
     /**
-     * Edita los datos del usuario con los nuevos datos de la pantalla
+     * Edita los datos del usuario con los nuevos datos de la pantalla en la base de datos.
      */
     private void editarDatos() {
         try {

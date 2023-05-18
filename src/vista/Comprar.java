@@ -19,7 +19,7 @@ import panelMensaje.ModernScrollBarUI;
 
 /**
  *
- * @author bayro
+ * @author bayron
  */
 public class Comprar extends javax.swing.JDialog {
 

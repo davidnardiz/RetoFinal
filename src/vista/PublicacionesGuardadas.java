@@ -14,8 +14,8 @@ import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
 /**
- *
- * @author arceu
+ * 
+ * @author David
  */
 public class PublicacionesGuardadas extends javax.swing.JDialog {
 
@@ -28,7 +28,7 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     private DAO dao;
 
     /**
-     * Genera una pantalla con todas las publicaciones que ha guardado
+     * Genera una pantalla con todas las publicaciones que ha guardado.
      *
      * @param vMain Es la ventana padre
      * @param modal Es si es modal
@@ -194,7 +194,7 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Abre la publicacion que has clickado
+     * Abre la publicacion que el usuario ha clickado.
      *
      * @param evt
      */
@@ -212,7 +212,7 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
     /**
-     * Vuelve a la pantalla anterior
+     * Vuelve a la pantalla anterior.
      *
      * @param evt
      */
@@ -224,7 +224,7 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
-     * Elimina todas las publicaciones que has guardado
+     * Elimina todas las publicaciones que el usuario tiene guardadas.
      *
      * @param evt
      */
@@ -244,7 +244,7 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEliminarPubsActionPerformed
 
     /**
-     * Carga la tabla con las publicaciones que has guardado
+     * Carga la tabla con las publicaciones que el usuario tiene guardadas.
      *
      * @param publicacionesList Son las publicaciones que has guardado
      */
@@ -284,7 +284,7 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
     }
 
     /**
-     * Abre una pantalla con todos los datos de la foto
+     * Abre una pantalla con todos los datos de la foto.
      *
      * @param foto Es la foto que vas a abrir
      */

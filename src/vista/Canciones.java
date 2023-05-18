@@ -15,7 +15,7 @@ public class Canciones extends javax.swing.JDialog {
     private Thread t;
 
     /**
-     * Crea una ventana para ver las canciones
+     * Crea una ventana para ver las canciones.
      *
      * @param parent Es la ventana desde la que se abre
      * @param modal Es si es modal o no
@@ -41,7 +41,7 @@ public class Canciones extends javax.swing.JDialog {
     }
 
     /**
-     * Crea un contador que cambia el segundo en el que se reproduce
+     * Crea un contador que cambia el segundo en el que se reproduce.
      */
     public void contador() {
         t = new Thread(new Runnable() {
@@ -164,7 +164,7 @@ public class Canciones extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Empieza o pausa el contador
+     * Empieza o pausa el contador.
      *
      * @param evt
      */
@@ -178,7 +178,7 @@ public class Canciones extends javax.swing.JDialog {
     }//GEN-LAST:event_btnReproducirActionPerformed
 
     /**
-     * Cambia un label para poder ver el valor del slider
+     * Cambia un label para poder ver el valor del slider.
      *
      * @param evt
      */

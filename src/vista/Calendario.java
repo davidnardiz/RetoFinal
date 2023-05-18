@@ -55,7 +55,6 @@ public class Calendario extends javax.swing.JDialog {
     private void initComponents() {
 
         btnEnviar = new javax.swing.JButton();
-        calendario = new com.toedter.calendar.JCalendar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(59, 61, 63));
@@ -65,7 +64,6 @@ public class Calendario extends javax.swing.JDialog {
 
         btnEnviar.setBackground(new java.awt.Color(227, 227, 227));
         btnEnviar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnEnviar.setForeground(new java.awt.Color(0, 0, 0));
         btnEnviar.setText("Elegir");
         btnEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,7 +71,6 @@ public class Calendario extends javax.swing.JDialog {
             }
         });
         getContentPane().add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, 130, 40));
-        getContentPane().add(calendario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 200));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -94,6 +91,5 @@ public class Calendario extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviar;
-    private com.toedter.calendar.JCalendar calendario;
     // End of variables declaration//GEN-END:variables
 }

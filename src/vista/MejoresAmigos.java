@@ -7,12 +7,14 @@ import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import modelo.DAO;
 
 /**
- *
- * @author arceu
+ * 
+ * @author David
  */
 public class MejoresAmigos extends javax.swing.JDialog {
 
@@ -21,7 +23,7 @@ public class MejoresAmigos extends javax.swing.JDialog {
     private Usuario nosotros;
 
     /**
-     * Genera una pantalla para poder añadir y eliminar mejores amigos
+     * Genera una pantalla para poder añadir y eliminar mejores amigos.
      *
      * @param vMain Es la ventana padre
      * @param aThis Es la pantalla desde la que se le llama
@@ -49,22 +51,25 @@ public class MejoresAmigos extends javax.swing.JDialog {
     }
 
     /**
-     * Ese metodo añade el usuario selecionado en el combobox a tu lista de
-     * mejores amigos
+     * Ese metodo carga en un arraylist todos los usuarios que el usuario principal puede añadir a us lista de mejores amigos.
      */
     private void aniadir() {
         try {
             amigos.removeAllItems();
             btnAniQuit.setText("Añadir");
             List<Usuario> mAmigos = dao.listarNoMejoresAmigos(nosotros);
+            List<Usuario> usuariosBloqueados = dao.listarBloqueados(nosotros);
+                
             for (Usuario i : mAmigos) {
-                if (i.getUsuario().equalsIgnoreCase(nosotros.getUsuario())) {
-
-                } else {
-                    amigos.addItem(i.getUsuario());
-                }
-
+                for (int j = 0; j < usuariosBloqueados.size(); j++) {
+                    if(i.getUsuario().equalsIgnoreCase(usuariosBloqueados.get(j).getUsuario())){
+                        
+                    }else{
+                        amigos.addItem(i.getUsuario());
+                    }
+                }    
             }
+            
             amigos.setSelectedIndex(-1);
         } catch (ErrVariados ex) {
             ex.mostrarError();
@@ -74,16 +79,24 @@ public class MejoresAmigos extends javax.swing.JDialog {
     }
 
     /**
-     * Este metodo quita de tu lista de mejores amigos al usuario que esta
-     * seleccionado en el combobox
+     * Este metodo carga en el combobox los mejores amigos del usuario principal.
      */
     private void quitar() {
         try {
             amigos.removeAllItems();
             btnAniQuit.setText("Quitar");
             List<Usuario> mAmigos = dao.listarMejoresAmigos(nosotros);
+            List<Usuario> usuariosBloqueados = dao.listarBloqueados(nosotros);
+                
             for (Usuario i : mAmigos) {
-                amigos.addItem(i.getUsuario());
+                for (int j = 0; j < usuariosBloqueados.size(); j++) {
+                    if(i.getUsuario().equalsIgnoreCase(usuariosBloqueados.get(j).getUsuario())){
+                        
+                    }else{
+                        amigos.addItem(i.getUsuario());
+                    }
+                }
+                
             }
             amigos.setSelectedIndex(-1);
         } catch (ErrVariados ex) {
@@ -204,7 +217,7 @@ public class MejoresAmigos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Llama al metodo de añadir
+     * Llama al metodo de añadir.
      *
      * @param evt
      */
@@ -214,7 +227,7 @@ public class MejoresAmigos extends javax.swing.JDialog {
     }//GEN-LAST:event_aniadirActionPerformed
 
     /**
-     * Llama al metodo de quitar
+     * Llama al metodo de quitar.
      *
      * @param evt
      */
@@ -224,7 +237,7 @@ public class MejoresAmigos extends javax.swing.JDialog {
     }//GEN-LAST:event_quitarActionPerformed
 
     /**
-     * Guarda los cambios en la base de datos
+     * Éste método añade o elimina de la lista de mejores amigos el usuario que está seleccionado en el combobox.
      *
      * @param evt
      */
@@ -232,7 +245,6 @@ public class MejoresAmigos extends javax.swing.JDialog {
         // TODO add your handling code here:
         try {
             if (aniadir.isSelected()) {
-
                 dao.aniadirAmigo(nosotros, amigos.getSelectedItem().toString());
                 aniadir();
 

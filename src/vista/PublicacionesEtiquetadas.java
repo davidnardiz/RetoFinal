@@ -13,8 +13,8 @@ import javax.swing.table.TableColumnModel;
 import modelo.DAO;
 
 /**
- *
- * @author arceu
+ * 
+ * @author David
  */
 public class PublicacionesEtiquetadas extends javax.swing.JDialog {
 
@@ -27,16 +27,16 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
     private DAO dao;
 
     /**
-     * Genera una ventana para mostrar las publicaciones en las que te han
+     * Genera una ventana para mostrar las publicaciones en las que te han.
      * etiquetado
      *
-     * @param vMain Ventana padre
-     * @param modal Es si es modal
-     * @param dao Es la interfaz de la logica del negocio
-     * @param publi Es la publicacion que se va a ver
-     * @param usu Es el usuario que controla la aplicacion
-     * @param usuarioPerfil1 Es el usuario del perfil
-     * @param parent Es la ventana desde la que se le llama
+     * @param vMain Ventana padre.
+     * @param modal Es si es modal.
+     * @param dao Es la interfaz de la logica del negocio.
+     * @param publi Es la publicacion que se va a ver.
+     * @param usu Es el usuario que controla la aplicacion.
+     * @param usuarioPerfil1 Es el usuario del perfil.
+     * @param parent Es la ventana desde la que se le llama.
      */
     public PublicacionesEtiquetadas(VMain vMain, boolean modal, DAO dao, Publicacion publi, Usuario usu, Usuario usuarioPerfil1, JDialog parent) {
         super(vMain, modal);
@@ -183,7 +183,7 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Abre la publicacion que has clickados
+     * Abre la publicacion que has clickado.
      *
      * @param evt
      */
@@ -201,7 +201,7 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
     }//GEN-LAST:event_tablaPublicacionesMouseClicked
 
     /**
-     * Vuelve a la ventana desde la que le has llamado
+     * Vuelve a la ventana desde la que le has llamado.
      *
      * @param evt
      */
@@ -213,7 +213,7 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
-     * Carga la tabla con publicaciones
+     * Carga la tabla con publicaciones.
      *
      * @param publicacionesList Son la publicaciones que quieres mostrar
      */
@@ -253,7 +253,7 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
     }
 
     /**
-     * Genera una pantalla con los datos de la publicacion
+     * Genera una pantalla con los datos de la publicacion.
      *
      * @param foto Es la publicacion cuyos datos vamos a ver
      */

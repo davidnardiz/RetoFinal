@@ -17,13 +17,13 @@ import net.miginfocom.swing.MigLayout;
 public class PanelCover extends javax.swing.JPanel {
 
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
-    private ActionListener event;
+    private ActionListener evento;
     private MigLayout layout;
-    private JLabel title;
-    private JLabel description;
-    private JLabel description1;
-    private ButtonOutLine button;
-    private boolean isLogin;
+    private JLabel titulo;
+    private JLabel descripcion;
+    private JLabel descripcion1;
+    private ButtonOutLine boton;
+    private boolean logeado;
 
     public PanelCover() {
         initComponents();
@@ -35,27 +35,27 @@ public class PanelCover extends javax.swing.JPanel {
     }
 
     private void init() {
-        title = new JLabel("Welcome Back!");
-        title.setFont(new Font("sansserif", 1, 30));
-        title.setForeground(new Color(245, 245, 245));
-        add(title);
-        description = new JLabel("Si ya tienes cuenta");
-        description.setForeground(new Color(245, 245, 245));
-        add(description);
-        description1 = new JLabel("puedes iniciar sesión!");
-        description1.setForeground(new Color(245, 245, 245));
-        add(description1);
-        button = new ButtonOutLine();
-        button.setBackground(new Color(255, 255, 255));
-        button.setForeground(new Color(255, 255, 255));
-        button.setText("INICIAR SESIÓN");
-        button.addActionListener(new ActionListener() {
+        titulo = new JLabel("Welcome Back!");
+        titulo.setFont(new Font("sansserif", 1, 30));
+        titulo.setForeground(new Color(245, 245, 245));
+        add(titulo);
+        descripcion = new JLabel("Si ya tienes cuenta");
+        descripcion.setForeground(new Color(245, 245, 245));
+        add(descripcion);
+        descripcion1 = new JLabel("puedes iniciar sesión!");
+        descripcion1.setForeground(new Color(245, 245, 245));
+        add(descripcion1);
+        boton = new ButtonOutLine();
+        boton.setBackground(new Color(255, 255, 255));
+        boton.setForeground(new Color(255, 255, 255));
+        boton.setText("INICIAR SESIÓN");
+        boton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                event.actionPerformed(ae);
+                evento.actionPerformed(ae);
             }
         });
-        add(button, "w 60%, h 40");
+        add(boton, "w 60%, h 40");
     }
 
     @SuppressWarnings("unchecked")
@@ -84,55 +84,55 @@ public class PanelCover extends javax.swing.JPanel {
     }
 
     public void addEvent(ActionListener event) {
-        this.event = event;
+        this.evento = event;
     }
 
-    public void registerLeft(double v) {
+    public void registroIncorrecto(double v) {
         v = Double.valueOf(df.format(v));
         login(false);
-        layout.setComponentConstraints(title, "pad 0 -" + v + "% 0 0");
-        layout.setComponentConstraints(description, "pad 0 -" + v + "% 0 0");
-        layout.setComponentConstraints(description1, "pad 0 -" + v + "% 0 0");
+        layout.setComponentConstraints(titulo, "pad 0 -" + v + "% 0 0");
+        layout.setComponentConstraints(descripcion, "pad 0 -" + v + "% 0 0");
+        layout.setComponentConstraints(descripcion1, "pad 0 -" + v + "% 0 0");
     }
 
-    public void registerRight(double v) {
+    public void registroCorrecto(double v) {
         v = Double.valueOf(df.format(v));
         login(false);
-        layout.setComponentConstraints(title, "pad 0 -" + v + "% 0 0");
-        layout.setComponentConstraints(description, "pad 0 -" + v + "% 0 0");
-        layout.setComponentConstraints(description1, "pad 0 -" + v + "% 0 0");
+        layout.setComponentConstraints(titulo, "pad 0 -" + v + "% 0 0");
+        layout.setComponentConstraints(descripcion, "pad 0 -" + v + "% 0 0");
+        layout.setComponentConstraints(descripcion1, "pad 0 -" + v + "% 0 0");
     }
 
-    public void loginLeft(double v) {
+    public void loginIncorrecto(double v) {
         v = Double.valueOf(df.format(v));
         login(true);
-        layout.setComponentConstraints(title, "pad 0 " + v + "% 0 " + v + "%");
-        layout.setComponentConstraints(description, "pad 0 " + v + "% 0 " + v + "%");
-        layout.setComponentConstraints(description1, "pad 0 " + v + "% 0 " + v + "%");
+        layout.setComponentConstraints(titulo, "pad 0 " + v + "% 0 " + v + "%");
+        layout.setComponentConstraints(descripcion, "pad 0 " + v + "% 0 " + v + "%");
+        layout.setComponentConstraints(descripcion1, "pad 0 " + v + "% 0 " + v + "%");
     }
 
-    public void loginRight(double v) {
+    public void loginCorrecto(double v) {
         v = Double.valueOf(df.format(v));
         login(true);
-        layout.setComponentConstraints(title, "pad 0 " + v + "% 0 " + v + "%");
-        layout.setComponentConstraints(description, "pad 0 " + v + "% 0 " + v + "%");
-        layout.setComponentConstraints(description1, "pad 0 " + v + "% 0 " + v + "%");
+        layout.setComponentConstraints(titulo, "pad 0 " + v + "% 0 " + v + "%");
+        layout.setComponentConstraints(descripcion, "pad 0 " + v + "% 0 " + v + "%");
+        layout.setComponentConstraints(descripcion1, "pad 0 " + v + "% 0 " + v + "%");
     }
 
     public void login(boolean login) {
-        if (this.isLogin != login) {
+        if (this.logeado != login) {
             if (login) {
-                title.setText("Bienvenido!");
-                description.setText("Regístrate si todavía");
-                description1.setText("no tienes cuenta!");
-                button.setText("REGISTRARSE");
+                titulo.setText("Bienvenido!");
+                descripcion.setText("Regístrate si todavía");
+                descripcion1.setText("no tienes cuenta!");
+                boton.setText("REGISTRARSE");
             } else {
-                title.setText("Inicia sesión!");
-                description.setText("Si ya tienes cuenta");
-                description1.setText("puedes iniciar sesión!");
-                button.setText("INICIAR SESIÓN");
+                titulo.setText("Inicia sesión!");
+                descripcion.setText("Si ya tienes cuenta");
+                descripcion1.setText("puedes iniciar sesión!");
+                boton.setText("INICIAR SESIÓN");
             }
-            this.isLogin = login;
+            this.logeado = login;
         }
     }
 

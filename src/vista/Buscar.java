@@ -30,7 +30,7 @@ public class Buscar extends javax.swing.JDialog {
     private boolean conver;
 
     /**
-     * Genera la pantalla para mostrar usuarios
+     * Genera la pantalla para mostrar usuarios.
      *
      * @param vMain Es la pantalla padre
      * @param modal Es si la pantalla es modal o si np
@@ -90,7 +90,7 @@ public class Buscar extends javax.swing.JDialog {
     }
 
     /**
-     * Carga la tabla
+     * Carga la tabla con los usuarios.
      *
      * @param usuariosList Son los usuarios que quieres que aparezcan en la
      * tabla
@@ -125,7 +125,7 @@ public class Buscar extends javax.swing.JDialog {
     }
 
     /**
-     * Al clickar en un usuario se abrira su perfil
+     * Al clickar en un usuario se abrira su perfil.
      *
      * @param usuario Es el usuario cuyo perfil quieres abrir
      */
@@ -143,7 +143,7 @@ public class Buscar extends javax.swing.JDialog {
     }
 
     /**
-     * Ese metodo permite cambiar el criterio de busqueda
+     * Éste metodo permite cambiar el criterio de busqueda.
      */
     private void cambiarFiltro() {
         if (buscador.isSelected()) {
@@ -408,7 +408,7 @@ public class Buscar extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Abre la ventana para ti
+     * Abre la ventana para ti.
      *
      * @param evt
      */
@@ -419,7 +419,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_btnParaTiActionPerformed
 
     /**
-     * Abre la ventana de buscar
+     * Abre la ventana de buscar.
      *
      * @param evt
      */
@@ -431,7 +431,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
-     * Abre la ventana de subir
+     * Abre la ventana de subir.
      *
      * @param evt
      */
@@ -443,7 +443,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSubirActionPerformed
 
     /**
-     * Abre la ventana de tienda
+     * Abre la ventana de tienda.
      *
      * @param evt
      */
@@ -454,7 +454,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_btnTiendaActionPerformed
 
     /**
-     * Abre la ventana de perfil
+     * Abre la ventana de perfil.
      *
      * @param evt
      */
@@ -465,7 +465,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCuentaActionPerformed
 
     /**
-     * Cambia el filtro de busqueda
+     * Cambia el filtro de busqueda.
      *
      * @param evt
      */
@@ -474,7 +474,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_buscadorMouseClicked
 
     /**
-     * Si se clicka en un usuario se abrira su perfil
+     * Éste método abrirá el perfil del usuario que sea clickado.
      *
      * @param evt
      */
@@ -499,7 +499,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
     /**
-     * Cambia el filtro de busqueda
+     * Cambia el filtro de busqueda.
      *
      * @param evt
      */
@@ -508,7 +508,7 @@ public class Buscar extends javax.swing.JDialog {
     }//GEN-LAST:event_buscadorKeyReleased
 
     /**
-     * Este metodo cierra la ventana
+     * Este metodo cierra la ventana.
      */
     private void cerrar() {
         this.dispose();
