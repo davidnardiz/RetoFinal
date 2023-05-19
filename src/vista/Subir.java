@@ -5,35 +5,58 @@ import clases.Historia;
 import clases.Publicacion;
 import clases.Reel;
 import clases.Usuario;
+import excepciones.ErrAlter;
+import excepciones.ErrInsert;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
+import excepciones.VentanaMensaje;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import modelo.DAO;
 import utilidades.Utilidades;
 
+/**
+ *
+ * @author Jason
+ */
 public class Subir extends javax.swing.JDialog {
 
     private DAO dao;
     private Usuario usu;
+    private VMain vMain;
 
     private String imagen = null;
 
     private Subir_Foto ventanaFoto;
     private Subir_Reel ventanaReel;
     private Subir_Historia ventanaHistoria;
-    private ParaTi paraTi;
 
-    public Subir(ParaTi paraTi, boolean modal, DAO dao, Usuario usu) {
-        //super(parent, modal);
+    private Publicacion publiEditar;
 
-        this.paraTi = paraTi;
+    private boolean editar = false;
+
+    /**
+     * Abre una ventana para subir publicaciones
+     *
+     * @param vMain Es la ventana padre
+     * @param modal Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param usu Es el usuario que controla la aplicacion
+     * @param publiEditar Es si vas a editar una publicacion o no
+     */
+    public Subir(VMain vMain, boolean modal, DAO dao, Usuario usu, Publicacion publiEditar) {
+        super(vMain, modal);
+        this.vMain = vMain;
         this.dao = dao;
         this.usu = usu;
+        this.publiEditar = publiEditar;
 
         initComponents();
 
@@ -46,8 +69,24 @@ public class Subir extends javax.swing.JDialog {
 
         panelSlide.init(ventanaFoto, ventanaReel, ventanaHistoria);
         panelSlide.setAnimate(4);
+
+        if (publiEditar != null) {
+            editar = true;
+            mostrarDatos();
+        }
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cerrar();
+            }
+
+        });
     }
 
+    /**
+     * Abre el explorador de archivos para seleccionar una foto
+     */
     public void elegirFoto() {
         imagen = Utilidades.seleccionarImagen(this);
         if (imagen != null) {
@@ -55,76 +94,111 @@ public class Subir extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Guarda la publicacion en la base de datos
+     */
     public void subirPublicacion() {
         Publicacion publi;
         String id;
+        try {
+            if (rdbtnFoto.isSelected()) {
+                publi = new Foto();
+                id = dao.calcularId("F");
 
-        if (rdbtnFoto.isSelected()) {
-            publi = new Foto();
+                if (ventanaFoto.cbCancion.getSelectedIndex() != -1) {
+                    int n = (ventanaFoto.cbCancion.getSelectedItem().toString()).indexOf('-');
+                    String tit = ventanaFoto.cbCancion.getSelectedItem().toString().substring(0, n - 1);
+                    publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
 
-            id = dao.calcularId("F");
+                }
 
-            if (ventanaFoto.cbCancion.getSelectedIndex() != -1) {
-                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaFoto.cbCancion.getSelectedItem().toString()).getId_cancion());
-            }
+                if (ventanaFoto.cbEtiquetado.getSelectedIndex() != -1) {
+                    ((Foto) publi).setEtiquetado(ventanaFoto.cbEtiquetado.getSelectedItem().toString());
+                }
 
-            if (ventanaFoto.cbEtiquetado.getSelectedIndex() != -1) {
-                publi.setEtiquetado(ventanaFoto.cbEtiquetado.getSelectedItem().toString());
-            }
+                if (!ventanaFoto.txtUbicacion.getText().isBlank()) {
+                    publi.setUbicacion(ventanaFoto.txtUbicacion.getText());
+                }
 
-            publi.setUbicacion(ventanaFoto.txtUbicacion.getText());
-            ((Foto) publi).setResolucion(ventanaFoto.cbResolucion.getSelectedItem().toString());
-            ((Foto) publi).setDescripcion(ventanaFoto.txtDescripcion.getText());
+                ((Foto) publi).setResolucion(ventanaFoto.cbResolucion.getSelectedItem().toString());
+                ((Foto) publi).setDescripcion(ventanaFoto.txtDescripcion.getText());
 
-        } else if (rdbtnReel.isSelected()) {
-            publi = new Reel();
+            } else if (rdbtnReel.isSelected()) {
+                publi = new Reel();
+                id = dao.calcularId("R");
 
-            id = dao.calcularId("R");
+                if (ventanaReel.cbCancion.getSelectedIndex() != -1) {
+                    int n = (ventanaReel.cbCancion.getSelectedItem().toString()).indexOf('-');
+                    String tit = ventanaReel.cbCancion.getSelectedItem().toString().substring(0, n - 1);
+                    publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
+                }
 
-            if (ventanaReel.cbCancion.getSelectedIndex() != -1) {
-                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaReel.cbCancion.getSelectedItem().toString()).getId_cancion());
-            }
+                if (!ventanaReel.txtUbicacion.getText().isBlank()) {
+                    publi.setUbicacion(ventanaReel.txtUbicacion.getText());
+                }
 
-            publi.setUbicacion(ventanaReel.txtUbicacion.getText());
-            ((Reel) publi).setDuracion(ventanaReel.sliderDuracion.getValue());
-            ((Reel) publi).setDescripcion(ventanaReel.txtDescripcion.getText());
+                ((Reel) publi).setDuracion(ventanaReel.sliderDuracion.getValue());
+                ((Reel) publi).setDescripcion(ventanaReel.txtDescripcion.getText());
 
-        } else {
-            publi = new Historia();
-
-            id = dao.calcularId("H");
-
-            if (ventanaHistoria.cbCancion.getSelectedIndex() != -1) {
-                publi.setId_cancion(dao.buscarCancionXTitulo(ventanaHistoria.cbCancion.getSelectedItem().toString()).getId_cancion());
-            }
-
-            if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() != -1) {
-                ((Historia) publi).setCod_tipo(dao.tipoHistoria(ventanaHistoria.cbTipoHistoria.getSelectedItem().toString()));
-            }
-
-            if (ventanaHistoria.rdbtnSi.isSelected()) {
-                ((Historia) publi).setMejores_amigos(true);
             } else {
-                ((Historia) publi).setMejores_amigos(false);
+                publi = new Historia();
+                id = dao.calcularId("H");
+
+                if (ventanaHistoria.cbCancion.getSelectedIndex() != -1) {
+                    int n = (ventanaHistoria.cbCancion.getSelectedItem().toString()).indexOf('-');
+                    String tit = ventanaHistoria.cbCancion.getSelectedItem().toString().substring(0, n - 1);
+                    publi.setId_cancion(dao.buscarCancionXTitulo(tit).getId_cancion());
+                }
+
+                if (ventanaHistoria.cbTipoHistoria.getSelectedIndex() != -1) {
+                    ((Historia) publi).setCod_tipo(dao.buscarCodTipoHistoria(ventanaHistoria.cbTipoHistoria.getSelectedItem().toString()));
+                }
+
+                if (ventanaHistoria.rdbtnSi.isSelected()) {
+                    ((Historia) publi).setMejores_amigos(true);
+                } else {
+                    ((Historia) publi).setMejores_amigos(false);
+                }
+
+                if (!ventanaHistoria.txtUbicacion.getText().isBlank()) {
+                    publi.setUbicacion(ventanaHistoria.txtUbicacion.getText());
+                }
+
             }
 
-            publi.setUbicacion(ventanaHistoria.txtUbicacion.getText());
+            publi.setId_publicacion(id);
+            publi.setImagen(imagen);
+            publi.setUsuario(usu.getUsuario());
+            publi.setFecha_subida(LocalDate.now());
+            publi.setNumLikes(Utilidades.numeros_aleatorios((int) (usu.getNumSeguidores() * 0.12), (int) (usu.getNumSeguidores() * 0.9)));
+            publi.setNumComentarios(Utilidades.numeros_aleatorios((int) (usu.getNumSeguidores() * 0.012), (int) (usu.getNumSeguidores() * 0.04)));
 
+            if (!editar) {
+                dao.publicar(publi);
+                VentanaMensaje ve = new VentanaMensaje("Publicado correctamente", "La imagen se ha guardado exitosamente en la base de datos");
+            } else {
+                publi.setId_publicacion(publiEditar.getId_publicacion());
+                dao.editarPublicacion(publi);
+                VentanaMensaje ve = new VentanaMensaje("Modificada correctamente", "Los datos de la imagen se han guardado correctamente en la base de datos");
+            }
+            this.dispose();
+            ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
+            paraTi.setVisible(true);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        } catch (ErrInsert ex) {
+            ex.mostrarError();
+        } catch (ErrAlter ex) {
+            ex.mostrarError();
         }
-
-        publi.setId_publicacion(id);
-        publi.setImagen(imagen);
-        publi.setUsuario(usu.getUsuario());
-        publi.setFecha_subida(LocalDate.now());
-        publi.setNumLikes(Utilidades.numeros_aleatorios((int) (usu.getNumSeguidores() * 0.12), (int) (usu.getNumSeguidores() * 0.9)));
-        publi.setNumComentarios(Utilidades.numeros_aleatorios((int) (usu.getNumSeguidores() * 0.012), (int) (usu.getNumSeguidores() * 0.04)));
-
-        dao.publicar(publi);
-        JOptionPane.showMessageDialog(this, "La publicacion se ha subido correctamente");
-        this.dispose();
-        paraTi.setVisible(true);
     }
 
+    /**
+     * Comprueba si los datos son validos o no
+     */
     public void comprobarDatos() {
         String mensaje = "";
         boolean correcto = true;
@@ -234,13 +308,16 @@ public class Subir extends javax.swing.JDialog {
             }
         }
         if (!mensaje.equalsIgnoreCase("")) {
-            JOptionPane.showMessageDialog(this, mensaje, "ERROR", 0);
+            VentanaMensaje ve = new VentanaMensaje("Cuidado", mensaje);
 
         } else {
             subirPublicacion();
         }
     }
 
+    /**
+     * Vacia todos los campos
+     */
     public void limpiar() {
         imagen = null;
 
@@ -280,6 +357,62 @@ public class Subir extends javax.swing.JDialog {
             rdbtn[i].setBackground(new Color(255, 255, 255));
 
         }
+    }
+
+    /**
+     * Muestra los datos de la publicacion que se va a editar
+     */
+    private void mostrarDatos() {
+        imagen = publiEditar.getImagen();
+
+        try {
+            if (publiEditar instanceof Foto) {
+                panelSlide.show(0);
+
+                if (publiEditar.getId_cancion() != null) {
+                    ventanaFoto.cbCancion.setSelectedItem(dao.buscarCancionXId(publiEditar.getId_cancion()).getTitulo());
+                }
+
+                ventanaFoto.txtUbicacion.setText(publiEditar.getUbicacion());
+                ventanaFoto.cbResolucion.setSelectedItem(((Foto) publiEditar).getResolucion());
+                ventanaFoto.cbEtiquetado.setSelectedItem(((Foto) publiEditar).getEtiquetado());
+                ventanaFoto.txtDescripcion.setText(((Foto) publiEditar).getDescripcion());
+
+            } else if (publiEditar instanceof Reel) {
+                panelSlide.show(1);
+                rdbtnReel.setSelected(true);
+
+                if (publiEditar.getId_cancion() != null) {
+                    ventanaReel.cbCancion.setSelectedItem(dao.buscarCancionXId(publiEditar.getId_cancion()).getTitulo());
+                }
+
+                ventanaReel.txtUbicacion.setText(publiEditar.getUbicacion());
+                ventanaReel.sliderDuracion.setValue(((Reel) publiEditar).getDuracion());
+                ventanaReel.txtDescripcion.setText(((Reel) publiEditar).getDescripcion());
+
+            } else {
+                panelSlide.show(2);
+                rdbtnHistoria.setSelected(true);
+
+                if (publiEditar.getId_cancion() != null) {
+                    ventanaHistoria.cbCancion.setSelectedItem(dao.buscarCancionXId(publiEditar.getId_cancion()).getTitulo());
+                }
+
+                ventanaHistoria.txtUbicacion.setText(publiEditar.getUbicacion());
+                ventanaHistoria.cbTipoHistoria.setSelectedItem(dao.buscarTipoHistoria(((Historia) publiEditar).getCod_tipo()));
+
+                if (((Historia) publiEditar).isMejores_amigos()) {
+                    ventanaHistoria.rdbtnSi.setSelected(true);
+                } else {
+                    ventanaHistoria.rdbtnNo.setSelected(true);
+                }
+            }
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -529,51 +662,102 @@ public class Subir extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre la ventana paraTi
+     *
+     * @param evt
+     */
     private void btnParaTiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParaTiActionPerformed
+        ParaTi paraTi = new ParaTi(vMain, true, dao, usu);
         this.dispose();
         paraTi.setVisible(true);
     }//GEN-LAST:event_btnParaTiActionPerformed
 
+    /**
+     * Abre la ventana buscar
+     *
+     * @param evt
+     */
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        Buscar buscar = new Buscar(paraTi, true, dao, usu, false);
+        Buscar buscar = new Buscar(vMain, true, dao, usu, false);
         this.dispose();
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    /**
+     * Abre la ventana subir
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        Subir subir = new Subir(paraTi, true, dao, usu);
+        Subir subir = new Subir(vMain, true, dao, usu, null);
         this.dispose();
         subir.setVisible(true);
     }//GEN-LAST:event_btnSubirActionPerformed
 
+    /**
+     * Abre la ventana tienda
+     *
+     * @param evt
+     */
     private void btnTiendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiendaActionPerformed
-        Tienda tienda = new Tienda(paraTi, true, dao, usu);
+        Tienda tienda = new Tienda(vMain, true, dao, usu);
         this.dispose();
         tienda.setVisible(true);
     }//GEN-LAST:event_btnTiendaActionPerformed
 
+    /**
+     * Abre la ventana perfil
+     *
+     * @param evt
+     */
     private void btnCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaActionPerformed
-        Perfil perfil = new Perfil(paraTi, true, dao, usu, usu);
+        Perfil perfil = new Perfil(vMain, true, dao, usu, usu);
         this.dispose();
         perfil.setVisible(true);
     }//GEN-LAST:event_btnCuentaActionPerformed
 
+    /**
+     * Cambia la pantalla para poder subir una foto
+     *
+     * @param evt
+     */
     private void cambiarFoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarFoto
         panelSlide.show(0);
         limpiar();
     }//GEN-LAST:event_cambiarFoto
 
+    /**
+     * Cambia la pantalla para poder subir un reel
+     *
+     * @param evt
+     */
     private void cambiarReel(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarReel
         panelSlide.show(1);
         limpiar();
     }//GEN-LAST:event_cambiarReel
 
+    /**
+     * Cambia la pantalla para poder subir una historia
+     *
+     * @param evt
+     */
     private void cambiarHistoria(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarHistoria
         panelSlide.show(2);
         limpiar();
     }//GEN-LAST:event_cambiarHistoria
+
+    /**
+     * Cierra la ventana
+     *
+     * @param evt
+     */
+    private void cerrar() {
+        this.dispose();
+        vMain.dispose();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -592,4 +776,5 @@ public class Subir extends javax.swing.JDialog {
     private javax.swing.JRadioButton rdbtnReel;
     private javax.swing.ButtonGroup tipoPublicacion;
     // End of variables declaration//GEN-END:variables
+
 }

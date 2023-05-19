@@ -2,42 +2,52 @@ package vista;
 
 import clases.Cancion;
 import clases.Usuario;
-import java.io.File;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.util.List;
 import modelo.DAO;
 
+/**
+ *
+ * @author Jason
+ */
 public class Subir_Foto extends javax.swing.JPanel {
 
+    private Subir subir;
     private DAO dao;
     private Usuario usu;
-    private Subir subir;
 
+    /**
+     * Genera una pantalla para subir fotos
+     *
+     * @param subir Es la ventana desde la que se le llama
+     * @param par Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param usu Es el usuario que controla la aplicacion
+     */
     public Subir_Foto(Subir subir, boolean par, DAO dao, Usuario usu) {
-        initComponents();
-
-        this.subir = subir;
-        this.dao = dao;
-        this.usu = usu;
-
-        List<Cancion> canciones = dao.listarCanciones();
-        for (Cancion i : canciones) {
-            cbCancion.addItem(i.getTitulo());
-        }
-        cbCancion.setSelectedIndex(-1);
-
-        List<Usuario> etiquetados = dao.listarUsuario();
-        for (Usuario i : etiquetados) {
-            cbEtiquetado.addItem(i.getUsuario());
-        }
-        cbEtiquetado.setSelectedIndex(-1);
-
-        /*
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
+            initComponents();
+            this.subir = subir;
+            this.dao = dao;
+            this.usu = usu;
+
+            List<Cancion> canciones = dao.listarCanciones();
+            for (Cancion i : canciones) {
+                cbCancion.addItem(i.getTitulo() + " - " + i.getArtista());
+            }
+            cbCancion.setSelectedIndex(-1);
+            List<Usuario> etiquetados = dao.listarUsuario();
+            for (Usuario i : etiquetados) {
+                cbEtiquetado.addItem(i.getUsuario());
+            }
+            cbEtiquetado.setSelectedIndex(-1);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-         */
     }
 
     @SuppressWarnings("unchecked")
@@ -152,10 +162,20 @@ public class Subir_Foto extends javax.swing.JPanel {
         add(btnSubir, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 480, 86, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre el explorador de archivos para seleccionar una foto
+     *
+     * @param evt
+     */
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         subir.elegirFoto();
     }//GEN-LAST:event_btnFotoActionPerformed
 
+    /**
+     * Sube la publicacion
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed

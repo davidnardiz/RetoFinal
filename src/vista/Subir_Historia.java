@@ -3,15 +3,29 @@ package vista;
 import clases.Cancion;
 import clases.TipoHistoria;
 import clases.Usuario;
+import excepciones.ErrSelect;
+import excepciones.ErrVariados;
 import java.util.List;
 import modelo.DAO;
 
+/**
+ *
+ * @author Jason
+ */
 public class Subir_Historia extends javax.swing.JPanel {
 
+    private Subir subir;
     private DAO dao;
     private Usuario usu;
-    private Subir subir;
 
+    /**
+     * Genera una pantalla para subir reels
+     *
+     * @param subir Es la ventana desde la que se le llama
+     * @param par Es si es modal
+     * @param dao Es la interfaz de la logica de negocio
+     * @param usu Es el usuario que controla la aplicacion
+     */
     public Subir_Historia(Subir subir, boolean par, DAO dao, Usuario usu) {
         initComponents();
 
@@ -19,25 +33,24 @@ public class Subir_Historia extends javax.swing.JPanel {
         this.usu = usu;
         this.subir = subir;
 
-        List<Cancion> canciones = dao.listarCanciones();
-        for (Cancion i : canciones) {
-            cbCancion.addItem(i.getTitulo());
-        }
-        cbCancion.setSelectedIndex(-1);
-
-        List<TipoHistoria> tipoHistoria = dao.listarTipoHistorias();
-        for (TipoHistoria i : tipoHistoria) {
-            cbTipoHistoria.addItem(i.getCod_tipo());
-        }
-        cbTipoHistoria.setSelectedIndex(-1);
-
-        /*
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Subir_Foto.class.getName()).log(Level.SEVERE, null, ex);
+            List<Cancion> canciones = dao.listarCanciones();
+            for (Cancion i : canciones) {
+                cbCancion.addItem(i.getTitulo() + " - " + i.getArtista());
+            }
+            cbCancion.setSelectedIndex(-1);
+
+            List<TipoHistoria> tipoHistoria = dao.listarTipoHistorias();
+            for (TipoHistoria i : tipoHistoria) {
+                cbTipoHistoria.addItem(i.getCod_tipo());
+            }
+            cbTipoHistoria.setSelectedIndex(-1);
+
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-         */
     }
 
     @SuppressWarnings("unchecked")
@@ -108,24 +121,26 @@ public class Subir_Historia extends javax.swing.JPanel {
         lblMejos.setText("Subir a mejores amigos?");
         add(lblMejos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 280, -1, -1));
 
-        rdbtnNo.setBackground(new java.awt.Color(49, 51, 53));
+        rdbtnNo.setBackground(getBackground());
         mejosGroup.add(rdbtnNo);
         rdbtnNo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rdbtnNo.setForeground(new java.awt.Color(255, 255, 255));
         rdbtnNo.setText("No");
         rdbtnNo.setBorder(null);
+        rdbtnNo.setContentAreaFilled(false);
         rdbtnNo.setFocusPainted(false);
         rdbtnNo.setFocusable(false);
         rdbtnNo.setRequestFocusEnabled(false);
         rdbtnNo.setRolloverEnabled(false);
         add(rdbtnNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 280, -1, -1));
 
-        rdbtnSi.setBackground(new java.awt.Color(49, 51, 53));
+        rdbtnSi.setBackground(getBackground());
         mejosGroup.add(rdbtnSi);
         rdbtnSi.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         rdbtnSi.setForeground(new java.awt.Color(255, 255, 255));
         rdbtnSi.setText("Si");
         rdbtnSi.setBorder(null);
+        rdbtnSi.setContentAreaFilled(false);
         rdbtnSi.setFocusPainted(false);
         rdbtnSi.setFocusable(false);
         rdbtnSi.setRequestFocusEnabled(false);
@@ -155,10 +170,20 @@ public class Subir_Historia extends javax.swing.JPanel {
         add(btnSubir, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 480, 86, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Llama al explorador de archivos
+     *
+     * @param evt
+     */
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         subir.elegirFoto();
     }//GEN-LAST:event_btnFotoActionPerformed
 
+    /**
+     * Sube la publicacion
+     *
+     * @param evt
+     */
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         subir.comprobarDatos();
     }//GEN-LAST:event_btnSubirActionPerformed

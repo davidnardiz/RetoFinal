@@ -1,4 +1,4 @@
-package clases;
+package utilidades.IniciarSesion;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -87,6 +87,6 @@ public class Button extends JButton {
         g2.dispose();
         grphcs.drawImage(img, 0, 0, null);
         super.paintComponent(grphcs);
-    } 
-    
+    }
+
 }

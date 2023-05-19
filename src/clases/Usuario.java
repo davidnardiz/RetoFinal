@@ -17,7 +17,8 @@ public class Usuario {
     private boolean verificado;
 
     /**
-     * ******** METODOS *********
+     *
+     * @return Devuelve todos los atributos del usuario
      */
     @Override
     public String toString() {
@@ -27,12 +28,7 @@ public class Usuario {
                 + numSeguidos + ", verificado=" + verificado + "]";
     }
 
-    /**
-     * ******** CONSTRUCTOR *********
-     */
-    /**
-     * ******** GETTER && SETTER *********
-     */
+    // GETTER && SETTER *
     public String getUsuario() {
         return usuario;
     }
