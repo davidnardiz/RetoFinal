@@ -170,7 +170,7 @@ public class ItemTienda extends javax.swing.JPanel {
         boolean tienB = true;
         GlassPanePopup.closePopupAll();
         // GlassPanePopup.closePopup();
-        GlassPanePopup.showPopup(new Notifications(usu, dao, tienB, art, tien, true, null), new DefaultOption() {
+        GlassPanePopup.showPopup(new Notifications(usu, dao, tienB, art, tien, true, null, true), new DefaultOption() {
 
             @Override
             public float opacity() {

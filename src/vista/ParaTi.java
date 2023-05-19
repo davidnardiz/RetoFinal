@@ -667,9 +667,7 @@ public class ParaTi extends javax.swing.JDialog {
         try {
             List<String> conversaciones = dao.sacarConversaciones(usu.getUsuario());
 
-            for (String men : conversaciones) {
-                System.out.println(men);
-            }
+         
             GlassPanePopup.showPopup(new NotificationsChat(vMain, this, usu, dao, false, null, null, true), new DefaultOption() {
                 @Override
                 public float opacity() {

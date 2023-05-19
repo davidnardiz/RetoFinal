@@ -42,13 +42,14 @@ public class Notifications extends javax.swing.JPanel {
     private List<Articulo> ar;
     private Tienda tien;
     private boolean filtrar;
-
+    private boolean boton;    
     private FiltrarPanel filtrarPanel;
 
-    public Notifications(Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien, boolean filtrar, FiltrarPanel filtrarPanel) {
+    public Notifications(Usuario usu, DAO dao, boolean tienda, List<Articulo> ar, Tienda tien, boolean filtrar, FiltrarPanel filtrarPanel, boolean boton) {
         try {
             this.usu = usu;
             this.dao = dao;
+            this.boton=boton;
             this.tienda = tienda;
             this.filtrarPanel = filtrarPanel;
             this.ar = ar;
@@ -88,6 +89,10 @@ public class Notifications extends javax.swing.JPanel {
             } else {
                 btnComprar.setVisible(false);
                 filtra.setVisible(false);
+            }
+            
+            if(!boton){
+                btnConversacion.setVisible(false);
             }
         } catch (ErrVariados ex) {
             ex.mostrarError();

@@ -108,13 +108,16 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        scroll.setBackground(getBackground());
+        scroll.setForeground(getBackground());
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setAutoscrolls(true);
         scroll.setFocusable(false);
         scroll.setPreferredSize(new java.awt.Dimension(594, 351));
         scroll.setRequestFocusEnabled(false);
 
         tablaPublicaciones.setBackground(getBackground());
+        tablaPublicaciones.setForeground(getBackground());
         tablaPublicaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -269,8 +272,8 @@ public class PublicacionesEtiquetadas extends javax.swing.JDialog {
 
                 }
             }
-
-            PublicacionPopUp publiPop = new PublicacionPopUp(vMain, true, dao, publi, nosotros, usuarioPerfil, perfil);
+            Usuario usu = dao.buscarUsuario(publi.getUsuario());
+            PublicacionPopUp publiPop = new PublicacionPopUp(vMain, true, dao, publi, nosotros, usu, perfil);
             publiPop.setVisible(true);
 
         } catch (ErrVariados ex) {

@@ -18,7 +18,16 @@ public class StarRatingNoEditable extends javax.swing.JPanel {
 
     public void setStar(int star) {
         this.star = star;
-        if (star == 1) {
+         
+        if (star == 0) {
+            star1.setSelected(false);
+            star2.setSelected(false);
+            star3.setSelected(false);
+            star4.setSelected(false);
+            star5.setSelected(false);
+            star = 0;
+            runEvent();
+        }else if (star == 1) {
             star1.setSelected(true);
             star2.setSelected(false);
             star3.setSelected(false);

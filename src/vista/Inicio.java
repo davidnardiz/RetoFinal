@@ -134,13 +134,13 @@ public class Inicio extends javax.swing.JLayeredPane {
         txtUsuarioReg = new MyTextField();
         txtUsuarioReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/user.png")));
         txtUsuarioReg.setHint("Usuario");
-        txtUsuarioReg.setText("xDoble_Jx");
+     
         login.add(txtUsuarioReg, "w 60%");
 
         txtContraseniaReg = new MyPasswordField();
         txtContraseniaReg.setPrefixIcon(new ImageIcon(getClass().getResource("/imagenes/pantalla/pass.png")));
         txtContraseniaReg.setHint("Contraseña");
-        txtContraseniaReg.setText("abcd");
+        
         login.add(txtContraseniaReg, "w 60%");
 
         JButton cmdForget = new JButton("Recuperar contraseña");

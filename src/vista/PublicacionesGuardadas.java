@@ -7,6 +7,8 @@ import excepciones.ErrSelect;
 import excepciones.ErrVariados;
 import java.awt.Color;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -110,12 +112,14 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
                 .addComponent(lblLogoLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        scroll.setBackground(getBackground());
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setAutoscrolls(true);
         scroll.setFocusable(false);
         scroll.setPreferredSize(new java.awt.Dimension(594, 351));
         scroll.setRequestFocusEnabled(false);
 
+        tablaPublicaciones.setBackground(getBackground());
         tablaPublicaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -289,18 +293,24 @@ public class PublicacionesGuardadas extends javax.swing.JDialog {
      * @param foto Es la foto que vas a abrir
      */
     private void abrirFoto(String foto) {
-        String rutaProyecto = System.getProperty("user.dir");
-        Publicacion publi = null;
+        try {
+            String rutaProyecto = System.getProperty("user.dir");
+            Publicacion publi = null;
 
-        for (Publicacion i : publicacionesList) {
-            if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
-                publi = i;
-                break;
+            for (Publicacion i : publicacionesList) {
+                if (foto.equalsIgnoreCase(rutaProyecto + "\\src\\imagenes\\publicaciones\\" + i.getImagen())) {
+                    publi = i;
+                    break;
+                }
             }
+            Usuario usu = dao.buscarUsuario(publi.getUsuario());
+            PublicacionPopUp publiPop = new PublicacionPopUp(vMain, true, dao, publi, nosotros, usu, perfil);
+            publiPop.setVisible(true);
+        } catch (ErrVariados ex) {
+            ex.mostrarError();
+        } catch (ErrSelect ex) {
+            ex.mostrarError();
         }
-
-        PublicacionPopUp publiPop = new PublicacionPopUp(vMain, true, dao, publi, nosotros, usuarioPerfil, perfil);
-        publiPop.setVisible(true);
 
     }
 

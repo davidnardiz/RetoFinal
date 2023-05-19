@@ -61,7 +61,7 @@ public class Tienda extends javax.swing.JDialog {
         getContentPane().setBackground(new Color(49, 51, 53));
         initComponents();
 
-        //setLocationRelativeTo(null);
+        setLocationRelativeTo(null);
         JScrollBar sb = scroll.getVerticalScrollBar();
         sb.setOpaque(false);
         sb.setForeground(new Color(33, 140, 206));
@@ -519,7 +519,7 @@ public class Tienda extends javax.swing.JDialog {
     private void carritoCompraLlenoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_carritoCompraLlenoMouseClicked
 
         boolean tien = true;
-        GlassPanePopup.showPopup(new Notifications(usu, dao, tien, ar, this, false, filtrarPanel), new DefaultOption() {
+        GlassPanePopup.showPopup(new Notifications(usu, dao, tien, ar, this, false, filtrarPanel, false), new DefaultOption() {
 
             @Override
             public float opacity() {
@@ -546,7 +546,7 @@ public class Tienda extends javax.swing.JDialog {
 
     private void filtrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtrarMouseClicked
 
-        GlassPanePopup.showPopup(new Notifications(usu, dao, false, ar, this, true, filtrarPanel), new DefaultOption() {
+        GlassPanePopup.showPopup(new Notifications(usu, dao, false, ar, this, true, filtrarPanel, false), new DefaultOption() {
 
             @Override
             public float opacity() {

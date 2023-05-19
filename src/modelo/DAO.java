@@ -16,7 +16,6 @@ import java.util.List;
 
 public interface DAO {
 
-    // Inserts
     /**
      * Éste método añade una publicación a la base de datos.
      *
@@ -24,7 +23,8 @@ public interface DAO {
      * datos.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void publicar(Publicacion publi) throws ErrVariados, ErrInsert;
 
@@ -36,7 +36,8 @@ public interface DAO {
      * @param publicacion la publicación a la que el usuario le da like.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void insertarLike(String usuario, String publicacion) throws ErrVariados, ErrInsert;
 
@@ -46,7 +47,8 @@ public interface DAO {
      * @param nosotros el usuario que sigue.
      * @param usuarioPerfil el usuario al que le siguen.
      * @throws ErrVariados
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void seguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrInsert;
 
@@ -57,7 +59,8 @@ public interface DAO {
      * @return
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public boolean registrar(Usuario us) throws ErrVariados, ErrInsert;
 
@@ -67,7 +70,8 @@ public interface DAO {
      * @param nosotros el usuario que bloquea.
      * @param usu el usuario al que bloquean.
      * @throws ErrVariados
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void bloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrInsert;
 
@@ -79,7 +83,8 @@ public interface DAO {
      * @param id_publicacion el id de la publicación que se guarda el usuario.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void guardarPublicación(String usuario, String id_publicacion) throws ErrVariados, ErrInsert;
 
@@ -91,7 +96,8 @@ public interface DAO {
      * @param usu el usuario que es guardado como mejor amigo.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void aniadirAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrInsert;
 
@@ -101,7 +107,8 @@ public interface DAO {
      * @param men el mensaje que envia el usuario.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void insertarMensaje(Mensaje men) throws ErrVariados, ErrInsert;
 
@@ -111,11 +118,11 @@ public interface DAO {
      * @param art es el articulo que hay que modificar.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrInsert
+     * @throws ErrInsert gestiona un excepcion por si da un error al insertar
+     * datos en la base de datos.
      */
     public void insertarArticulo(Articulo art) throws ErrVariados, ErrInsert;
 
-    // Selects
     /**
      * Éste método busca una publicación en la base de datos.
      *
@@ -123,7 +130,8 @@ public interface DAO {
      * @return devuelve la publicación con ese id con todos sus datos.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public Publicacion buscarPublicacionXId(String id) throws ErrVariados, ErrSelect;
 
@@ -134,7 +142,8 @@ public interface DAO {
      * datos.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Publicacion> listarPublicaciones() throws ErrVariados, ErrSelect;
 
@@ -147,7 +156,8 @@ public interface DAO {
      * tiene guardadas.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Publicacion> listarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrSelect;
 
@@ -161,7 +171,8 @@ public interface DAO {
      * usuario está etiquetado.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Publicacion> listarPublicacionesEtiquetadas(String usuario) throws ErrVariados, ErrSelect;
 
@@ -176,7 +187,8 @@ public interface DAO {
      * requisitos para que le aparezcan al usuario.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Publicacion> listarPublicacionesParaTi(String usuario) throws ErrVariados, ErrSelect;
 
@@ -188,7 +200,8 @@ public interface DAO {
      * @return el id de la publicación.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public String calcularId(String tipo) throws ErrVariados, ErrSelect;
 
@@ -201,7 +214,8 @@ public interface DAO {
      * @return devuelve el usuario con toda su información.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public Usuario buscarUsuario(String usuario) throws ErrVariados, ErrSelect;
 
@@ -215,7 +229,8 @@ public interface DAO {
      * y contraseña.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public Usuario iniciarSesion(String usuario, String contrasenia) throws ErrVariados, ErrSelect;
 
@@ -225,7 +240,8 @@ public interface DAO {
      * @return devuelve un listado de los usuarios de la base de datos.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarUsuario() throws ErrVariados, ErrSelect;
 
@@ -239,7 +255,8 @@ public interface DAO {
      * @return devuelve todos los usuarios de la base de datos.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Publicacion> listarPublicacionesUsuario(String usuarioPerfil, String nosotros, String tipo) throws ErrVariados, ErrSelect;
 
@@ -252,7 +269,8 @@ public interface DAO {
      * usuario el parámetro que se le pasa.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarUsuarioXUsuario(String usuario) throws ErrVariados, ErrSelect;
 
@@ -263,7 +281,8 @@ public interface DAO {
      * @return devuelve todos los usuarios verificados
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarUsuariosVerificados(String usuario) throws ErrVariados, ErrSelect;
 
@@ -275,7 +294,8 @@ public interface DAO {
      * @return devuelve todos los ususarios que tengan ese minimos de seguidores
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarUsuariosXSeguidores(String usuario) throws ErrVariados, ErrSelect;
 
@@ -288,7 +308,8 @@ public interface DAO {
      * amigos y que contengan esos caracteres en su nombre
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarUsuarioXMejos(String usuario) throws ErrVariados, ErrSelect;
 
@@ -300,7 +321,8 @@ public interface DAO {
      * @return devuelve el numero de publicaciones
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public int numPublicacionesUsuario(String usuario) throws ErrVariados, ErrSelect;
 
@@ -310,7 +332,8 @@ public interface DAO {
      * @return devuelve un listado con todas las canciones de la base de datos.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Cancion> listarCanciones() throws ErrVariados, ErrSelect;
 
@@ -320,7 +343,8 @@ public interface DAO {
      * @return devuelve un listado de los tipos de historias disponibles.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<TipoHistoria> listarTipoHistorias() throws ErrVariados, ErrSelect;
 
@@ -332,7 +356,8 @@ public interface DAO {
      * @return devuelve la canción con toda su información.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public Cancion buscarCancionXTitulo(String titulo) throws ErrVariados, ErrSelect;
 
@@ -343,18 +368,20 @@ public interface DAO {
      * @return devuelve la canción con toda su información.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public Cancion buscarCancionXId(String id) throws ErrVariados, ErrSelect;
 
     /**
-     *
+     * Busca el codigo del tipo de historia en
      *
      * @param tipo
      * @return devuelve el codigo de del tipo de la historia
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public String buscarCodTipoHistoria(String tipo) throws ErrVariados, ErrSelect;
 
@@ -365,7 +392,8 @@ public interface DAO {
      * @return devuelve el tipo de publicación.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public String buscarTipoHistoria(String id) throws ErrVariados, ErrSelect;
 
@@ -381,7 +409,8 @@ public interface DAO {
      * publicación o falso en caso de que no lo haya hecho.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public boolean comprobarLike(String usuario, String publicacion) throws ErrVariados, ErrSelect;
 
@@ -395,7 +424,8 @@ public interface DAO {
      * otro usuario o false si es al contrario.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public boolean verSeguimiento(String nosotros, String usuarioPerfil) throws ErrVariados, ErrSelect;
 
@@ -409,7 +439,8 @@ public interface DAO {
      * bloqueados.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarBloqueados(Usuario usuario) throws ErrVariados, ErrSelect;
 
@@ -423,19 +454,22 @@ public interface DAO {
      * bloqueados.
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarDesbloqueados(Usuario usuario) throws ErrVariados, ErrSelect;
 
     /**
-     * Éste
+     * Éste método comprueba si el usuario 2 esta el la lista de mejores amigos
+     * del usuario 1
      *
      * @param nosotros
      * @param el
      * @return
      * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
      * la base de datos.
-     * @throws ErrSelect
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public boolean comprobarMejos(String nosotros, String el) throws ErrVariados, ErrSelect;
 
@@ -447,8 +481,10 @@ public interface DAO {
      * @param el el usuario que puede estas bloqueado o no.
      * @return devuelve verdadero si un usuario tiene bloqueado a otro y
      * devuelve falso si no es así.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public boolean comprobarBloqueado(String nosotros, String el) throws ErrVariados, ErrSelect;
 
@@ -458,8 +494,10 @@ public interface DAO {
      * @param nosotros el usuario del que queremos saber sus mejores amigos.
      * @return devuelve una lista de los usuarios que un usuario tiene en
      * mejores amigos.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarMejoresAmigos(Usuario nosotros) throws ErrVariados, ErrSelect;
 
@@ -471,8 +509,10 @@ public interface DAO {
      * tiene ensus mejores amigos.
      * @return devuelve una lista de los usuarios que un usuario no tiene en
      * mejores amigos. mejores amigos.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Usuario> listarNoMejoresAmigos(Usuario nosotros) throws ErrVariados, ErrSelect;
 
@@ -485,8 +525,10 @@ public interface DAO {
      * usuario tiene guardada.
      * @return devuelve verdadero si el usuario tiene guardada la publicación y
      * devuelve falso si no la tiene guardada.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public boolean comprobarGuardado(String usuario, String publicacion) throws ErrVariados, ErrSelect;
 
@@ -497,8 +539,10 @@ public interface DAO {
      * @param usuario2 el otro usuario que participa en la conversació.
      * @return devuelve un listado con todos los mensajes de una conversación
      * entre dos usuario.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Mensaje> sacarMensajes(String usuario1, String usuario2) throws ErrVariados, ErrSelect;
 
@@ -507,8 +551,10 @@ public interface DAO {
      *
      * @param id el id
      * @return devuelve el id del nuevo mensaje.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public String calcularIdMensaje(String id) throws ErrVariados, ErrSelect;
 
@@ -518,8 +564,10 @@ public interface DAO {
      * @param usuario el usuario del que queremos obtener sus conversaciones.
      * @return devuelve un listado de las conversaciónes que un usuario tiene
      * iniciadas.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<String> sacarConversaciones(String usuario) throws ErrVariados, ErrSelect;
 
@@ -527,8 +575,10 @@ public interface DAO {
      * Éste método lista todos los artículos de la base de datos.
      *
      * @return devuelve un listado con todos los articulos de la base de datos.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Articulo> sacarTodosLosArticulos() throws ErrVariados, ErrSelect;
 
@@ -536,8 +586,10 @@ public interface DAO {
      * Éste método calcula el id de un artículo.
      *
      * @return devuelve el id de un artículo.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public String calcularIdArticulo(String id) throws ErrVariados, ErrSelect;
 
@@ -546,8 +598,10 @@ public interface DAO {
      *
      * @param ar el articulo del que queremos saber su valoración.
      * @return devuelve la valoración del artículo.
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public int obtenerValoracion(Articulo ar) throws ErrVariados, ErrSelect;
 
@@ -559,8 +613,10 @@ public interface DAO {
      * @param max precio máximo.
      * @param opc orden del precio.
      * @return
-     * @throws ErrVariados
-     * @throws ErrSelect
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrSelect gestiona un excepcion por si da un error al recuperar
+     * datos de la base de datos.
      */
     public List<Articulo> sacarArituclosPorPrecio(int min, int max, int opc) throws ErrVariados, ErrSelect;
 
@@ -569,8 +625,10 @@ public interface DAO {
      * Éste método sobreescribe los datos de un usuario.
      *
      * @param us el usuario con la nueva información.
-     * @throws ErrVariados
-     * @throws ErrAlter
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrAlter gestiona un excepcion por si da un error al modificar
+     * algo de la base de datos.
      */
     public void editarPerfil(Usuario us) throws ErrVariados, ErrAlter;
 
@@ -578,17 +636,21 @@ public interface DAO {
      * Éste método sobreescribe los datos de una publicación.
      *
      * @param publi la publicación con la nueva información.
-     * @throws ErrVariados
-     * @throws ErrAlter
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrAlter gestiona un excepcion por si da un error al modificar
+     * algo de la base de datos.
      */
     public void editarPublicacion(Publicacion publi) throws ErrVariados, ErrAlter;
 
     /**
+     * Este método sobreescribe los datos de un articulo
      *
-     *
-     * @param art
-     * @throws ErrVariados
-     * @throws ErrAlter
+     * @param art es el articulo que se va a modificar
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrAlter gestiona un excepcion por si da un error al modificar
+     * algo de la base de datos.
      */
     public void modificarArt(Articulo art) throws ErrVariados, ErrAlter;
 
@@ -600,8 +662,10 @@ public interface DAO {
      * @param valoracion la valoración que le da el usuario comprador al
      * usuario. vendedor.
      * @param id el id del articulo que el usuario compra.
-     * @throws ErrVariados
-     * @throws ErrAlter
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrAlter gestiona un excepcion por si da un error al modificar
+     * algo de la base de datos.
      */
     public void comprarArticulo(String lugarEntrega, LocalDate fecha, int valoracion, String id) throws ErrVariados, ErrAlter;
 
@@ -611,8 +675,10 @@ public interface DAO {
      *
      * @param usuario el usuario del que queremos.
      * @param publicacion la publicacion de la que se quiere quitar el like.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void quitarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete;
 
@@ -621,8 +687,10 @@ public interface DAO {
      *
      * @param nosotros el usuario que deja de seguir.
      * @param usuarioPerfil el usuario que es dejado de seguir.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void dejarSeguir(String nosotros, String usuarioPerfil) throws ErrVariados, ErrDelete;
 
@@ -631,8 +699,10 @@ public interface DAO {
      *
      * @param id_publicacion el id de la publicación que el usuario quiere
      * borrar.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void eliminarPublicacion(String id_publicacion) throws ErrVariados, ErrDelete;
 
@@ -641,8 +711,10 @@ public interface DAO {
      * usuario.
      *
      * @param usuario el usuario que se quiere borrar.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void eliminarUsuario(String usuario) throws ErrVariados, ErrDelete;
 
@@ -651,8 +723,10 @@ public interface DAO {
      *
      * @param nosotros el usuario que va a desbloquear a otro usuario.
      * @param usu el usuario que es desbloqueado.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void desbloquearUsuario(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 
@@ -662,8 +736,10 @@ public interface DAO {
      * @param usuario el usuario que va a quitar la publicación.
      * @param id_publicacion el id de la publicación que se quiere quitar de
      * guardados.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void desguardarPublicacion(String usuario, String id_publicacion) throws ErrVariados, ErrDelete;
 
@@ -672,8 +748,10 @@ public interface DAO {
      * la tabla de guardadas.
      *
      * @param usuario
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void vaciarPublicacionesGuardadas(String usuario) throws ErrVariados, ErrDelete;
 
@@ -684,8 +762,10 @@ public interface DAO {
      * @param nosotros el usuario del que vamos a quitar el mejor amigo.
      * @param usu el usuario que vamos a quitar de mejores amigos del usuario
      * que controla el programa.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void quitarAmigo(Usuario nosotros, String usu) throws ErrVariados, ErrDelete;
 
@@ -693,8 +773,10 @@ public interface DAO {
      * Éste método elimina un artículo de la base de datos.
      *
      * @param id el id de la publicación que se va a eliminar.
-     * @throws ErrVariados
-     * @throws ErrDelete
+     * @throws ErrVariados gestiona un excepcion por si no se puede conectar con
+     * la base de datos.
+     * @throws ErrDelete gestiona un excepcion por si da un error al elimianar
+     * algo de la base de datos.
      */
     public void borrarArticulo(String id) throws ErrVariados, ErrDelete;
 

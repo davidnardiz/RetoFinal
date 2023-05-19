@@ -72,8 +72,6 @@ public class Buscar extends javax.swing.JDialog {
 
         String rutaProyecto = System.getProperty("user.dir");
 
-        System.out.println(rutaProyecto + "src\\utilidades\\Filtros_Buscador\\user.png");
-
         buscador.addOption(new SearchOption("usuario", new ImageIcon(rutaProyecto + "\\src\\utilidades\\Filtros_Buscador\\user.png")));
         buscador.addOption(new SearchOption("verificado", new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\verificado.png")));
         buscador.addOption(new SearchOption("mejos", new ImageIcon(rutaProyecto + "\\src\\imagenes\\pantalla\\mejoresAmigosBuscar.png")));
@@ -351,7 +349,7 @@ public class Buscar extends javax.swing.JDialog {
         scroll.setBackground(getBackground());
         scroll.setForeground(new java.awt.Color(255, 255, 255));
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setAutoscrolls(true);
 
         tablaUsuarios.setBackground(getBackground());
         tablaUsuarios.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N

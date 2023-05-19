@@ -53,7 +53,7 @@ public class EnviarGmail extends javax.swing.JDialog {
     public EnviarGmail(VMain vMain, Inicio aThis, boolean modal, DAO dao, Usuario us, String razon) {
         super(vMain, modal);
 
-        this.conector = conector;
+        this.conector = vMain;
         this.main = aThis;
         this.dao = dao;
         this.usu = us;

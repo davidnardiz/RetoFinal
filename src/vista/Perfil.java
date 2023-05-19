@@ -707,7 +707,7 @@ public class Perfil extends javax.swing.JDialog {
 
         scroll.setBackground(getBackground());
         scroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setAutoscrolls(true);
         scroll.setFocusable(false);
         scroll.setPreferredSize(new java.awt.Dimension(594, 351));
         scroll.setRequestFocusEnabled(false);

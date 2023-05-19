@@ -58,6 +58,7 @@ public class panelContenido extends javax.swing.JPanel {
             artCarrito = new ArrayList<>();
 
             int valoracion = dao.obtenerValoracion(art);
+            
             starRatingNoEditable1.setStar(valoracion);
             if (borrarB) {
                 System.out.println("asddfff");
@@ -85,6 +86,10 @@ public class panelContenido extends javax.swing.JPanel {
             } else if (!mostrar && !borrarB) {
                 comprar.setVisible(true);
                 agregado.setVisible(false);
+            }
+            
+            if(usu.getUsuario().equalsIgnoreCase(art.getVendedor())){
+                comprar.setVisible(false);
             }
             vendedor.setForeground(Color.white);
             descripcion.setForeground(Color.white);
