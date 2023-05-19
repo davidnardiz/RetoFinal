@@ -366,7 +366,7 @@ public class DAOImplementacionBD implements DAO {
     }
 
     @Override
-    public void quirarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete {
+    public void quitarLike(String usuario, String publicacion) throws ErrVariados, ErrDelete {
 
         this.abrirConexion();
 

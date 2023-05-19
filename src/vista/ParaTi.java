@@ -271,7 +271,7 @@ public class ParaTi extends javax.swing.JDialog {
 
             } else {
                 lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
-                dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
+                dao.quitarLike(usu.getUsuario(), publi.getId_publicacion());
             }
 
         } catch (ErrVariados ex) {

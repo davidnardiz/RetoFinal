@@ -198,7 +198,6 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         lblDescripcion.setVisible(false);
 
         btnEliminar.setBackground(new java.awt.Color(227, 227, 227));
-        btnEliminar.setForeground(new java.awt.Color(0, 0, 0));
         btnEliminar.setText("Eliminar Publicacion");
         btnEliminar.setBorder(null);
         btnEliminar.setFocusable(false);
@@ -212,7 +211,6 @@ public class PublicacionPopUp extends javax.swing.JDialog {
         btnEliminar.setVisible(false);
 
         btnEditar.setBackground(new java.awt.Color(227, 227, 227));
-        btnEditar.setForeground(new java.awt.Color(0, 0, 0));
         btnEditar.setText("Editar Publicacion");
         btnEditar.setBorder(null);
         btnEditar.setFocusable(false);
@@ -255,7 +253,7 @@ public class PublicacionPopUp extends javax.swing.JDialog {
 
             } else {
                 lblMegusta.setText(Integer.parseInt(lblMegusta.getText()) - 1 + "");
-                dao.quirarLike(usu.getUsuario(), publi.getId_publicacion());
+                dao.quitarLike(usu.getUsuario(), publi.getId_publicacion());
             }
         } catch (ErrVariados ex) {
             ex.mostrarError();

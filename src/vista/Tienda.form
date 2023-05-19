@@ -101,7 +101,7 @@
         <Component class="javax.swing.JLabel" name="carritoCompraLleno">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/iconos/carrito-de-supermercado-removebg-preview (1).jpg"/>
+              <Image iconType="3" name="/imagenes/pantalla/carrito-de-supermercado-removebg-preview (1).jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -116,7 +116,7 @@
         <Component class="javax.swing.JLabel" name="carritoCompra1">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/iconos/carrito-de-compras (1)-removebg-preview (1).jpg"/>
+              <Image iconType="3" name="/imagenes/pantalla/carrito-de-compras (1)-removebg-preview (1).jpg"/>
             </Property>
           </Properties>
           <Constraints>
@@ -353,7 +353,7 @@
           <Color blue="36" green="33" red="29" type="rgb"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/imagenes/iconos/opciones-removebg-preview (1).jpg"/>
+          <Image iconType="3" name="/imagenes/pantalla/opciones-removebg-preview (1).jpg"/>
         </Property>
       </Properties>
       <Events>
@@ -405,7 +405,7 @@
         <Component class="javax.swing.JLabel" name="lblModificar">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/iconos/boton-editar-removebg-preview (1).jpg"/>
+              <Image iconType="3" name="/imagenes/pantalla/boton-editar-removebg-preview (1).jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -415,7 +415,7 @@
         <Component class="javax.swing.JLabel" name="lblBorrar">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/iconos/borrar (1)-removebg-preview (1).jpg"/>
+              <Image iconType="3" name="/imagenes/pantalla/borrar (1)-removebg-preview (1).jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -425,7 +425,7 @@
         <Component class="javax.swing.JLabel" name="lblSubir">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/iconos/boton-mas-removebg-preview (1) (1).jpg"/>
+              <Image iconType="3" name="/imagenes/pantalla/boton-mas-removebg-preview (1) (1).jpg"/>
             </Property>
           </Properties>
           <Events>
@@ -460,7 +460,7 @@
           <Color blue="36" green="33" red="29" type="rgb"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/imagenes/iconos/opciones-removebg-preview (1).jpg"/>
+          <Image iconType="3" name="/imagenes/pantalla/opciones-removebg-preview (1).jpg"/>
         </Property>
       </Properties>
       <Events>
@@ -475,7 +475,7 @@
     <Component class="javax.swing.JLabel" name="filtrar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/imagenes/iconos/filtrar.jpg"/>
+          <Image iconType="3" name="/imagenes/pantalla/filtrar.jpg"/>
         </Property>
       </Properties>
       <Events>
@@ -483,7 +483,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="600" y="80" width="-1" height="50"/>
+          <AbsoluteConstraints x="580" y="90" width="50" height="50"/>
         </Constraint>
       </Constraints>
     </Component>

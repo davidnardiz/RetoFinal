@@ -25,6 +25,7 @@ import panelMensaje.DefaultOption;
 import panelMensaje.GlassPanePopup;
 import panelMensaje.ModernScrollBarUI;
 import panelMensaje.Notifications;
+import panelMensaje.panelOpcion;
 import tienda.FiltrarPanel;
 
 import tienda.panelContenido;
@@ -185,9 +186,6 @@ public class Tienda extends javax.swing.JDialog {
         btnParaTi.setFocusPainted(false);
         btnParaTi.setFocusable(false);
         btnParaTi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnParaTi.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnParaTi.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnParaTi.setPreferredSize(new java.awt.Dimension(50, 50));
         btnParaTi.setRequestFocusEnabled(false);
         btnParaTi.setRolloverEnabled(false);
         btnParaTi.addActionListener(new java.awt.event.ActionListener() {
@@ -207,9 +205,6 @@ public class Tienda extends javax.swing.JDialog {
         btnBuscar.setFocusPainted(false);
         btnBuscar.setFocusable(false);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBuscar.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnBuscar.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnBuscar.setPreferredSize(new java.awt.Dimension(50, 50));
         btnBuscar.setRequestFocusEnabled(false);
         btnBuscar.setRolloverEnabled(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -229,9 +224,6 @@ public class Tienda extends javax.swing.JDialog {
         btnSubir.setFocusPainted(false);
         btnSubir.setFocusable(false);
         btnSubir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSubir.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnSubir.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnSubir.setPreferredSize(new java.awt.Dimension(50, 50));
         btnSubir.setRequestFocusEnabled(false);
         btnSubir.setRolloverEnabled(false);
         btnSubir.addActionListener(new java.awt.event.ActionListener() {
@@ -251,9 +243,6 @@ public class Tienda extends javax.swing.JDialog {
         btnTienda.setFocusPainted(false);
         btnTienda.setFocusable(false);
         btnTienda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnTienda.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnTienda.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnTienda.setPreferredSize(new java.awt.Dimension(50, 50));
         btnTienda.setRequestFocusEnabled(false);
         btnTienda.setRolloverEnabled(false);
         btnTienda.addActionListener(new java.awt.event.ActionListener() {
@@ -273,9 +262,6 @@ public class Tienda extends javax.swing.JDialog {
         btnCuenta.setFocusPainted(false);
         btnCuenta.setFocusable(false);
         btnCuenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnCuenta.setMaximumSize(new java.awt.Dimension(50, 50));
-        btnCuenta.setMinimumSize(new java.awt.Dimension(50, 50));
-        btnCuenta.setPreferredSize(new java.awt.Dimension(50, 50));
         btnCuenta.setRequestFocusEnabled(false);
         btnCuenta.setRolloverEnabled(false);
         btnCuenta.addActionListener(new java.awt.event.ActionListener() {
@@ -290,15 +276,15 @@ public class Tienda extends javax.swing.JDialog {
             franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(franajAbajoLayout.createSequentialGroup()
                 .addGap(66, 66, 66)
-                .addComponent(btnParaTi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnParaTi)
                 .addGap(66, 66, 66)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar)
                 .addGap(64, 64, 64)
-                .addComponent(btnSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSubir)
                 .addGap(64, 64, 64)
-                .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnTienda)
                 .addGap(66, 66, 66)
-                .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCuenta)
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         franajAbajoLayout.setVerticalGroup(
@@ -306,11 +292,11 @@ public class Tienda extends javax.swing.JDialog {
             .addGroup(franajAbajoLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(franajAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnParaTi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSubir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCuenta)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnParaTi)
+                    .addComponent(btnSubir)
+                    .addComponent(btnTienda))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -417,7 +403,7 @@ public class Tienda extends javax.swing.JDialog {
                 filtrarMouseClicked(evt);
             }
         });
-        getContentPane().add(filtrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, -1, 50));
+        getContentPane().add(filtrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 50, 50));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -456,41 +442,29 @@ public class Tienda extends javax.swing.JDialog {
 
     private void opciones1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opciones1MouseClicked
 
-        panelOpciones.setVisible(true);
-        Point img1L = panelDestino.getLocationOnScreen();
+     GlassPanePopup.showPopup(new panelOpcion(vMain, usu, dao, añadir, ar, this), new DefaultOption(){
 
-        int targetX = img1L.x;
-        int targetY = img1L.y;
-
-        int startX = panelOpciones.getX();
-        int startY = panelOpciones.getY();
-
-        int endX = targetX - 10;
-        int endY = targetY - 30;
-
-        Animator animator = new Animator(400, new TimingTargetAdapter() {
             @Override
-            public void timingEvent(float fraction) {
-                int x = (int) (startX + (endX - startX) * fraction);
-                int y = (int) (startY + (endY - startY) * fraction);
-
-                panelOpciones.setLocation(x, y);
-
+            public float opacity() {
+                return 0;
             }
 
             @Override
-            public void end() {
-                // Devolver la imagen del producto a su posición inicial
+            public LayoutCallback getLayoutCallBack(Component parent) {
+                return new DefaultLayoutCallBack(parent) {
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()) {
+                            cw.setBounds(560, 480, 80, 150);
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
 
-                // imgArticulo1.setImage(nuevoIcon);
+                };
             }
+
         });
-
-        // Iniciar el Animator
-        animator.start();
-
-        opciones1.setVisible(false);
-        opciones2.setVisible(true);
     }//GEN-LAST:event_opciones1MouseClicked
 
     private void lblModificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblModificarMouseClicked
@@ -512,7 +486,8 @@ public class Tienda extends javax.swing.JDialog {
     }//GEN-LAST:event_lblSubirMouseClicked
 
     private void opciones2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opciones2MouseClicked
-
+        
+        
         int startX = panelOpciones.getX();
         int startY = panelOpciones.getY();
 
